@@ -26,7 +26,7 @@ if __name__ == '__main__':
 
 @bot.event
 async def on_ready():
-    log(f'[{time.ctime()}] Подключение успешно осуществлено!\nВ сети: {bot.user}')
+    print(f'[{time.ctime()}] Подключение успешно осуществлено!\nВ сети: {bot.user}')
 
     async def __presence():
         _sleeping = 12
