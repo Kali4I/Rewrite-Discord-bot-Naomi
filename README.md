@@ -1,0 +1,1 @@
+# Rewrite-Discord bot Naomi
