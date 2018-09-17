@@ -31,15 +31,15 @@ async def on_ready():
     async def __presence():
         _sleeping = 12
         while not bot.is_closed():
-            await client.change_presence(activity=discord.Streaming(name=f'{len(bot.guilds)} серверов!', url='https://www.twitch.tv/%none%'))
+            await bot.change_presence(activity=discord.Streaming(name=f'{len(bot.guilds)} серверов!', url='https://www.twitch.tv/%none%'))
             await asyncio.sleep(_sleeping)
-            await client.change_presence(activity=discord.Streaming(name=f'{len(bot.users)} пользователей!', url='https://www.twitch.tv/%none%'))
+            await bot.change_presence(activity=discord.Streaming(name=f'{len(bot.users)} пользователей!', url='https://www.twitch.tv/%none%'))
             await asyncio.sleep(_sleeping)
-            await client.change_presence(activity=discord.Streaming(name=f'{len(bot.emojis)} эмодзи!', url='https://www.twitch.tv/%none%'))
+            await bot.change_presence(activity=discord.Streaming(name=f'{len(bot.emojis)} эмодзи!', url='https://www.twitch.tv/%none%'))
             await asyncio.sleep(_sleeping)
-            await client.change_presence(activity=discord.Streaming(name=f'{len(bot.all_commands)} команд!', url='https://www.twitch.tv/%none%'))
+            await bot.change_presence(activity=discord.Streaming(name=f'{len(bot.all_commands)} команд!', url='https://www.twitch.tv/%none%'))
             await asyncio.sleep(_sleeping)
-            await client.change_presence(activity=discord.Streaming(name=f'n!help', url='https://www.twitch.tv/%none%'))
+            await bot.change_presence(activity=discord.Streaming(name=f'n!help', url='https://www.twitch.tv/%none%'))
             await asyncio.sleep(_sleeping)
     bot.loop.create_task(__presence())
 
