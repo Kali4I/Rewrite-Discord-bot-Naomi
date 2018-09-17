@@ -125,19 +125,19 @@ class Pages:
             await self.show_page(page)
 
     async def first_page(self):
-        """goes to the first page"""
+        """На первую страницу"""
         await self.show_page(1)
 
     async def last_page(self):
-        """goes to the last page"""
+        """На последнюю страницу"""
         await self.show_page(self.maximum_pages)
 
     async def next_page(self):
-        """goes to the next page"""
+        """Следующая страница"""
         await self.checked_show_page(self.current_page + 1)
 
     async def previous_page(self):
-        """goes to the previous page"""
+        """Предыдущая страница"""
         await self.checked_show_page(self.current_page - 1)
 
     async def show_current_page(self):
@@ -145,7 +145,7 @@ class Pages:
             await self.show_page(self.current_page)
 
     async def numbered_page(self):
-        """lets you type a page number to go to"""
+        """Ввести номер страницы для перехода"""
         to_delete = []
         to_delete.append(await self.channel.send('What page do you want to go to?'))
 
@@ -174,7 +174,7 @@ class Pages:
             pass
 
     async def show_help(self):
-        """shows this message"""
+        """Вызвать это окно"""
         messages = ['Welcome to the interactive paginator!\n']
         messages.append('This interactively allows you to see pages of text by navigating with ' \
                         'reactions. They are as follows:\n')
@@ -194,7 +194,7 @@ class Pages:
         self.bot.loop.create_task(go_back_to_current_page())
 
     async def stop_pages(self):
-        """stops the interactive pagination session"""
+        """Убрать данное сообщение"""
         await self.message.delete()
         self.paginating = False
 
@@ -427,7 +427,7 @@ class HelpPaginator(Pages):
         self.embed.title = self.title
 
         if hasattr(self, '_is_bot'):
-            value ='Check the bot source: **[GitHub Link](https://github.com/F4stZ4p/DJ5n4k3/)**'
+            value ='**[Исходный код](https://github.com/AkiraSumato-01/Rewrite-Discord-Bot-Naomi)**'
             self.embed.add_field(name='**GitHub**', value=value, inline=False)
 
         self.embed.set_footer(text=f'Use "{self.prefix}help command" for more info on a command.')
@@ -467,7 +467,7 @@ class HelpPaginator(Pages):
         self.embed.clear_fields()
         self.embed.add_field(name='What are these reactions for?', value='\n'.join(messages), inline=False)
 
-        self.embed.set_footer(text=f'We were on page {self.current_page} before this message.')
+        self.embed.set_footer(text=f'Использование справочника.')
         await self.message.edit(embed=self.embed)
 
         async def go_back_to_current_page():
@@ -477,27 +477,26 @@ class HelpPaginator(Pages):
         self.bot.loop.create_task(go_back_to_current_page())
 
     async def show_bot_help(self):
-        """shows how to use the bot"""
+        """Как использовать бота"""
 
         self.embed.title = 'Справочник по командам.'
         self.embed.description = None
         self.embed.clear_fields()
 
         entries = (
-            ('<argument>', 'This means the argument is __**required**__.'),
-            ('[argument]', 'This means the argument is __**optional**__.'),
-            ('[A|B]', 'This means the it can be __**either A or B**__.'),
-            ('[argument...]', 'This means you can have multiple arguments.\n' \
-                              'Now that you know the basics, it should be noted that...\n' \
-                              '__**You do not type in the brackets!**__')
-        )
+            ('<argument>', 'Это - __**обязательный**__ аргумент .'),
+            ('[argument]', 'Это - __**опциональный**__ аргумент.'),
+            ('[A|B]', 'Выбор между __**A и B**__.'),
+            ('[argument...]', 'Это означает множество аргументов.\n' \
+                              'На этом все.\n' \
+                              '__**Не вводите в команды кавычки и скобки!**__'))
 
-        self.embed.add_field(name='How do I use this bot?', value='Reading the bot signature is pretty simple.')
+        self.embed.add_field(name='Как использовать справку?', value='Небольшая инструкция по использованию справочника.')
 
         for name, value in entries:
             self.embed.add_field(name=name, value=value, inline=False)
 
-        self.embed.set_footer(text=f'We were on page {self.current_page} before this message.')
+        self.embed.set_footer(text=f'Использование справочника.')
         await self.message.edit(embed=self.embed)
 
         async def go_back_to_current_page():

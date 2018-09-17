@@ -23,7 +23,7 @@ class Owner(object):
 
     @commands.command(name='thelp', description='Тестовое меню справки.')
     @commands.is_owner()
-    async def help(self, ctx, *, command:str=None):
+    async def thelp(self, ctx, *, command:str=None):
         try:
             if command is None:
                 p = await HelpPaginator.from_bot(ctx)
@@ -32,7 +32,7 @@ class Owner(object):
 
                 if entity is None:
                     clean = command.replace('@', '@\u200b')
-                    return await ctx.send(f'Command or category "{clean}" not found.')
+                    return await ctx.send(f'Команда или категория "{clean}" не найдена.')
                 elif isinstance(entity, commands.Command):
                     p = await HelpPaginator.from_command(ctx, entity)
                 else:
