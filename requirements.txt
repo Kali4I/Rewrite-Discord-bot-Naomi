@@ -1,0 +1,11 @@
+aiohttp
+git+https://github.com/Rapptz/discord.py@rewrite#egg=discord.py[voice]
+git+https://github.com/Nekos-life/nekos.py
+youtube_dl
+pillow
+psutil
+requests
+speedtest-cli
+python-whois
+datetime
+apiai
