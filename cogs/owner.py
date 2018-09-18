@@ -25,11 +25,63 @@ class Owner(object):
         if command:
             return await ctx.send('Справка по конкретным командам не готова.')
 
-        menu = discord.Embed(color=0x9FEE59, title='Справочник по командам.')
-        for cmd in self.bot.commands:
-            menu.add_field(name=cmd.name, value=cmd.description, inline=True)
+        temp = []
+        cmd_list = []
+        command_pages = {}
+        for cmd in [x for x in self.bot.commands if not x.hidden]:
+            if len(temp) != 10:
+                temp.append(cmd)
+            else:
+                cmd_list.append(temp)
+                temp = []
+        for row in cmd_list:
+            for i in range(len(cmd_list)):
+                command_pages[i] = [f'{x.name} | {x.description}' for x in row if not x.hidden]
 
-        await ctx.send(embed=menu)
+        current = await ctx.send('Кликните реакцию.')
+
+        async def react_control():
+            reactions = {'<':'⬅', '>':'➡'}
+            for react in reactions:
+                await current.add_reaction(react)
+
+            def check(r, u):
+                if not current:
+                    return False
+                elif str(r) not in reactions.keys():
+                    return False
+                elif u.id != ctx.author.id or r.message.id != current.id:
+                    return False
+                return True
+
+            while current:
+                react, user = await self.bot.wait_for('reaction_add', check=check)
+                try:
+                    control = reactions.get(str(react))
+                except:
+                    control = None
+
+
+                if control == '<':
+                    for i in command_pages:
+                        try:
+                            await current.edit(embed=command_pages[i - 1])
+                        except KeyError:
+                            pass
+
+                if control == '>':
+                    for i in command_pages:
+                        try:
+                            await current.edit(embed=command_pages[i + 1])
+                        except KeyError:
+                            pass
+
+                try:
+                    await current.remove_reaction(react, user)
+                except discord.HTTPException:
+                    pass
+                    
+        self.bot.loop.create_task(react_control())
 
 
 

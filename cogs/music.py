@@ -335,7 +335,7 @@ class Music:
 
         return player
 
-    @commands.command(name='disconnect', aliases=['leave', 'l'])
+    @commands.command(name='disconnect', description='Отключиться от голосового канала.', aliases=['leave', 'l'])
     async def disconnect_(self, ctx):
         if ctx.guild.voice_client:
             await ctx.guild.voice_client.disconnect()
@@ -343,7 +343,7 @@ class Music:
         else:
             await ctx.send(':notes: Я не нахожусь в голосовом канале.', delete_after=20)
 
-    @commands.command(name='connect', aliases=['join', 'j'])
+    @commands.command(name='connect', , description='Подключиться к голосовому каналу.', aliases=['join', 'j'])
     async def connect_(self, ctx, *, channel: discord.VoiceChannel=None):
         """Connect to voice.
 
@@ -378,7 +378,7 @@ class Music:
 
         await ctx.send(f":notes: Голосовой канал: **{channel}**", delete_after=20)
         
-    @commands.command(name='play', aliases=['sing', 'p'])
+    @commands.command(name='play', description='Проигрывание музыки.', aliases=['sing', 'p'])
     async def play_(self, ctx, *, search: str):
         """Request a song and add it to the queue.
 
@@ -407,7 +407,7 @@ class Music:
         source = await YTDLSource.create_source(ctx, search, loop=self.bot.loop, download=False)
         await player.queue.put(source)
 
-    @commands.command(name='playing', aliases=['np', 'current', 'currentsong', 'now_playing'])
+    @commands.command(name='playing', description='Что сейчас проигрывается.', aliases=['np', 'current', 'currentsong', 'now_playing'])
     async def now_playing_(self, ctx):
         """Display information about the currently playing song."""
 
