@@ -14,9 +14,6 @@ class Logger(object):
     async def on_member_unban(self, g, u):
         print(f'[{time.ctime()}] {u.name} ({u.id}) разбанен на {g.name} ({g.id})')
 
-    async def on_message(self, m):
-        print(f'[{time.ctime()}] {m.author}: {"".join(m.content)}')
-
     async def on_member_join(self, m):
         print(f'[{time.ctime()}] {m} присоединился к гильдии {m.guild.name}')
 
