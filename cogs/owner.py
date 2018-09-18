@@ -21,97 +21,11 @@ class Owner(object):
 
 
 
-    @commands.command(name='thelp', description='Тестовое меню справки.')
-    @commands.is_owner()
-    async def thelp(self, ctx, *, command:str=None):
-        try:
-            if command is None:
-                p = await HelpPaginator.from_bot(ctx)
-            else:
-                entity = self.bot.get_cog(command) or self.bot.get_command(command)
-
-                if entity is None:
-                    clean = command.replace('@', '@\u200b')
-                    return await ctx.send(f'Команда или категория "{clean}" не найдена.')
-                elif isinstance(entity, commands.Command):
-                    p = await HelpPaginator.from_command(ctx, entity)
-                else:
-                    p = await HelpPaginator.from_cog(ctx, entity)
-
-            await p.paginate()
-        except Exception as e:
-            await ctx.send(e)
-
-    """
-    async def thelp(self, ctx, command:str=None):
-        if command:
-            return await ctx.send('Справка по конкретным командам не готова.')
-
-        temp = []
-        cmd_list = []
-        command_pages = {}
-        for cmd in [x for x in self.bot.commands if not x.hidden]:
-            if len(temp) != 10:
-                temp.append(cmd)
-            else:
-                cmd_list.append(temp)
-                temp = []
-        for row in cmd_list:
-            for i in range(len(cmd_list)):
-                command_pages[i] = [f'{x.name} | {x.description}' for x in row if not x.hidden]
-
-        current = await ctx.send('Кликните реакцию.')
-
-        async def react_control():
-            reactions = {'⬅':'<', '➡':'>'}
-            for react in reactions:
-                await current.add_reaction(react)
-
-            def check(r, u):
-                if not current:
-                    return False
-                elif str(r) not in reactions.keys():
-                    return False
-                elif u.id != ctx.author.id or r.message.id != current.id:
-                    return False
-                return True
-
-            while current:
-                react, user = await self.bot.wait_for('reaction_add', check=check)
-                try:
-                    control = reactions.get(str(react))
-                except:
-                    control = None
-
-                curpage = 0
-
-                if control == '<':
-                    try:
-                        await current.edit(embed=command_pages[curpage - 1])
-                    except KeyError as e:
-                        print(e)
-
-                if control == '>':
-                    try:
-                        await current.edit(embed=command_pages[curpage + 1])
-                    except KeyError as e:
-                        print(e)
-
-                try:
-                    await current.remove_reaction(react, user)
-                except discord.HTTPException:
-                    pass
-                    
-        self.bot.loop.create_task(react_control())
-
-
-"""
-
-
-
-    @commands.command(name='ping', description='Проверка скорости ответа.')
+    @commands.command(name='ping')
     @commands.is_owner()
     async def ping(self, ctx):
+        """Проверка скорости ответа."""
+
         resp = await ctx.send('Тестируем...')
         diff = resp.created_at - ctx.message.created_at
         await resp.edit(content=f'Задержка API: {1000*diff.total_seconds():.1f}ms.\nЗадержка {self.bot.user.name}: {round(self.bot.latency * 1000)}ms')
@@ -121,9 +35,10 @@ class Owner(object):
 
 
 
-    @commands.command(hidden=True, description='Перезагрузка.', aliases=['r'])
+    @commands.command(hidden=True, aliases=['r'])
     @commands.is_owner()
     async def restart(self, ctx):
+        """Перезагрузка."""
         await ctx.send(embed=discord.Embed(color=0x13CFEB).set_footer(text="Перезагружаемся..."))
         os.execl(sys.executable, sys.executable, * sys.argv)
 
@@ -132,9 +47,10 @@ class Owner(object):
 
 
 
-    @commands.command(name='load', description='Загрузка модуля.', hidden=True)
+    @commands.command(name='load', hidden=True)
     @commands.is_owner()
     async def cog_load(self, ctx, *, cog: str):
+        """Загрузка модуля."""
 
         try:
             self.bot.load_extension(cog)
@@ -148,9 +64,10 @@ class Owner(object):
 
 
 
-    @commands.command(name='unload', description='Выгрузка модуля.', hidden=True)
+    @commands.command(name='unload', hidden=True)
     @commands.is_owner()
     async def cog_unload(self, ctx, *, cog: str):
+        """Выгрузка модуля."""
 
         try:
             self.bot.unload_extension(cog)
@@ -160,9 +77,10 @@ class Owner(object):
             await ctx.send(f'**`Модуль {cog} успешно выгружен`**')
 
 
-    @commands.command(name='reload', description='Перезагрузка модуля.', hidden=True)
+    @commands.command(name='reload', hidden=True)
     @commands.is_owner()
     async def cog_reload(self, ctx, *, cog: str):
+        """Перезагрузка модуля."""
 
         try:
             self.bot.unload_extension(cog)
@@ -173,9 +91,10 @@ class Owner(object):
             await ctx.send(f'**`Модуль {cog} успешно перезагружен`**')
 
 
-    @commands.command(name='execute', description=f'Интерпретатор Python {platform.python_version()}.', aliases=['exec', 'eval'], hidden=True)
+    @commands.command(name='execute', aliases=['exec', 'eval'], hidden=True)
     @commands.is_owner()
     async def execute(self, ctx, *, code: str):
+        """Интерпретатор Python."""
 
         async def _execution():
             async with ctx.channel.typing():

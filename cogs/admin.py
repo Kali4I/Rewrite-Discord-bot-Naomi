@@ -12,10 +12,10 @@ class Admin(object):
 
 
 
-    @commands.command(name='cleanup', description='Очистка чата от сообщений конкретного пользователя.')
-    async def cleanup(self, ctx, member:discord.Member=None, count:int=None):
-        if not member or not count:
-            return await ctx.send(embed=discord.Embed(color=0xff00ff).set_footer(text='cleanup [@пользователь] [кол-во сообщений]'))
+    @commands.command(name='cleanup')
+    @commands.cooldown(1.4)
+    async def cleanup(self, ctx, member:discord.Member, count:int=None):
+        """Удалить последние `count` сообщений участника `member`."""
 
         def is_member(m):
             return m.author == member
@@ -27,11 +27,10 @@ class Admin(object):
 
 
 
-    @commands.command(name='purge', description='Очистка чата.', aliases=['clean', 'clear', 'clearchat'])
-    async def purge(self, ctx, count:int=None):
-        if not count:
-            return await ctx.send(embed=discord.Embed(color=0xff00ff).set_footer(text='purge [кол-во сообщений]'))
-
+    @commands.command(name='purge', aliases=['clean', 'clear', 'clearchat'])
+    @commands.cooldown(1.4)
+    async def purge(self, ctx, count:int):
+        """Удалить последние `count` сообщений в чате."""
         await ctx.channel.purge(limit=count)
 
 
@@ -39,13 +38,13 @@ class Admin(object):
 
 
 
-    @commands.command(name='ban', description='Забанить пользователя.')
-    async def ban(self, ctx, member:discord.Member=None, reason:str=None):
+    @commands.command(name='ban')
+    @commands.cooldown(1.4)
+    async def ban(self, ctx, member:discord.Member, reason:str=None):
+        """Заблокировать пользователя на сервере."""
+
         if not ctx.author.permissions_in(ctx.channel).ban_members:
             return await ctx.send(embed=discord.Embed(color=0xFF0000).set_footer(text='Нет прав.'))
-
-        if not member:
-            return await ctx.send(embed=discord.Embed(color=0xD587F2).set_footer(text='ban [@пользователь] [причина]'))
 
         if not reason:
             reason = 'отсутствует.'
@@ -63,8 +62,11 @@ class Admin(object):
 
 
 
-    @commands.command(name='banlist', description='Банлист сервера.', aliases=['bans'])
+    @commands.command(name='banlist', aliases=['bans'])
+    @commands.cooldown(1.4)
     async def banlist(self, ctx):
+        """Список заблокированных здесь пользователей."""
+
         if not ctx.author.permissions_in(ctx.channel).ban_members:
             return await ctx.send(embed=discord.Embed(color=0xFF0000).set_footer(text='Нет прав.'))
 
@@ -84,11 +86,11 @@ class Admin(object):
 
 
 
-    @commands.command(name='kick', description='Выгнать пользователя.')
-    async def kick(self, ctx, member:discord.Member=None, reason:str=None):
-        if not member:
-            return await ctx.send(embed=discord.Embed(color=0xD587F2).set_footer(text='kick [@пользователь] [причина]'))
-        
+    @commands.command(name='kick')
+    @commands.cooldown(1.4)
+    async def kick(self, ctx, member:discord.Member, reason:str=None):
+        """Выгнать пользователя с сервера."""
+
         if not reason:
             reason = 'отсутствует.'
 

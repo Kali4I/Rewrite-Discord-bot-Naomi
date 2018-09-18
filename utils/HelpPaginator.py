@@ -458,7 +458,7 @@ class HelpPaginator(Pages):
             await self.message.add_reaction(reaction)
 
     async def show_help(self):
-        """shows this message"""
+        """Отобразить это сообщение"""
 
         self.embed.title = 'Paginator help'
         self.embed.description = 'Hello! Welcome to the help page.'

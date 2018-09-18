@@ -17,8 +17,37 @@ class Member(object):
 
 
 
-    @commands.command(name='userinfo', description='Информация об участнике сервера.', aliases=['user-info'])
+    @commands.command(name='help', aliases=['info', 'h'])
+    @commands.cooldown(3.2)
+    async def thelp(self, ctx, *, command:str=None):
+        """Справочник по командам."""
+        try:
+            if command is None:
+                p = await HelpPaginator.from_bot(ctx)
+            else:
+                entity = self.bot.get_cog(command) or self.bot.get_command(command)
+
+                if entity is None:
+                    clean = command.replace('@', '@\u200b')
+                    return await ctx.send(f'Команда или категория "{clean}" не найдена.')
+                elif isinstance(entity, commands.Command):
+                    p = await HelpPaginator.from_command(ctx, entity)
+                else:
+                    p = await HelpPaginator.from_cog(ctx, entity)
+
+            await p.paginate()
+        except Exception as e:
+            await ctx.send(e)
+
+
+
+
+
+
+    @commands.command(name='userinfo', , aliases=['user-info'])
+    @commands.cooldown(3.2)
     async def userinfo(self, ctx, member:discord.Member=None):
+        """Информация об участнике сервера."""
 
         if not member:
             member = ctx.author
@@ -57,8 +86,10 @@ class Member(object):
 
 
 
-    @commands.command(name='guild', description='Информация о сервере.', aliases=['server'])
+    @commands.command(name='guild', aliases=['server'])
+    @commands.cooldown(3.2)
     async def guild(self, ctx):
+        """Информация о гильдии (Discord-сервере)."""
 
         stats = discord.Embed(color=0x18C30B, title='Информация о сервере %s [%s]' % (ctx.guild.name, ctx.guild.id))
         stats.add_field(name='Регион', value=ctx.guild.region)
@@ -80,8 +111,10 @@ class Member(object):
 
 
 
-    @commands.command(name='mcplayer', description='Статистика игрока Minecraft.', aliases=['mcuser'])
+    @commands.command(name='mcplayer', aliases=['mcuser'])
+    @commands.cooldown(3.2)
     async def mcplayer(self, ctx, nickname:str=None):
+        """Статистика игрока Minecraft."""
 
         if not nickname:
             return await ctx.send(embed=discord.Embed(color=0xff0000).set_footer(text='mcplayer [ник]'))
@@ -106,8 +139,10 @@ class Member(object):
 
 
 
-    @commands.command(name='mcstats', description='Статистика сервера Minecraft.', aliases=['mcserver', 'mcserv', 'mcinfo', 'mcstatus'])
+    @commands.command(name='mcstats', aliases=['mcserver', 'mcserv', 'mcinfo', 'mcstatus'])
+    @commands.cooldown(3.2)
     async def mcstats(self, ctx, adress:str=None):
+        """Статистика сервера Minecraft."""
 
         if not adress:
             return await ctx.send(embed=discord.Embed(color=0xff0000).set_footer(text='mcstats [адрес_сервера]'))
@@ -132,139 +167,10 @@ class Member(object):
 
 
 
-    @commands.command(name='help', description='Справочник по командам.', aliases=['info'])
-    async def help(self, ctx):
-
-        naomiserver = discord.utils.get(discord.utils.get(self.bot.guilds, id=347635213670678528).emojis, name='naomiserver')
-        naomiusers = discord.utils.get(discord.utils.get(self.bot.guilds, id=347635213670678528).emojis, name='naomiusers')
-        naomicmds = discord.utils.get(discord.utils.get(self.bot.guilds, id=347635213670678528).emojis, name='naomicmds')
-
-        help_main = f'''
-Спасибо, что используете {self.bot.user.name}!
-
-{naomiserver} | Серверов: {len(self.bot.guilds)}
-{naomiusers} | Пользователей: {len(self.bot.users)}
-:smiley: | Эмодзи: {len(self.bot.emojis)}
-{naomicmds} | Команд: {len(self.bot.commands)}
-
-
-Некоторая помощь в разработке - [F4stZ4p](https://github.com/F4stZ4p)
-
-Для навигации по справочнику,
-используйте реакции под этим сообщением
-в качестве панели управления.
-'''
-        help_f01 = f'''```css
-play     | Музыка;
-neko     | [#] Аниме арты;
-talk     | Общение с ботом;
-avatar   | Получить аватарку пользователя;
-osu      | Статистика игрока osu!;
-say      | Отправка сообщения от имени бота;```
-`[#] - только в NSFW-каналах.`
-`[*] - требуются права Администратора.`
-`[X] - команда не завершена.`
-'''
-        help_f02 = f'''```css
-banlist  | [*] Банлист;
-purge    | [*] Очистка чата;
-kick     | [*] Выгнать пользователя;
-ban      | [*] Забанить пользователя;
-unban    | [X];```
-`[#] - только в NSFW-каналах.`
-`[*] - требуются права Администратора.`
-`[X] - команда не завершена.`
-'''
-        help_f03 = f'''```css
-help     | Список команд;
-hostinfo | WHOIS-информация о домене;
-calc     | Калькулятор;
-guild    | [X];
-bot      | [X];```
-`[#] - только в NSFW-каналах.`
-`[*] - требуются права Администратора.`
-`[X] - команда не завершена.`
-'''
-
-        _description = f'[「Наш Discord-сервер」](https://discord.gg/ZQfNQ43) [「Пригласить меня」](https://discordapp.com/oauth2/authorize?client_id=452534618520944649&scope=bot&permissions=301296759) [「GitHub」](https://github.com/AkiraSumato-01/Discord-Bot-Naomi)  \nПрефикс на этом сервере: '
-
-        help_list = {
-            'page_00': discord.Embed(color=0x00C6FF, title=':page_facing_up: Справочник по командам', description=_description),
-            'page_01': discord.Embed(color=0x00C6FF, title=':page_facing_up: Справочник по командам', description=_description),
-            'page_02': discord.Embed(color=0x00C6FF, title=':page_facing_up: Справочник по командам', description=_description),
-            'page_03': discord.Embed(color=0x00C6FF, title=':page_facing_up: Справочник по командам', description=_description),
-        }
-
-
-        help_list['page_00'].set_footer(text=f'help | Главная')
-        help_list['page_00'].add_field(name='Главная:', value=help_main)
-
-        help_list['page_01'].set_footer(text=f'help | Стр. #1')
-        help_list['page_01'].add_field(name='Развлечение:', value=help_f01)
-
-        help_list['page_02'].set_footer(text=f'help | Стр. #2')
-        help_list['page_02'].add_field(name='Администрирование:', value=help_f02)
-
-        help_list['page_03'].set_footer(text=f'help | Стр. #3')
-        help_list['page_03'].add_field(name='Прочее:', value=help_f03)
-
-        _buttons = {
-            '⬛': '00',
-            '1⃣': '01',
-            '2⃣': '02',
-            '3⃣': '03'
-        }
-
-        _user_ = ctx.author
-
-        _current = await ctx.send(embed=help_list['page_00'], delete_after=120)
-
-        async def __menu_controller(current, help_list, _buttons):
-            for react in _buttons:
-                await current.add_reaction(react)
-
-            def check(r, u):
-                if not current:
-                    return False
-                elif str(r) not in _buttons.keys():
-                    return False
-                elif u.id != _user_.id or r.message.id != current.id:
-                    return False
-                return True
-
-            while current:
-                react, user = await self.bot.wait_for('reaction_add', check=check)
-                try:
-                    control = _buttons.get(str(react))
-                except:
-                    control = None
-
-
-                if control == '00':
-                    await current.edit(embed=help_list['page_00'])
-                if control == '01':
-                    await current.edit(embed=help_list['page_01'])
-                if control == '02':
-                    await current.edit(embed=help_list['page_02'])
-                if control == '03':
-                    await current.edit(embed=help_list['page_03'])
-
-                try:
-                    await current.remove_reaction(react, user)
-                except discord.HTTPException:
-                    pass
-                    
-        self.bot.loop.create_task(__menu_controller(_current, help_list, _buttons))
-
-
-
-
-
-
-    @commands.command(name='talk', description='Общение с ботом.', aliases=['t'])
-    async def _talking(self, ctx, *, message:str=None):
-        if not message:
-            return await ctx.send(embed=discord.Embed(color=0xff0000).set_footer(text='talk [сообщение] | Dialogflow'))
+    @commands.command(name='talk', aliases=['t'])
+    @commands.cooldown(3.2)
+    async def talk(self, ctx, *, message:str):
+        """Общение с ботом."""
         
         ai = apiai.ApiAI(os.getenv('TALK_SERVICE_TOKEN'))
 
@@ -290,11 +196,10 @@ bot      | [X];```
 
 
 
-    @commands.command(name='hostinfo', description='WHOIS-информация о домене.', aliases=['host', 'whoisweb'])
-    async def _hostinfo(self, ctx, domain:str=None):
-
-        if not domain:
-            return await ctx.send(embed=discord.Embed(color=0xff0000).set_footer(text='hostinfo [домен]'))
+    @commands.command(name='hostinfo', aliases=['host', 'whoisweb'])
+    @commands.cooldown(3.2)
+    async def hostinfo(self, ctx, domain:str):
+        """WHOIS-информация о домене."""
 
         whois_info = whois.whois(domain)
 
@@ -331,6 +236,7 @@ bot      | [X];```
 
 
     @commands.command(name='helloworld', description='Hello World!!', aliases=['hw'])
+    @commands.cooldown(3.2)
     async def _helloworld(self, ctx):
         await ctx.send('Hello, %s' % ctx.author.mention)
 
@@ -339,24 +245,25 @@ bot      | [X];```
 
 
 
-    @commands.command(name='say', description='Повторить сообщение пользователя.', aliases=['repeat', 'msg'])
-    async def _say(self, ctx, *, msg:str=None):
-        if msg is None:
-            await ctx.send('%s, вы не указали сообщение.' % ctx.author.mention)
-        else:
-            try:
-                await ctx.message.delete()
-            except:
-                pass
-            await ctx.send(msg)
+    @commands.command(name='say', aliases=['repeat', 'msg'])
+    @commands.cooldown(3.2)
+    async def _say(self, ctx, *, msg:str):
+        """Повторить сообщение пользователя."""
+        try:
+            await ctx.message.delete()
+        except:
+            pass
+        await ctx.send(msg)
 
 
 
 
 
 
-    @commands.command(name='neko', description='Отправляет аниме изображение [Только в NSFW-каналах]', aliases=['anime', 'catgirl', 'nekogirl'])
+    @commands.command(name='neko', aliases=['anime', 'catgirl', 'nekogirl'])
+    @commands.cooldown(3.2)
     async def _catgirl(self, ctx, tag:str=None):
+        """Отправляет аниме изображение [Только в NSFW-каналах]"""
         try:
             if not ctx.channel.is_nsfw():
                 return await ctx.send(embed=discord.Embed(color=0xff0000).set_footer(text='Вы не в NSFW канале!'))
@@ -394,10 +301,9 @@ bot      | [X];```
 
 
     @commands.command(name='calc', description='Калькулятор', aliases=['calculator', 'calculate'])
-    async def _calc(self, ctx, *, numbers:str=None):
-        if not numbers:
-            return await ctx.send(embed=discord.Embed(color=0xff00ff).set_footer(text='calc [матем.выражение]'))
-
+    @commands.cooldown(3.2)
+    async def _calc(self, ctx, *, numbers:str):
+        """Калькулятор."""
         from math import pi
         from re import sub
 
@@ -417,24 +323,26 @@ bot      | [X];```
                 return await ctx.send(embed=discord.Embed(color=0xf0a302).set_footer(text='Выражение имеет ошибку.\nИсправьте его.'))
 
             if len(__eval) > 12 and not __eval.isnumeric():
-                await ctx.send(embed=discord.Embed(color=0xf0a302, description=f'(Указаны первые 12 цифр)\n{__eval[:12]}\n\nОкругленный:\n{round(float(__eval))}').set_footer(text='calc [матем.выражение]'))
+                await ctx.send(embed=discord.Embed(color=0xf0a302, description=f'```css\n{numbers}\n({b})\n```(Указаны первые 12 цифр)\n{__eval[:12]}\n\nОкругленный:\n{round(float(__eval))}').set_footer(text='calc [матем.выражение]'))
 
             elif len(__eval) > 12 and __eval.isnumeric():
-                await ctx.send(embed=discord.Embed(color=0xf0a302, description=f'(Указаны первые 12 цифр)\n{__eval[:12]}').set_footer(text='calc [матем.выражение]'))
+                await ctx.send(embed=discord.Embed(color=0xf0a302, description=f'```css\n{numbers}\n({b})\n```(Указаны первые 12 цифр)\n{__eval[:12]}').set_footer(text='calc [матем.выражение]'))
 
             else:
-                await ctx.send(embed=discord.Embed(color=0xf0a302, description=f'{__eval}').set_footer(text='calc [матем.выражение]'))
+                await ctx.send(embed=discord.Embed(color=0xf0a302, description=f'```css\n{numbers}\n({b})\n```{__eval}').set_footer(text='calc [матем.выражение]'))
 
 
 
 
 
 
-    @commands.command(name='osu', description='Статистика игрока osu!.', aliases=['osu!'])
-    async def _osu(self, ctx, player:str=None, mode:str='osu!'):
+    @commands.command(name='osu', aliases=['osu!'])
+    @commands.cooldown(3.2)
+    async def osu(self, ctx, player:str, mode:str=None):
+        """Статистика игрока osu!."""
 
-        if not player:
-            return await ctx.send(embed=discord.Embed(color=0xD587F2).set_footer(text='osu [ник_игрока] | lemmy.pw'))
+        if not mode:
+            mode = 'osu!'
 
         if mode == 'osu!'  or mode == 'o':
             game_mode = {'num': 0, 'name': 'osu!'}
@@ -464,8 +372,10 @@ bot      | [X];```
 
 
 
-    @commands.command(name='avatar', description='Выдает аватарку пользователя.', aliases=['useravatar'])
-    async def _avatar(self, ctx, member:discord.Member=None):
+    @commands.command(name='avatar', aliases=['useravatar'])
+    @commands.cooldown(3.2)
+    async def avatar(self, ctx, member:discord.Member=None):
+        """Выдает аватарку пользователя."""
 
         if not member:
             member = ctx.author
