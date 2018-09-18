@@ -17,7 +17,7 @@ class Member(object):
 
 
 
-    @commands.command(name='mcstats', description='Статистика сервера Minecraft.', aliases=['mcserver', 'mcserv', 'mcinfo'])
+    @commands.command(name='mcstats', description='Статистика сервера Minecraft.', aliases=['mcserver', 'mcserv', 'mcinfo', 'mcstatus'])
     async def mcstats(self, ctx, adress:str=None):
 
         if not adress:
@@ -27,7 +27,7 @@ class Member(object):
         status = server.status()
 
         try:
-            stats = discord.Embed(color=0x18C30B, description="```%s```" % (''.join([x['text'] for x in s.description['extra']])))
+            stats = discord.Embed(color=0x18C30B, description="```%s```" % ''.join([x['text'] for x in status.description['extra']]))
             stats.add_field(name='Адрес', value=server.host)
             stats.add_field(name='Порт', value=server.port)
             stats.add_field(name='Игроки', value='%s/%s' % (status.players.online, status.players.max))
