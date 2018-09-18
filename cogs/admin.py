@@ -13,7 +13,7 @@ class Admin(object):
 
 
     @commands.command(name='cleanup', description='Очистка чата от сообщений конкретного пользователя.')
-    async def _cleanup(self, ctx, member:discord.Member=None, count:int=None):
+    async def cleanup(self, ctx, member:discord.Member=None, count:int=None):
         if not member or not count:
             return await ctx.send(embed=discord.Embed(color=0xff00ff).set_footer(text='cleanup [@пользователь] [кол-во сообщений]'))
 
@@ -23,8 +23,12 @@ class Admin(object):
         await ctx.channel.purge(limit=count, check=is_member)
 
 
+
+
+
+
     @commands.command(name='purge', description='Очистка чата.', aliases=['clean', 'clear', 'clearchat'])
-    async def _cleanup(self, ctx, count:int=None):
+    async def purge(self, ctx, count:int=None):
         if not count:
             return await ctx.send(embed=discord.Embed(color=0xff00ff).set_footer(text='purge [кол-во сообщений]'))
 
@@ -36,7 +40,7 @@ class Admin(object):
 
 
     @commands.command(name='ban', description='Забанить пользователя.')
-    async def _ban(self, ctx, member:discord.Member=None, reason:str=None):
+    async def ban(self, ctx, member:discord.Member=None, reason:str=None):
         if not ctx.author.permissions_in(ctx.channel).ban_members:
             return await ctx.send(embed=discord.Embed(color=0xFF0000).set_footer(text='Нет прав.'))
 
@@ -60,7 +64,7 @@ class Admin(object):
 
 
     @commands.command(name='banlist', description='Банлист сервера.', aliases=['bans'])
-    async def _banlist(self, ctx):
+    async def banlist(self, ctx):
         if not ctx.author.permissions_in(ctx.channel).ban_members:
             return await ctx.send(embed=discord.Embed(color=0xFF0000).set_footer(text='Нет прав.'))
 
@@ -81,7 +85,7 @@ class Admin(object):
 
 
     @commands.command(name='kick', description='Выгнать пользователя.')
-    async def _kick(self, ctx, member:discord.Member=None, reason:str=None):
+    async def kick(self, ctx, member:discord.Member=None, reason:str=None):
         if not member:
             return await ctx.send(embed=discord.Embed(color=0xD587F2).set_footer(text='kick [@пользователь] [причина]'))
         

@@ -5,6 +5,7 @@ import json
 import apiai
 from discord.ext import commands
 from random import choice, randint
+from mcstatus import MinecraftServer
 
 class Member(object):
 
@@ -16,7 +17,33 @@ class Member(object):
 
 
 
-    @commands.command()
+    @commands.command(name='mcstats', description='Статистика сервера Minecraft.', aliases=['mcserver', 'mcserv', 'mcinfo'])
+    async def mcstats(self, ctx, adress:str=None):
+
+        if not adress:
+            return await ctx.send(embed=discord.Embed(color=0xff0000).set_footer(text='mcstats [адрес_сервера]'))
+
+        server = MinecraftServer.lookup(adress)
+        status = server.status()
+
+        try:
+            stats = discord.Embed(color=0x18C30B, description="```%s```" % (''.join([x['text'] for x in s.description['extra']])))
+            stats.add_field(name='Адрес', value=server.host)
+            stats.add_field(name='Порт', value=server.port)
+            stats.add_field(name='Игроки', value='%s/%s' % (status.players.online, status.players.max))
+            stats.add_field(name='Задержка', value='%s мс' % status.latency)
+            stats.add_field(name='Ядро', value=status.version.name)
+        except:
+            stats = discord.Embed(color=0xff0000).set_footer(text='mcstats [адрес_существующего_сервера]')
+
+        await ctx.send(embed=stats)
+
+
+
+
+
+
+    @commands.command(name='help', description='Справочник по командам.', aliases=['info', self.bot.user.mention])
     async def help(self, ctx):
 
         naomiserver = discord.utils.get(discord.utils.get(self.bot.guilds, id=347635213670678528).emojis, name='naomiserver')
@@ -148,7 +175,7 @@ bot      | [X];```
     @commands.command(name='talk', description='Общение с ботом.', aliases=['t'])
     async def _talking(self, ctx, *, message:str=None):
         if not message:
-            return await self.channel.send(embed=discord.Embed(color=0xff0000).set_footer(text='talk [сообщение] | Dialogflow'))
+            return await ctx.send(embed=discord.Embed(color=0xff0000).set_footer(text='talk [сообщение] | Dialogflow'))
         
         ai = apiai.ApiAI(os.getenv('TALK_SERVICE_TOKEN'))
 

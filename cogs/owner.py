@@ -21,10 +21,10 @@ class Owner(object):
 
     @commands.command(name='ping', description='Проверка скорости ответа.')
     @commands.is_owner()
-    async def _ping(self, ctx):
+    async def ping(self, ctx):
         resp = await ctx.send('Тестируем...')
         diff = resp.created_at - ctx.message.created_at
-        await resp.edit(content=f'API: {1000*diff.total_seconds():.1f}ms.\n{self.bot.user.name}: {round(self.bot.latency * 1000)}ms')
+        await resp.edit(content=f'Задержка API: {1000*diff.total_seconds():.1f}ms.\nЗадержка {self.bot.user.name}: {round(self.bot.latency * 1000)}ms')
 
 
 
@@ -85,7 +85,7 @@ class Owner(object):
 
     @commands.command(name='execute', description=f'Интерпретатор Python {platform.python_version()}.', aliases=['exec', 'eval'], hidden=True)
     @commands.is_owner()
-    async def _execute(self, ctx, *, code: str):
+    async def execute(self, ctx, *, code: str):
 
         async def _execution():
             async with ctx.channel.typing():
