@@ -41,7 +41,7 @@ class Owner(object):
         current = await ctx.send('Кликните реакцию.')
 
         async def react_control():
-            reactions = {'<':'⬅', '>':'➡'}
+            reactions = {'⬅':'<', '➡':'>'}
             for react in reactions:
                 await current.add_reaction(react)
 
@@ -61,20 +61,19 @@ class Owner(object):
                 except:
                     control = None
 
+                curpage = 0
 
                 if control == '<':
-                    for i in command_pages:
-                        try:
-                            await current.edit(embed=command_pages[i - 1])
-                        except KeyError:
-                            pass
+                    try:
+                        await current.edit(embed=command_pages[curpage - 1])
+                    except KeyError:
+                        pass
 
                 if control == '>':
-                    for i in command_pages:
-                        try:
-                            await current.edit(embed=command_pages[i + 1])
-                        except KeyError:
-                            pass
+                    try:
+                        await current.edit(embed=command_pages[curpage + 1])
+                    except KeyError:
+                        pass
 
                 try:
                     await current.remove_reaction(react, user)
