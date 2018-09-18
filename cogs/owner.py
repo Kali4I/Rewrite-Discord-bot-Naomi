@@ -19,6 +19,23 @@ class Owner(object):
 
 
 
+    @commands.command(name='thelp', description='Тестовое меню справки.')
+    @commands.is_owner()
+    async def thelp(self, ctx, command:str=None):
+        if command:
+            return await ctx.send('Справка по конкретным командам не готова.')
+
+        menu = discord.Embed(color=0x9FEE59, title='Справочник по командам.')
+        for cmd in client.commands:
+            menu.add_field(name=cmd.name, value=cmd.description, inline=True)
+
+        await ctx.send(embed=menu)
+
+
+
+
+
+
     @commands.command(name='ping', description='Проверка скорости ответа.')
     @commands.is_owner()
     async def ping(self, ctx):

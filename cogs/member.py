@@ -17,6 +17,95 @@ class Member(object):
 
 
 
+    @commands.command(name='userinfo', description='Информация об участнике сервера.', aliases=['user-info'])
+    async def userinfo(self, ctx, member:discord.Member=None):
+
+        if not member:
+            member = ctx.author
+
+        if member.nick == '':
+            stats = discord.Embed(color=0x18C30B, title='Информация об участнике %s (%s) [%s]' % (member.nick, member.name, member.id))
+        else:
+            stats = discord.Embed(color=0x18C30B, title='Информация об участнике %s [%s]' % (member.name, member.id))
+
+        if member.name == self.bot.user.name:
+            owner = (await self.bot.application_info()).owner
+
+            stats.add_field(name='Присоединился', value=self.bot.user.joined_at)
+            stats.add_field(name='Создал аккаунт', value=self.bot.user.created_at)
+            stats.add_field(name='Цвет никнейма', value=self.bot.user.colour)
+            stats.add_field(name='Кол-во ролей', value=len(self.bot.user.roles))
+            stats.add_field(name='Высшая роль', value=self.bot.user.top_role.name)
+            stats.add_field(name='Бот?', value='Да')
+            stats.add_field(name='Серверов со мной', value=len(self.bot.guilds))
+            stats.add_field(name='Мой разработчик', value=owner)
+            stats.set_thumbnail(url=self.bot.user.avatar_url)
+
+        else:
+            stats.add_field(name='Присоединился', value=member.joined_at)
+            stats.add_field(name='Создал аккаунт', value=member.created_at)
+            stats.add_field(name='Цвет никнейма', value=member.colour)
+            stats.add_field(name='Кол-во ролей', value=len(member.roles))
+            stats.add_field(name='Высшая роль', value=member.top_role.name)
+            stats.add_field(name='Бот?', value=str(member.bot).replace('True', 'Да').replace('False', 'Нет'))
+            stats.set_thumbnail(url=member.avatar_url)
+
+        await ctx.send(embed=stats)
+
+
+
+
+
+
+    @commands.command(name='guild', description='Информация о сервере.', aliases=['server'])
+    async def guild(self, ctx):
+
+        stats = discord.Embed(color=0x18C30B, title='Информация о сервере %s [%s]' % (ctx.guild.name, ctx.guild.id))
+        stats.add_field(name='Регион', value=ctx.guild.region)
+        stats.add_field(name='Всего эмодзи', value=len(ctx.guild.emojis))
+        stats.add_field(name='Всего участников', value=len(ctx.guild.members))
+        stats.add_field(name='Всего ролей', value=len(ctx.guild.roles))
+        stats.add_field(name='Текстовых каналов', value=len(ctx.guild.text_channels))
+        stats.add_field(name='Голосовых каналов', value=len(ctx.guild.voice_channels))
+        stats.add_field(name='Владелец', value=ctx.guild.owner)
+        stats.add_field(name='Участников', value=len(ctx.guild.members))
+        stats.add_field(name='Пользователей', value=len([x.name for x in ctx.guild.members if not x.bot]))
+        stats.add_field(name='Ботов', value=len([x.name for x in ctx.guild.members if x.bot]))
+        stats.set_thumbnail(url=ctx.guild.icon_url)
+
+        await ctx.send(embed=stats)
+
+
+
+
+
+
+    @commands.command(name='mcplayer', description='Статистика игрока Minecraft.', aliases=['mcuser'])
+    async def mcplayer(self, ctx, nickname:str=None):
+
+        if not nickname:
+            return await ctx.send(embed=discord.Embed(color=0xff0000).set_footer(text='mcplayer [ник]'))
+
+        request = requests.get('https://minecraft-statistic.net/api/player/info/' + nickname)
+        content = requests.json()
+
+        try:
+            stats = discord.Embed(color=0x18C30B, title='Статистика игрока %s' % content['data']['name'])
+            stats.add_field(name='UUID', value=content['data']['uuid'])
+            stats.add_field(name='Всего сыграно', value=content['data']['total_time_play'])
+            stats.add_field(name='В сети?', value=str(content['data']['online']).replace('1', 'Да').replace('0', 'Нет'))
+            stats.add_field(name='Лицензия?', value=str(content['data']['license']).replace('1', 'Да').replace('0', 'Нет'))
+            stats.add_field(name='Последний раз в сети', value=time.time() - content['data']['last_play'])
+        except:
+            stats = discord.Embed(color=0xff0000).set_footer(text='mcplayer [ник]')
+
+        await ctx.send(embed=stats)
+
+
+
+
+
+
     @commands.command(name='mcstats', description='Статистика сервера Minecraft.', aliases=['mcserver', 'mcserv', 'mcinfo', 'mcstatus'])
     async def mcstats(self, ctx, adress:str=None):
 
@@ -56,7 +145,7 @@ class Member(object):
 {naomiserver} | Серверов: {len(self.bot.guilds)}
 {naomiusers} | Пользователей: {len(self.bot.users)}
 :smiley: | Эмодзи: {len(self.bot.emojis)}
-{naomicmds} | Команд: {len(self.bot.all_commands)}
+{naomicmds} | Команд: {len(self.bot.commands)}
 
 
 Некоторая помощь в разработке - [F4stZ4p](https://github.com/F4stZ4p)

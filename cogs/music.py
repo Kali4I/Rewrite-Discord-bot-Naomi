@@ -199,11 +199,11 @@ class MusicPlayer:
 
             if control == 'vol_up':
                 player = self._cog.get_player(context)
-                vctwo.source.volume += 5
+                vctwo.source.volume += 2.5
                         
             if control == 'vol_down':
                 player = self._cog.get_player(context)
-                vctwo.source.volume -= 5
+                vctwo.source.volume -= 2.5
 
             if control == 'thumbnail':
                 await channel.send(embed=discord.Embed(color=self.bot.color).set_image(url=source.thumbnail).set_footer(text=f"Requested by {source.requester} | Video: {source.title}", icon_url=source.requester.avatar_url), delete_after=10)
@@ -254,7 +254,7 @@ class MusicPlayer:
             embednps.add_field(name="URL-ссылка:", value=f"**[URL]({source.web_url})**", inline=True)
             embednps.add_field(name="Загрузил:", value=f"**{source.uploader}**", inline=True)
             embednps.add_field(name="Длительность:", value=f"**{datetime.timedelta(seconds=source.duration)}**", inline=True)
-            embednps.set_thumbnail(url=f"{source.thumbnail}")
+            embednps.set_thumbnail(url=source.thumbnail)
             self.np = await self._channel.send(embed=embednps)
 
             self.music_controller = self.bot.loop.create_task(self.buttons_controller(self._guild, self.np, source, self._channel, self._ctxs))
@@ -335,6 +335,14 @@ class Music:
 
         return player
 
+    @commands.command(name='disconnect', aliases='leave', 'l')
+    async def disconnect_(self, ctx):
+        if ctx.guild.voice_client:
+            await ctx.guild.voice_client.disconnect()
+            await ctx.send(':notes: Успешно.', delete_after=20)
+        else:
+            await ctx.send(':notes: Я не нахожусь в голосовом канале.', delete_after=20)
+
     @commands.command(name='connect', aliases=['join', 'j'])
     async def connect_(self, ctx, *, channel: discord.VoiceChannel=None):
         """Connect to voice.
@@ -351,7 +359,7 @@ class Music:
             try:
                 channel = ctx.author.voice.channel
             except AttributeError:
-                await ctx.send(":notes: Вы не подключены к голосовому каналу.")
+                await ctx.send(":notes: Вы не подключены к голосовому каналу.", delete_after=20)
 
         vc = ctx.voice_client
         
