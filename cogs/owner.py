@@ -26,7 +26,7 @@ class Owner(object):
             return await ctx.send('Справка по конкретным командам не готова.')
 
         menu = discord.Embed(color=0x9FEE59, title='Справочник по командам.')
-        for cmd in client.commands:
+        for cmd in self.bot.commands:
             menu.add_field(name=cmd.name, value=cmd.description, inline=True)
 
         await ctx.send(embed=menu)
