@@ -43,7 +43,7 @@ class Member(object):
 
 
 
-    @commands.command(name='help', description='Справочник по командам.', aliases=['info', self.bot.user.mention])
+    @commands.command(name='help', description='Справочник по командам.', aliases=['info'])
     async def help(self, ctx):
 
         naomiserver = discord.utils.get(discord.utils.get(self.bot.guilds, id=347635213670678528).emojis, name='naomiserver')
