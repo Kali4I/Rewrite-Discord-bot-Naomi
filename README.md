@@ -16,4 +16,4 @@ For launch on HerokuApp you need to:
 
 Bot written with Python 3.6.6 and Discord-Rewrite 1.0.0a
 
-Thanks [F4stZ4p](https://github.com/F4stZ4p) for music cog.
+Thanks [F4stZ4p](https://github.com/F4stZ4p) for music cog. 
