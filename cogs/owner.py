@@ -40,7 +40,7 @@ class Owner(object):
 
             await p.paginate()
         except Exception as e:
-await ctx.send(e)
+            await ctx.send(e)
 
     """
     async def thelp(self, ctx, command:str=None):
