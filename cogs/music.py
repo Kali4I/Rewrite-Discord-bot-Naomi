@@ -335,7 +335,7 @@ class Music:
 
         return player
 
-    @commands.command(name='disconnect', aliases='leave', 'l')
+    @commands.command(name='disconnect', aliases=['leave', 'l'])
     async def disconnect_(self, ctx):
         if ctx.guild.voice_client:
             await ctx.guild.voice_client.disconnect()
