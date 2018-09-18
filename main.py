@@ -37,7 +37,7 @@ async def on_ready():
             await asyncio.sleep(_sleeping)
             await bot.change_presence(activity=discord.Streaming(name=f'{len(bot.emojis)} эмодзи!', url='https://www.twitch.tv/%none%'))
             await asyncio.sleep(_sleeping)
-            await bot.change_presence(activity=discord.Streaming(name=f'{len(client.commands)} команд!', url='https://www.twitch.tv/%none%'))
+            await bot.change_presence(activity=discord.Streaming(name=f'{len(bot.commands)} команд!', url='https://www.twitch.tv/%none%'))
             await asyncio.sleep(_sleeping)
             await bot.change_presence(activity=discord.Streaming(name=f'n!help', url='https://www.twitch.tv/%none%'))
             await asyncio.sleep(_sleeping)
