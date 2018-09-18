@@ -6,6 +6,8 @@ import traceback
 import textwrap
 import platform
 
+from utils.HelpPaginator import HelpPaginator, CannotPaginate
+
 from discord.ext import commands
 from contextlib import redirect_stdout
 
@@ -21,6 +23,26 @@ class Owner(object):
 
     @commands.command(name='thelp', description='Тестовое меню справки.')
     @commands.is_owner()
+    async def help(self, ctx, *, command:str=None):
+        try:
+            if command is None:
+                p = await HelpPaginator.from_bot(ctx)
+            else:
+                entity = self.bot.get_cog(command) or self.bot.get_command(command)
+
+                if entity is None:
+                    clean = command.replace('@', '@\u200b')
+                    return await ctx.send(f'Command or category "{clean}" not found.')
+                elif isinstance(entity, commands.Command):
+                    p = await HelpPaginator.from_command(ctx, entity)
+                else:
+                    p = await HelpPaginator.from_cog(ctx, entity)
+
+            await p.paginate()
+        except Exception as e:
+await ctx.send(e)
+
+    """
     async def thelp(self, ctx, command:str=None):
         if command:
             return await ctx.send('Справка по конкретным командам не готова.')
@@ -66,14 +88,14 @@ class Owner(object):
                 if control == '<':
                     try:
                         await current.edit(embed=command_pages[curpage - 1])
-                    except KeyError:
-                        pass
+                    except KeyError as e:
+                        print(e)
 
                 if control == '>':
                     try:
                         await current.edit(embed=command_pages[curpage + 1])
-                    except KeyError:
-                        pass
+                    except KeyError as e:
+                        print(e)
 
                 try:
                     await current.remove_reaction(react, user)
@@ -83,7 +105,7 @@ class Owner(object):
         self.bot.loop.create_task(react_control())
 
 
-
+"""
 
 
 

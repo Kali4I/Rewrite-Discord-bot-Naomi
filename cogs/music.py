@@ -343,7 +343,7 @@ class Music:
         else:
             await ctx.send(':notes: Я не нахожусь в голосовом канале.', delete_after=20)
 
-    @commands.command(name='connect', , description='Подключиться к голосовому каналу.', aliases=['join', 'j'])
+    @commands.command(name='connect', description='Подключиться к голосовому каналу.', aliases=['join', 'j'])
     async def connect_(self, ctx, *, channel: discord.VoiceChannel=None):
         """Connect to voice.
 
