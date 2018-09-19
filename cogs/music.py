@@ -10,6 +10,14 @@ from functools import partial
 from youtube_dl import YoutubeDL
 from discord.ext.commands.cooldowns import BucketType
 
+"""
+discord.ext.commands music.py "cog"
+    (https://github.com/F4stZ4p/DJ5n4k3/blob/master/modules/music.py)
+
+Edited by AkiraSumato-01 for Rewrite-Discord-Bot-Naomi
+    (https://github.com/AkiraSumato-01/Rewrite-Discord-Bot-Naomi)
+"""
+
 ytdlopts = {
     'format': 'bestaudio/best',
     'outtmpl': 'downloads/%(extractor)s-%(id)s-%(title)s.%(ext)s',
@@ -193,8 +201,8 @@ class MusicPlayer:
                 await self._cog.cleanup(guild)
 
                 try:
-                    self.music_controller.cancel()
                     await vc.disconnect()
+                    self.music_controller.cancel()
                 except:
                     pass
 

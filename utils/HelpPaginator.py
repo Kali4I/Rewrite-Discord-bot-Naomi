@@ -1,5 +1,6 @@
 # Help paginator by Rapptz
 # Edited by F4stZ4p
+#   & AkiraSumato-01
 
 import asyncio
 import discord
@@ -425,7 +426,7 @@ class HelpPaginator(Pages):
         self.embed.clear_fields()
         self.embed.description = self.description
         self.embed.title = self.title
-        
+
         """if hasattr(self, '_is_bot'):
             value ='**[Исходный код](https://github.com/AkiraSumato-01/Rewrite-Discord-Bot-Naomi)**'
             self.embed.add_field(name='**GitHub**', value=value, inline=False)"""
