@@ -92,9 +92,9 @@ class Pages:
 
         if self.maximum_pages > 1:
             if self.show_entry_count:
-                text = f'Page {page}/{self.maximum_pages} ({len(self.entries)} entries)'
+                text = f'Страница {page} из {self.maximum_pages} ({len(self.entries)} entries)'
             else:
-                text = f'Page {page}/{self.maximum_pages}'
+                text = f'Страница {page} из {self.maximum_pages}'
 
             self.embed.set_footer(text=text)
 
@@ -108,7 +108,7 @@ class Pages:
             return
 
         p.append('')
-        p.append('Confused? React with \N{INFORMATION SOURCE} for more info.')
+        p.append('Кликните реакцию \N{INFORMATION SOURCE} для отображения информации.')
         self.embed.description = '\n'.join(p)
         self.message = await self.channel.send(embed=self.embed)
         for (reaction, _) in self.reaction_emojis:
@@ -147,7 +147,7 @@ class Pages:
     async def numbered_page(self):
         """Ввести номер страницы для перехода"""
         to_delete = []
-        to_delete.append(await self.channel.send('What page do you want to go to?'))
+        to_delete.append(await self.channel.send('Какую страницу отобразить?'))
 
         def message_check(m):
             return m.author == self.author and \
@@ -157,7 +157,7 @@ class Pages:
         try:
             msg = await self.bot.wait_for('message', check=message_check, timeout=30.0)
         except asyncio.TimeoutError:
-            to_delete.append(await self.channel.send('Took too long.'))
+            to_delete.append(await self.channel.send('Слишком долго.'))
             await asyncio.sleep(5)
         else:
             page = int(msg.content)
@@ -165,7 +165,7 @@ class Pages:
             if page != 0 and page <= self.maximum_pages:
                 await self.show_page(page)
             else:
-                to_delete.append(await self.channel.send(f'Invalid page given. ({page}/{self.maximum_pages})'))
+                to_delete.append(await self.channel.send(f'Неверный номер страницы. ({page}/{self.maximum_pages})'))
                 await asyncio.sleep(5)
 
         try:
@@ -425,20 +425,20 @@ class HelpPaginator(Pages):
         self.embed.clear_fields()
         self.embed.description = self.description
         self.embed.title = self.title
-
-        if hasattr(self, '_is_bot'):
+        
+        """if hasattr(self, '_is_bot'):
             value ='**[Исходный код](https://github.com/AkiraSumato-01/Rewrite-Discord-Bot-Naomi)**'
-            self.embed.add_field(name='**GitHub**', value=value, inline=False)
+            self.embed.add_field(name='**GitHub**', value=value, inline=False)"""
 
-        self.embed.set_footer(text=f'Use "{self.prefix}help command" for more info on a command.')
+        self.embed.set_footer(text=f'"{self.prefix}help [команда]" для подробного описание команды.')
 
         signature = _command_signature
 
         for entry in entries:
-            self.embed.add_field(name=signature(entry), value=entry.short_doc or "No help given", inline=False)
+            self.embed.add_field(name=signature(entry), value=entry.short_doc or "[!] Описание отсутствует", inline=False)
 
         if self.maximum_pages:
-            self.embed.set_author(name=f'Page {page}/{self.maximum_pages} ({self.total} commands)')
+            self.embed.set_author(name=f'Страница {page} из {self.maximum_pages} (Команд: {self.total})')
 
         if not self.paginating:
             return await self.channel.send(embed=self.embed)
@@ -460,12 +460,12 @@ class HelpPaginator(Pages):
     async def show_help(self):
         """Отобразить это сообщение"""
 
-        self.embed.title = 'Paginator help'
-        self.embed.description = 'Hello! Welcome to the help page.'
+        self.embed.title = 'Информация по справочнику.'
+        self.embed.description = 'Описание реакций.'
 
         messages = [f'{emoji} {func.__doc__}' for emoji, func in self.reaction_emojis]
         self.embed.clear_fields()
-        self.embed.add_field(name='What are these reactions for?', value='\n'.join(messages), inline=False)
+        self.embed.add_field(name='Для чего здесь эти реакции?', value='\n'.join(messages), inline=False)
 
         self.embed.set_footer(text=f'Использование справочника.')
         await self.message.edit(embed=self.embed)
@@ -480,18 +480,18 @@ class HelpPaginator(Pages):
         """Как использовать бота"""
 
         self.embed.title = 'Справочник по командам.'
-        self.embed.description = None
+        self.embed.description = 'Описание аргументов.'
         self.embed.clear_fields()
 
         entries = (
-            ('<argument>', 'Это - __**обязательный**__ аргумент .'),
-            ('[argument]', 'Это - __**опциональный**__ аргумент.'),
+            ('<аргумент>', '__**обязательный**__ аргумент .'),
+            ('[аргумент]', '__**опциональный**__ аргумент.'),
             ('[A|B]', 'Выбор между __**A и B**__.'),
-            ('[argument...]', 'Это означает множество аргументов.\n' \
+            ('[аргумент...]', 'Множество аргументов.\n\n' \
                               'На этом все.\n' \
                               '__**Не вводите в команды кавычки и скобки!**__'))
 
-        self.embed.add_field(name='Как использовать справку?', value='Небольшая инструкция по использованию справочника.')
+        #self.embed.add_field(name='Как использовать справочник?', value='Описание аргументов.')
 
         for name, value in entries:
             self.embed.add_field(name=name, value=value, inline=False)

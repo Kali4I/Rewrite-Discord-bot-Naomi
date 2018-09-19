@@ -22,7 +22,12 @@ class Owner(object):
     @commands.command(name='ping')
     @commands.is_owner()
     async def ping(self, ctx):
-        """Проверка скорости ответа."""
+        """Проверка скорости ответа.
+
+        Подробности:
+        --------------
+        Аргументы не требуются.
+        """
 
         resp = await ctx.send('Тестируем...')
         diff = resp.created_at - ctx.message.created_at
@@ -36,7 +41,12 @@ class Owner(object):
     @commands.command(hidden=True, aliases=['r'])
     @commands.is_owner()
     async def restart(self, ctx):
-        """Перезагрузка."""
+        """Перезагрузка.
+
+        Подробности:
+        --------------
+        Аргументы не требуются.
+        """
         await ctx.send(embed=discord.Embed(color=0x13CFEB).set_footer(text="Перезагружаемся..."))
         os.execl(sys.executable, sys.executable, * sys.argv)
 
@@ -48,7 +58,12 @@ class Owner(object):
     @commands.command(name='load', hidden=True)
     @commands.is_owner()
     async def cog_load(self, ctx, *, cog: str):
-        """Загрузка модуля."""
+        """Загрузка модуля.
+
+        Подробности:
+        --------------
+        <cog> - имя модуля (включая директорию).
+        """
 
         try:
             self.bot.load_extension(cog)
@@ -65,7 +80,12 @@ class Owner(object):
     @commands.command(name='unload', hidden=True)
     @commands.is_owner()
     async def cog_unload(self, ctx, *, cog: str):
-        """Выгрузка модуля."""
+        """Выгрузка модуля.
+
+        Подробности:
+        --------------
+        <cog> - имя модуля (включая директорию).
+        """
 
         try:
             self.bot.unload_extension(cog)
@@ -78,7 +98,12 @@ class Owner(object):
     @commands.command(name='reload', hidden=True)
     @commands.is_owner()
     async def cog_reload(self, ctx, *, cog: str):
-        """Перезагрузка модуля."""
+        """Перезагрузка модуля.
+
+        Подробности:
+        --------------
+        [cog] - имя модуля (включая директорию).
+        """
 
         try:
             self.bot.unload_extension(cog)
@@ -92,7 +117,12 @@ class Owner(object):
     @commands.command(name='execute', aliases=['exec', 'eval'], hidden=True)
     @commands.is_owner()
     async def execute(self, ctx, *, code: str):
-        """Интерпретатор Python."""
+        """Интерпретатор Python.
+
+        Подробности:
+        --------------
+        <code> - единичное выражение или блок кода Python.
+        """
 
         async def _execution():
             async with ctx.channel.typing():

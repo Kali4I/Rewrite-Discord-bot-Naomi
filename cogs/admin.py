@@ -14,7 +14,13 @@ class Admin(object):
 
     @commands.command(name='cleanup')
     async def cleanup(self, ctx, member:discord.Member, count:int=None):
-        """Удалить последние `count` сообщений участника `member`."""
+        """Удалить последние `count` сообщений участника `member`.
+
+        Подробности:
+        --------------
+        <member> - участник, чьи сообщения удалить.
+        [count] - кол-во сообщений, которые будут удалены.
+        """
 
         def is_member(m):
             return m.author == member
@@ -28,7 +34,13 @@ class Admin(object):
 
     @commands.command(name='purge', aliases=['clean', 'clear', 'clearchat'])
     async def purge(self, ctx, count:int):
-        """Удалить последние `count` сообщений в чате."""
+        """Удалить последние `count` сообщений в чате.
+
+        Подробности:
+        --------------
+        <count> - кол-во сообщений, которые будут удалены.
+        """
+
         await ctx.channel.purge(limit=count)
 
 
@@ -38,7 +50,13 @@ class Admin(object):
 
     @commands.command(name='ban')
     async def ban(self, ctx, member:discord.Member, reason:str=None):
-        """Заблокировать пользователя на сервере."""
+        """Заблокировать пользователя на сервере.
+
+        Подробности:
+        --------------
+        <member> - участник, которого нужно заблокировать.
+        [reason] - причина.
+        """
 
         if not ctx.author.permissions_in(ctx.channel).ban_members:
             return await ctx.send(embed=discord.Embed(color=0xFF0000).set_footer(text='Нет прав.'))
@@ -61,7 +79,12 @@ class Admin(object):
 
     @commands.command(name='banlist', aliases=['bans'])
     async def banlist(self, ctx):
-        """Список заблокированных здесь пользователей."""
+        """Список заблокированных здесь пользователей.
+
+        Подробности:
+        --------------
+        Аргументы не требуются.
+        """
 
         if not ctx.author.permissions_in(ctx.channel).ban_members:
             return await ctx.send(embed=discord.Embed(color=0xFF0000).set_footer(text='Нет прав.'))
@@ -84,7 +107,13 @@ class Admin(object):
 
     @commands.command(name='kick')
     async def kick(self, ctx, member:discord.Member, reason:str=None):
-        """Выгнать пользователя с сервера."""
+        """Выгнать пользователя с сервера.
+
+        Подробности:
+        --------------
+        <member> - пользователь, которого нужно выгнать.
+        [reason] - причина.
+        """
 
         if not reason:
             reason = 'отсутствует.'

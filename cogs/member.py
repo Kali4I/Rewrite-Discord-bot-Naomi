@@ -2,6 +2,7 @@ import discord
 import nekos
 import whois
 import json
+import time
 import apiai
 from discord.ext import commands
 from random import choice, randint
@@ -19,9 +20,63 @@ class Member(object):
 
 
 
+    @command.command(name='idea', aliases=['myidea', 'my-idea'])
+    async def idea(self, ctx, *, message:str):
+        """Поделиться Вашей идеей для меня.
+
+        Подробности:
+        --------------
+        <message> - описание вашей идеи.
+        """
+
+        try:
+            ideas_guild = discord.utils.get(self.bot.guilds, id=457092470472179712)
+            ideas_channel = discord.utils.get(ideas_guild.rep_guild, id=483662616921767956)
+
+            await ideas_channel.send(embed=discord.Embed(color=0xF56415, 
+                                title='Идея от пользователя.',
+                                description='Отправил: %s\nОписание:```markup\n%s```\n\n%s' % (ctx.author, message, time.ctime())))
+        except Exception as e:
+            await ctx.send('Не удалось отправить.\n%s' % e)
+
+
+
+
+
+
+    @command.command(name='bug', aliases=['bugreport', 'bug-report', 'report-bug'])
+    async def bugreport(self, ctx, *, message:str):
+        """Сообщить о проблеме / баге.
+
+        Подробности:
+        --------------
+        <message> - подробное описание проблемы.
+        """
+
+        try:
+            rep_guild = discord.utils.get(self.bot.guilds, id=457092470472179712)
+            rep_channel = discord.utils.get(bug_reports_guild.rep_guild, id=483662931377127424)
+
+            await rep_channel.send(embed=discord.Embed(color=0xF56415, 
+                                title='Новый баг-репорт!',
+                                description='Отправил: %s\nОписание:```markup\n%s```\n\n%s' % (ctx.author, message, time.ctime())))
+        except Exception as e:
+            await ctx.send('Не удалось отправить репорт.\n%s' % e)
+
+
+
+
+
+
     @commands.command(name='help', aliases=['info', 'h'])
     async def thelp(self, ctx, *, command:str=None):
-        """Справочник по командам."""
+        """Справочник по командам.
+
+        Подробности:
+        --------------
+        [command] - команда, описание которой нужно показать.
+            (например, `help osu`)
+        """
         try:
             if command is None:
                 p = await HelpPaginator.from_bot(ctx)
@@ -47,7 +102,13 @@ class Member(object):
 
     @commands.command(name='userinfo', aliases=['user-info'])
     async def userinfo(self, ctx, member:discord.Member=None):
-        """Информация об участнике сервера."""
+        """Информация об участнике сервера.
+
+        Подробности:
+        --------------
+        [member] - участник.
+            (если не указан, выдается информация об авторе команды)
+        """
 
         if not member:
             member = ctx.author
@@ -88,7 +149,12 @@ class Member(object):
 
     @commands.command(name='guild', aliases=['server'])
     async def guild(self, ctx):
-        """Информация о гильдии (Discord-сервере)."""
+        """Информация о гильдии (Discord-сервере).
+
+        Подробности:
+        --------------
+        Аргументы не требуются.
+        """
 
         stats = discord.Embed(color=0x18C30B, title='Информация о сервере %s [%s]' % (ctx.guild.name, ctx.guild.id))
         stats.add_field(name='Регион', value=ctx.guild.region)
@@ -111,11 +177,13 @@ class Member(object):
 
 
     @commands.command(name='mcplayer', aliases=['mcuser'])
-    async def mcplayer(self, ctx, nickname:str=None):
-        """Статистика игрока Minecraft."""
+    async def mcplayer(self, ctx, nickname:str):
+        """Статистика игрока Minecraft.
 
-        if not nickname:
-            return await ctx.send(embed=discord.Embed(color=0xff0000).set_footer(text='mcplayer [ник]'))
+        Подробности:
+        --------------
+        <nickname> - никнейм игрока Minecraft.
+        """
 
         request = requests.get('https://minecraft-statistic.net/api/player/info/' + nickname)
         content = requests.json()
@@ -138,11 +206,13 @@ class Member(object):
 
 
     @commands.command(name='mcstats', aliases=['mcserver', 'mcserv', 'mcinfo', 'mcstatus'])
-    async def mcstats(self, ctx, adress:str=None):
-        """Статистика сервера Minecraft."""
+    async def mcstats(self, ctx, adress:str):
+        """Статистика сервера Minecraft.
 
-        if not adress:
-            return await ctx.send(embed=discord.Embed(color=0xff0000).set_footer(text='mcstats [адрес_сервера]'))
+        Подробности:
+        --------------
+        <adress> - IP адрес или домен сервера Minecraft.
+        """
 
         server = MinecraftServer.lookup(adress)
         status = server.status()
@@ -166,7 +236,12 @@ class Member(object):
 
     @commands.command(name='talk', aliases=['t'])
     async def talk(self, ctx, *, message:str):
-        """Общение с ботом."""
+        """Общение с ботом.
+
+        Подробности:
+        --------------
+        <message> - ваше сообщение боту.
+        """
         
         ai = apiai.ApiAI(os.getenv('TALK_SERVICE_TOKEN'))
 
@@ -194,7 +269,12 @@ class Member(object):
 
     @commands.command(name='hostinfo', aliases=['host', 'whoisweb'])
     async def hostinfo(self, ctx, domain:str):
-        """WHOIS-информация о домене."""
+        """WHOIS-информация о домене.
+
+        Подробности:
+        --------------
+        <domain> - домен (например google.com).
+        """
 
         whois_info = whois.whois(domain)
 
@@ -241,7 +321,12 @@ class Member(object):
 
     @commands.command(name='say', aliases=['repeat', 'msg'])
     async def _say(self, ctx, *, msg:str):
-        """Повторить сообщение пользователя."""
+        """Повторить сообщение пользователя.
+
+        Подробности:
+        --------------
+        <msg> - ваше сообщение.
+        """
         try:
             await ctx.message.delete()
         except:
@@ -255,7 +340,22 @@ class Member(object):
 
     @commands.command(name='neko', aliases=['anime', 'catgirl', 'nekogirl'])
     async def _catgirl(self, ctx, tag:str=None):
-        """Отправляет аниме изображение [Только в NSFW-каналах]"""
+        """Отправляет аниме изображение [Только в NSFW-каналах]
+
+        Подробности:
+        --------------
+        [tag] - тег (если не указан, выбирается рандомно).
+
+        Список тегов:
+            feet, yuri, trap, futanari, hololewd, lewdkemo, solog,
+            feetg, cum, erokemo, les, lewdk, ngif, tickle, lewd,
+            feed, eroyuri, eron, cum_jpg, bj, nsfw_neko_gif, solo,
+            kemonomimi, nsfw_avatar, poke, anal, slap, hentai, avatar,
+            erofeet, holo, keta, blowjob, pussy, tits, holoero,
+            pussy_jpg, pwankg, classic, kuni, pat, kiss, femdom, neko,
+            cuddle, erok, fox_girl, boobs, smallboobs, hug, ero, wallpaper
+        """
+
         try:
             if not ctx.channel.is_nsfw():
                 return await ctx.send(embed=discord.Embed(color=0xff0000).set_footer(text='Вы не в NSFW канале!'))
@@ -272,8 +372,6 @@ class Member(object):
                 'erok', 'fox_girl', 'boobs', 'smallboobs', 'hug', 'ero', 'wallpaper']
 
         n = discord.Embed(color=0xF13875)
-
-        print([x for x in tags])
 
         if tag is None:
             n.set_image(url=nekos.img(choice(tags)))
@@ -294,7 +392,12 @@ class Member(object):
 
     @commands.command(name='calc', aliases=['calculator', 'calculate'])
     async def _calc(self, ctx, *, numbers:str):
-        """Калькулятор."""
+        """Калькулятор.
+
+        Подробности:
+        --------------
+        <numbers> - математическое выражение.
+        """
         from math import pi
         from re import sub
 
@@ -329,7 +432,14 @@ class Member(object):
 
     @commands.command(name='osu', aliases=['osu!'])
     async def osu(self, ctx, player:str, mode:str=None):
-        """Статистика игрока osu!."""
+        """Статистика игрока osu!.
+
+        Подробности:
+        --------------
+        <player> - никнейм игрока osu!.
+        [mode] - режим игры.
+            (mania, catch, osu!, taiko)
+        """
 
         if not mode:
             mode = 'osu!'
@@ -364,7 +474,13 @@ class Member(object):
 
     @commands.command(name='avatar', aliases=['useravatar'])
     async def avatar(self, ctx, member:discord.Member=None):
-        """Выдает аватарку пользователя."""
+        """Выдает аватарку пользователя.
+
+        Подробности:
+        --------------
+        [member] - участник.
+            (если не указан, выдается аватарка автора команды)
+        """
 
         if not member:
             member = ctx.author

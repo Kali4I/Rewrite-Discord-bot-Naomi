@@ -335,26 +335,30 @@ class Music:
 
         return player
 
-    @commands.command(name='disconnect', description='Отключиться от голосового канала.', aliases=['leave', 'l'])
+    @commands.command(name='disconnect', aliases=['leave', 'l'])
     async def disconnect_(self, ctx):
+        """Отключить меня от голосового канала.
+
+        Подробности:
+        --------------
+        Аргументы не требуются.
+        """
+
         if ctx.guild.voice_client:
             await ctx.guild.voice_client.disconnect()
             await ctx.send(':notes: Успешно.', delete_after=20)
         else:
             await ctx.send(':notes: Я не нахожусь в голосовом канале.', delete_after=20)
 
-    @commands.command(name='connect', description='Подключиться к голосовому каналу.', aliases=['join', 'j'])
+    @commands.command(name='connect', aliases=['join', 'j'])
     async def connect_(self, ctx, *, channel: discord.VoiceChannel=None):
-        """Connect to voice.
+        """Подключить меня к голосовому каналу.
 
-        Parameters
-        ------------
-        channel: discord.VoiceChannel [Optional]
-            The channel to connect to. If a channel is not specified, an attempt to join the voice channel you are in
-            will be made.
-
-        This command also handles moving the bot to different channels.
+        Подробности:
+        --------------
+        [channel] - голосовой канал.
         """
+
         if not channel:
             try:
                 channel = ctx.author.voice.channel
@@ -378,18 +382,15 @@ class Music:
 
         await ctx.send(f":notes: Голосовой канал: **{channel}**", delete_after=20)
         
-    @commands.command(name='play', description='Проигрывание музыки.', aliases=['sing', 'p'])
+    @commands.command(name='play', aliases=['sing', 'p'])
     async def play_(self, ctx, *, search: str):
-        """Request a song and add it to the queue.
+        """Проигрывание музыки.
 
-        This command attempts to join a valid voice channel if the bot is not already in one.
-        Uses YTDL to automatically search and retrieve a song.
-
-        Parameters
-        ------------
-        search: str [Required]
-            The song to search and retrieve using YTDL. This could be a simple search, an ID or URL.
+        Подробности:
+        --------------
+        <search> - название песни или ссылка на видео YouTube.
         """
+        
         await ctx.trigger_typing()
 
         vc = ctx.voice_client
