@@ -18,7 +18,6 @@ class Member(object):
 
 
     @commands.command(name='help', aliases=['info', 'h'])
-    @commands.cooldown(3.2)
     async def thelp(self, ctx, *, command:str=None):
         """Справочник по командам."""
         try:
@@ -45,7 +44,6 @@ class Member(object):
 
 
     @commands.command(name='userinfo', aliases=['user-info'])
-    @commands.cooldown(3.2)
     async def userinfo(self, ctx, member:discord.Member=None):
         """Информация об участнике сервера."""
 
@@ -87,7 +85,6 @@ class Member(object):
 
 
     @commands.command(name='guild', aliases=['server'])
-    @commands.cooldown(3.2)
     async def guild(self, ctx):
         """Информация о гильдии (Discord-сервере)."""
 
@@ -112,7 +109,6 @@ class Member(object):
 
 
     @commands.command(name='mcplayer', aliases=['mcuser'])
-    @commands.cooldown(3.2)
     async def mcplayer(self, ctx, nickname:str=None):
         """Статистика игрока Minecraft."""
 
@@ -140,7 +136,6 @@ class Member(object):
 
 
     @commands.command(name='mcstats', aliases=['mcserver', 'mcserv', 'mcinfo', 'mcstatus'])
-    @commands.cooldown(3.2)
     async def mcstats(self, ctx, adress:str=None):
         """Статистика сервера Minecraft."""
 
@@ -168,7 +163,6 @@ class Member(object):
 
 
     @commands.command(name='talk', aliases=['t'])
-    @commands.cooldown(3.2)
     async def talk(self, ctx, *, message:str):
         """Общение с ботом."""
         
@@ -197,7 +191,6 @@ class Member(object):
 
 
     @commands.command(name='hostinfo', aliases=['host', 'whoisweb'])
-    @commands.cooldown(3.2)
     async def hostinfo(self, ctx, domain:str):
         """WHOIS-информация о домене."""
 
@@ -236,7 +229,6 @@ class Member(object):
 
 
     @commands.command(name='helloworld', description='Hello World!!', aliases=['hw'])
-    @commands.cooldown(3.2)
     async def _helloworld(self, ctx):
         await ctx.send('Hello, %s' % ctx.author.mention)
 
@@ -246,7 +238,6 @@ class Member(object):
 
 
     @commands.command(name='say', aliases=['repeat', 'msg'])
-    @commands.cooldown(3.2)
     async def _say(self, ctx, *, msg:str):
         """Повторить сообщение пользователя."""
         try:
@@ -261,7 +252,6 @@ class Member(object):
 
 
     @commands.command(name='neko', aliases=['anime', 'catgirl', 'nekogirl'])
-    @commands.cooldown(3.2)
     async def _catgirl(self, ctx, tag:str=None):
         """Отправляет аниме изображение [Только в NSFW-каналах]"""
         try:
@@ -301,7 +291,6 @@ class Member(object):
 
 
     @commands.command(name='calc', aliases=['calculator', 'calculate'])
-    @commands.cooldown(3.2)
     async def _calc(self, ctx, *, numbers:str):
         """Калькулятор."""
         from math import pi
@@ -337,7 +326,6 @@ class Member(object):
 
 
     @commands.command(name='osu', aliases=['osu!'])
-    @commands.cooldown(3.2)
     async def osu(self, ctx, player:str, mode:str=None):
         """Статистика игрока osu!."""
 
@@ -373,7 +361,6 @@ class Member(object):
 
 
     @commands.command(name='avatar', aliases=['useravatar'])
-    @commands.cooldown(3.2)
     async def avatar(self, ctx, member:discord.Member=None):
         """Выдает аватарку пользователя."""
 
