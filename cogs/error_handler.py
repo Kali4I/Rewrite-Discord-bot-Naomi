@@ -53,7 +53,7 @@ class ErrorHandler:
 
         await rep_channel.send(embed=discord.Embed(color=0xF56415, 
                                 title='ErrorHandler обнаружил ошибку!',
-                                description='Вызвано участником: %s\nПодробности ошибки:```markup\n%s```\n\n%s' % (ctx.author, traceback.format_exc(), time.ctime())))
+                                description='Вызвано участником: %s\nПодробности ошибки:```markup\n%s```\n\n%s' % (ctx.author, error, time.ctime())))
 
 
 
