@@ -44,7 +44,7 @@ class Member(object):
 
 
 
-    @commands.command(name='userinfo', , aliases=['user-info'])
+    @commands.command(name='userinfo', aliases=['user-info'])
     @commands.cooldown(3.2)
     async def userinfo(self, ctx, member:discord.Member=None):
         """Информация об участнике сервера."""
@@ -300,7 +300,7 @@ class Member(object):
 
 
 
-    @commands.command(name='calc', description='Калькулятор', aliases=['calculator', 'calculate'])
+    @commands.command(name='calc', aliases=['calculator', 'calculate'])
     @commands.cooldown(3.2)
     async def _calc(self, ctx, *, numbers:str):
         """Калькулятор."""
