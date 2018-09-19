@@ -56,7 +56,7 @@ class Member(object):
 
         try:
             rep_guild = discord.utils.get(self.bot.guilds, id=457092470472179712)
-            rep_channel = discord.utils.get(bug_reports_guild.channels, id=483662931377127424)
+            rep_channel = discord.utils.get(rep_guild.channels, id=483662931377127424)
 
             await ctx.send('Ваш баг-репорт отправлен на наш Discord-сервер;\n Спасибо за помощь.')
             await rep_channel.send(embed=discord.Embed(color=0xF56415, 
