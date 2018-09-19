@@ -20,7 +20,7 @@ class Member(object):
 
 
 
-    @command.command(name='idea', aliases=['myidea', 'my-idea'])
+    @commands.command(name='idea', aliases=['myidea', 'my-idea'])
     async def idea(self, ctx, *, message:str):
         """Поделиться Вашей идеей для меня.
 
@@ -44,7 +44,7 @@ class Member(object):
 
 
 
-    @command.command(name='bug', aliases=['bugreport', 'bug-report', 'report-bug'])
+    @commands.command(name='bug', aliases=['bugreport', 'bug-report', 'report-bug'])
     async def bugreport(self, ctx, *, message:str):
         """Сообщить о проблеме / баге.
 
