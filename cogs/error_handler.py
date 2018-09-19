@@ -1,7 +1,8 @@
 import traceback
 import sys
-from discord.ext import commands
 import discord
+import time
+from discord.ext import commands
 
 """
 Error handler by EvieePy
@@ -53,8 +54,6 @@ class ErrorHandler:
         await rep_channel.send(embed=discord.Embed(color=0xF56415, 
                                 title='ErrorHandler обнаружил ошибку!',
                                 description='Вызвано участником: %s\nПодробности ошибки:```markup\n%s```\n\n%s' % (ctx.author, traceback.format_exc(), time.ctime())))
-        print('Ignoring exception in command {}:'.format(ctx.command), file=sys.stderr)
-traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
 
 
 
