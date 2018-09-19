@@ -10,11 +10,30 @@ from random import choice, randint
 from mcstatus import MinecraftServer
 
 from utils.HelpPaginator import HelpPaginator, CannotPaginate
+from utils.HastebinPoster import post
 
 class Member(object):
 
     def __init__(self, bot):
         self.bot = bot
+
+
+
+
+
+
+    @commands.command(name='hastebin')
+    async def hastebin_post(self, ctx, *, code:str):
+        """Отправить код на Hastebin.com.
+
+        Подробности:
+        --------------
+        <code> - код для отправки на hastebin.com (без ```)
+        """
+
+        link = await post(code)
+        await ctx.send(embed=discord.Embed(title='Ваш код был загружен на Hastebin:',
+                                        description=f'```{link}```'))
 
 
 

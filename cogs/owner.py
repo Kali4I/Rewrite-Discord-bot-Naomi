@@ -19,7 +19,7 @@ class Owner(object):
 
 
 
-    @commands.command(name='ping')
+    @commands.command(name='ping', hidden=True)
     @commands.is_owner()
     async def ping(self, ctx):
         """Проверка скорости ответа.
@@ -47,6 +47,7 @@ class Owner(object):
         --------------
         Аргументы не требуются.
         """
+
         await ctx.send(embed=discord.Embed(color=0x13CFEB).set_footer(text="Перезагружаемся..."))
         os.execl(sys.executable, sys.executable, * sys.argv)
 
@@ -102,7 +103,7 @@ class Owner(object):
 
         Подробности:
         --------------
-        [cog] - имя модуля (включая директорию).
+        <cog> - имя модуля (включая директорию).
         """
 
         try:
@@ -124,7 +125,7 @@ class Owner(object):
         <code> - единичное выражение или блок кода Python.
         """
 
-        async def _execution():
+        async def v_execution():
             async with ctx.channel.typing():
                 env = {
                     'channel': ctx.channel,
@@ -132,6 +133,7 @@ class Owner(object):
                     'guild': ctx.guild,
                     'message': ctx.message,
                     'client': self.bot,
+                    'bot': self.bot,
                     'discord': discord,
                     'ctx': ctx
                 }
@@ -171,7 +173,7 @@ class Owner(object):
                         success_msg.set_footer(text=f'Интерпретация успешно завершена - Python {platform.python_version()} | {platform.system()}')
                         return await ctx.send(f'{owner.mention}, смотри сюда!', embed=success_msg)
 
-        self.bot.loop.create_task(_execution())
+        self.bot.loop.create_task(v_execution())
 
         try:
             await ctx.message.delete()
