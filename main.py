@@ -14,7 +14,8 @@ _cogs = ['cogs.member',
          'cogs.admin',
          'cogs.owner',
          'cogs.music',
-         'cogs.logger']
+         'cogs.logger',
+         'cogs.error_handler']
 
 if __name__ == '__main__':
     for extension in _cogs:
