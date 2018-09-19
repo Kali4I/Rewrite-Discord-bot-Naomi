@@ -21,6 +21,27 @@ class Member(object):
 
 
 
+    @commands.command(name='myname', aliases=['my-name'])
+    async def myname(self, ctx, *, nickname:str=None):
+        """Сменить Ваш никнейм.
+
+        Подробности:
+        --------------
+        [nickname] - новый никнейм (ничего для сброса).
+        """
+
+        try:
+            await ctx.author.edit(nick=nickname, reason='Запрошено пользователем.')
+        except discord.errors.Forbidden:
+            await ctx.send(embed=discord.Embed(color=0xff0000).set_footer(text='У меня нет прав.'))
+
+
+
+
+
+
+
+
     @commands.command(name='idea', aliases=['myidea', 'my-idea'])
     async def idea(self, ctx, *, message:str):
         """Поделиться Вашей идеей для меня.
@@ -189,7 +210,7 @@ class Member(object):
         """
 
         request = requests.get('https://minecraft-statistic.net/api/player/info/' + nickname)
-        content = requests.json()
+        content = request.json()
 
         try:
             stats = discord.Embed(color=0x18C30B, title='Статистика игрока %s' % content['data']['name'])
