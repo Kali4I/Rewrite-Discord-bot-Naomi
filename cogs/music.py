@@ -21,7 +21,7 @@ ytdlopts = {
     'quiet': True,
     'no_warnings': True,
     'default_search': 'auto',
-    'source_address': '0.0.0.0'  # ipv6 addresses cause issues sometimes
+    'source_address': '0.0.0.0'
 }
 
 ffmpegopts = {
@@ -68,7 +68,7 @@ class YTDLSource(discord.PCMVolumeTransformer):
         self.uploader = data.get('uploader')
 
         if self.uploader is None:
-            self.uploader = "Unknown uploader"
+            self.uploader = "Неизвестно"
         
         # YTDL info dicts (data) have other useful information you might want
         # https://github.com/rg3/youtube-dl/blob/master/README.md
@@ -206,10 +206,10 @@ class MusicPlayer:
                 vctwo.source.volume -= 2.5
 
             if control == 'thumbnail':
-                await channel.send(embed=discord.Embed(color=self.bot.color).set_image(url=source.thumbnail).set_footer(text=f"Requested by {source.requester} | Video: {source.title}", icon_url=source.requester.avatar_url), delete_after=10)
+                await channel.send(embed=discord.Embed(color=0x17FD6E).set_image(url=source.thumbnail).set_footer(text=f"Запросил: {source.requester} | Видео: {source.title}", icon_url=source.requester.avatar_url), delete_after=10)
 
             if control == 'tutorial':
-                await channel.send(embed=discord.Embed(color=self.bot.color).add_field(name="Как использовать контроллер?", value="⏯ - Пауза\n⏭ - Пропустить\n➕ - Увеличить громкость\n➖ - Понизить громкость\n🖼 - Получить превью\n⏹ - Остановить проигрывание\nℹ - Очередь\n❔ - Показать справку по контроллеру"), delete_after=10)
+                await channel.send(embed=discord.Embed(color=0x17FD6E).add_field(name="Как использовать контроллер?", value="⏯ - Пауза\n⏭ - Пропустить\n➕ - Увеличить громкость\n➖ - Понизить громкость\n🖼 - Получить превью\n⏹ - Остановить проигрывание\nℹ - Очередь\n❔ - Показать справку по контроллеру"), delete_after=10)
             
             if control == 'queue':
                 await self._cog.queue_info(context)
@@ -373,12 +373,12 @@ class Music:
             try:
                 await vc.move_to(channel)
             except asyncio.TimeoutError:
-                raise VoiceConnectionError(f'Moving to channel: <{channel}> timed out.')
+                raise VoiceConnectionError(f'Переход в <{channel}> закончилось неудачей;\n Timeout.')
         else:
             try:
                 await channel.connect()
             except asyncio.TimeoutError:
-                raise VoiceConnectionError(f'Connecting to channel: <{channel}> timed out.')
+                raise VoiceConnectionError(f'Подключение к <{channel}> закончилось неудачей;\n Timeout.')
 
         await ctx.send(f":notes: Голосовой канал: **{channel}**", delete_after=20)
         
@@ -408,9 +408,14 @@ class Music:
         source = await YTDLSource.create_source(ctx, search, loop=self.bot.loop, download=False)
         await player.queue.put(source)
 
-    @commands.command(name='playing', description='Что сейчас проигрывается.', aliases=['np', 'current', 'currentsong', 'now_playing'])
+    @commands.command(name='playing', aliases=['np', 'current', 'currentsong', 'now_playing'])
     async def now_playing_(self, ctx):
-        """Display information about the currently playing song."""
+        """Что сейчас проигрывается.
+
+        Подробности:
+        --------------
+        Аргументы не требуются.
+        """
 
         vc = ctx.voice_client
 
@@ -430,12 +435,12 @@ class Music:
         except discord.HTTPException:
             pass
 
-        embednp = discord.Embed(color=self.bot.color)
-        embednp.add_field(name="Song title:", value=f"```fix\n{vc.source.title}```", inline=False)
-        embednp.add_field(name="Requested by:", value=f"**{vc.source.requester}**", inline=True)
-        embednp.add_field(name="Song URL:", value=f"**[URL]({vc.source.web_url})**", inline=True)
-        embednp.add_field(name="Uploader:", value=f"**{vc.source.uploader}**", inline=True)
-        embednp.add_field(name="Song duration:", value=f"**{datetime.timedelta(seconds=vc.source.duration)}**", inline=True)
+        embednp = discord.Embed(color=0x17FD6E)
+        embednp.add_field(name="Проигрывается:", value=f"```fix\n{vc.source.title}```", inline=False)
+        embednp.add_field(name="Запросил:", value=f"**{vc.source.requester}**", inline=True)
+        embednp.add_field(name="URL-ссылка:", value=f"**[URL]({vc.source.web_url})**", inline=True)
+        embednp.add_field(name="Загрузил:", value=f"**{vc.source.uploader}**", inline=True)
+        embednp.add_field(name="Длительность:", value=f"**{datetime.timedelta(seconds=vc.source.duration)}**", inline=True)
         embednp.set_thumbnail(url=f"{vc.source.thumbnail}")
         player.np = await ctx.send(embed=embednp)
         self.music_controller = self.bot.loop.create_task(MusicPlayer(ctx).buttons_controller(ctx.guild, player.np, vc.source, ctx.channel, ctx))
@@ -448,7 +453,7 @@ class Music:
         upcoming = list(itertools.islice(player.queue._queue, 0, 5))
 
         fmt = '\n'.join(f'**`{_["title"]}`**' for _ in upcoming)
-        embed = discord.Embed(title=f'Queue - Next {len(upcoming)}', description=fmt, color=self.bot.color)
+        embed = discord.Embed(title=f'Очередь - Следующий {len(upcoming)}', description=fmt, color=0x17FD6E)
         await ctx.send(embed=embed)
 
 def setup(bot):

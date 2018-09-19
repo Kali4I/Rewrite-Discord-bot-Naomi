@@ -31,8 +31,9 @@ class Member(object):
 
         try:
             ideas_guild = discord.utils.get(self.bot.guilds, id=457092470472179712)
-            ideas_channel = discord.utils.get(ideas_guild.rep_guild, id=483662616921767956)
+            ideas_channel = discord.utils.get(ideas_guild.channels, id=483662616921767956)
 
+            await ctx.send('Ваша идея отправлена на наш Discord-сервер;\n Спасибо за помощь.')
             await ideas_channel.send(embed=discord.Embed(color=0xF56415, 
                                 title='Идея от пользователя.',
                                 description='Отправил: %s\nОписание:```markup\n%s```\n\n%s' % (ctx.author, message, time.ctime())))
@@ -55,8 +56,9 @@ class Member(object):
 
         try:
             rep_guild = discord.utils.get(self.bot.guilds, id=457092470472179712)
-            rep_channel = discord.utils.get(bug_reports_guild.rep_guild, id=483662931377127424)
+            rep_channel = discord.utils.get(bug_reports_guild.channels, id=483662931377127424)
 
+            await ctx.send('Ваш баг-репорт отправлен на наш Discord-сервер;\n Спасибо за помощь.')
             await rep_channel.send(embed=discord.Embed(color=0xF56415, 
                                 title='Новый баг-репорт!',
                                 description='Отправил: %s\nОписание:```markup\n%s```\n\n%s' % (ctx.author, message, time.ctime())))
