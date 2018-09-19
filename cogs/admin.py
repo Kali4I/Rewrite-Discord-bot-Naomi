@@ -128,7 +128,7 @@ class Admin(object):
 
             for user in banned_users:
                 if user == member:
-                    await ctx.guild.unban(user=, *, reason=None)
+                    await ctx.guild.unban(user=user, *, reason=None)
         except discord.errors.Forbidden:
             return await ctx.send(embed=discord.Embed(color=0xFF0000).set_footer(text='У меня нет прав.'))
 
