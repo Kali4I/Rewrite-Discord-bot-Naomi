@@ -13,7 +13,6 @@ class Admin(object):
 
 
     @commands.command(name='cleanup')
-    @commands.cooldown(1.4)
     async def cleanup(self, ctx, member:discord.Member, count:int=None):
         """Удалить последние `count` сообщений участника `member`."""
 
@@ -28,7 +27,6 @@ class Admin(object):
 
 
     @commands.command(name='purge', aliases=['clean', 'clear', 'clearchat'])
-    @commands.cooldown(1.4)
     async def purge(self, ctx, count:int):
         """Удалить последние `count` сообщений в чате."""
         await ctx.channel.purge(limit=count)
@@ -39,7 +37,6 @@ class Admin(object):
 
 
     @commands.command(name='ban')
-    @commands.cooldown(1.4)
     async def ban(self, ctx, member:discord.Member, reason:str=None):
         """Заблокировать пользователя на сервере."""
 
@@ -63,7 +60,6 @@ class Admin(object):
 
 
     @commands.command(name='banlist', aliases=['bans'])
-    @commands.cooldown(1.4)
     async def banlist(self, ctx):
         """Список заблокированных здесь пользователей."""
 
@@ -87,7 +83,6 @@ class Admin(object):
 
 
     @commands.command(name='kick')
-    @commands.cooldown(1.4)
     async def kick(self, ctx, member:discord.Member, reason:str=None):
         """Выгнать пользователя с сервера."""
 
