@@ -6,8 +6,6 @@ import traceback
 import textwrap
 import platform
 
-from utils.HelpPaginator import HelpPaginator, CannotPaginate
-
 from discord.ext import commands
 from contextlib import redirect_stdout
 

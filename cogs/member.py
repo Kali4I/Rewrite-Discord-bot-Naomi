@@ -7,6 +7,8 @@ from discord.ext import commands
 from random import choice, randint
 from mcstatus import MinecraftServer
 
+from utils.HelpPaginator import HelpPaginator, CannotPaginate
+
 class Member(object):
 
     def __init__(self, bot):
