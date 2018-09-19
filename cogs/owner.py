@@ -132,7 +132,8 @@ class Owner(object):
                     'guild': ctx.guild,
                     'message': ctx.message,
                     'client': self.bot,
-                    'discord': discord
+                    'discord': discord,
+                    'ctx': ctx
                 }
 
                 owner = (await self.bot.application_info()).owner

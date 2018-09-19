@@ -194,6 +194,7 @@ class MusicPlayer:
 
                 try:
                     self.music_controller.cancel()
+                    await vc.disconnect()
                 except:
                     pass
 
