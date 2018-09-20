@@ -51,9 +51,11 @@ class Pages:
             pages += 1
         self.maximum_pages = pages
 
+        github_url = 'https://github.com/AkiraSumato-01/Rewrite-Discord-Bot-Naomi'
+        server_url = 'https://discord.gg/ZQfNQ43'
 
-
-        self.embed = discord.Embed(colour=randint(0x000000, 0xFFFFFF))
+        self.embed = discord.Embed(colour=randint(0x000000, 0xFFFFFF), 
+                description=f'[[GitHub]]({github_url}) [[Наш Discord сервер]]({server_url})')
         self.paginating = len(entries) > per_page
         self.show_entry_count = show_entry_count
         self.reaction_emojis = [
@@ -431,10 +433,6 @@ class HelpPaginator(Pages):
         self.embed.clear_fields()
         self.embed.description = self.description
         self.embed.title = self.title
-
-        """if hasattr(self, '_is_bot'):
-            value ='**[Исходный код](https://github.com/AkiraSumato-01/Rewrite-Discord-Bot-Naomi)**'
-            self.embed.add_field(name='**GitHub**', value=value, inline=False)"""
 
         self.embed.set_footer(text=f'"{self.prefix}help [команда]" для подробного описание команды.')
 

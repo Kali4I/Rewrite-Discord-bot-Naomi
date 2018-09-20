@@ -436,7 +436,7 @@ class Music:
 
         player = self.get_player(ctx)
         if not player.current:
-            return await ctx.send(":notes: Я не нахожусь в голосовом канале. Присоединитесь к любому из них и выполните команду.", delete_after=20)
+            return await ctx.send(":notes: Проигрывание неактивно в данный момент.", delete_after=20)
 
         try:
             # Remove our previous now_playing message.
