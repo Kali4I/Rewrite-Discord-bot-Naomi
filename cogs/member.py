@@ -3,6 +3,7 @@ import nekos
 import whois
 import json
 import time
+import os
 import apiai
 import requests
 from discord.ext import commands
@@ -13,6 +14,7 @@ from utils.HelpPaginator import HelpPaginator, CannotPaginate
 from utils.HastebinPoster import post
 
 class Member(object):
+    """Набор команд для участников сервера."""
 
     def __init__(self, bot):
         self.bot = bot

@@ -10,6 +10,7 @@ from discord.ext import commands
 from contextlib import redirect_stdout
 
 class Owner(object):
+    """Набор команд для отладки и тестирования."""
 
     def __init__(self, bot):
         self.bot = bot
@@ -31,7 +32,7 @@ class Owner(object):
 
         resp = await ctx.send('Тестируем...')
         diff = resp.created_at - ctx.message.created_at
-        await resp.edit(content=f'Задержка API: {1000*diff.total_seconds():.1f}ms.\nЗадержка {self.bot.user.name}: {round(self.bot.latency * 1000)}ms')
+        await resp.edit(content=f':ping_pong: Pong!\nЗадержка API: {1000*diff.total_seconds():.1f}мс.\nЗадержка {self.bot.user.name}: {round(self.bot.latency * 1000)}мс')
 
 
 

@@ -3,6 +3,7 @@ from discord.ext import commands
 from random import choice
 
 class Admin(object):
+    """Набор команд для Администрирования."""
 
     def __init__(self, bot):
         self.bot = bot
@@ -14,7 +15,7 @@ class Admin(object):
 
     @commands.command(name='newname', aliases=['new-name', 'change-name', 'changename', 'newnick'])
     async def newname(self, ctx, member:discord.Member, *, nickname:str=None):
-        """Сменить Ваш никнейм.
+        """Сменить никнейм пользователя.
 
         Подробности:
         --------------
@@ -183,7 +184,7 @@ class Admin(object):
 
         try:
             await member.kick(reason=reason)
-            
+
         except discord.errors.Forbidden:
             return await ctx.send(embed=discord.Embed(color=0xff0000).set_footer(text='У меня нет прав.'))
 

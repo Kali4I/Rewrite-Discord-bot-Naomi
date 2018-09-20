@@ -13,6 +13,8 @@ Edited by AkiraSumato-01 for Rewrite-Discord-Bot-Naomi
 """
 
 class ErrorHandler:
+    """Модуль обработки и оповещения об исключениях."""
+
     def __init__(self, bot):
         self.bot = bot
 

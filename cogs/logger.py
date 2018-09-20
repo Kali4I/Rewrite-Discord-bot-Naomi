@@ -3,6 +3,7 @@ from discord.ext import commands
 import time
 
 class Logger(object):
+    """Набор эвентов для логирования событий."""
 
     def __init__(self, bot):
         self.bot = bot
