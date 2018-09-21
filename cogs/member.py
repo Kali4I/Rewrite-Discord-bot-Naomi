@@ -53,8 +53,8 @@ class Member(object):
             try:
                 async with bot.session.get(f"https://api.jikan.moe/search/manga/{query}") as response:
                     data = await response.json()
-                    embed = discord.Embed(color=random.randint(0x000000, 0xFFFFFF), timestamp=ctx.message.created_at, title=data["result"][0].get("title"))
-                    embed.add_field(name="Описание:", value=f"{data['result'][0].get('description')}**[Read more about {data['result'][0].get('title')}...]({data['result'][0].get('url')})**", inline=True)
+                    embed = discord.Embed(color=randint(0x000000, 0xFFFFFF), timestamp=ctx.message.created_at, title=data["result"][0].get("title"))
+                    embed.add_field(name="Описание:", value=f"{data['result'][0].get('description')}  **[Больше информации об {data['result'][0].get('title')}...]({data['result'][0].get('url')})**", inline=True)
                     embed.add_field(name="Оценка на MyAnimeList:", value=f"**{data['result'][0].get('score')}/10**", inline=True)
                     embed.add_field(name="Пользователей:", value=f"**{data['result'][0].get('members')}**", inline=True)
                     embed.add_field(name="Тип:", value=f"**{data['result'][0].get('type')}**", inline=True)
@@ -62,7 +62,8 @@ class Member(object):
                     embed.set_thumbnail(url=data['result'][0].get('image_url'))
                     embed.set_footer(text=f"Поиск манги - {query}", icon_url=ctx.author.avatar_url)
                     await ctx.send(embed=embed)
-            except:
+                    
+            except KeyError:
                 await ctx.send(f'По запросу ``{query}`` ничего не найдено..')
 
 
