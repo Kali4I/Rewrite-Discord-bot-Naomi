@@ -4,6 +4,7 @@ import whois
 import json
 import time
 import os
+import aiohttp
 import apiai
 import requests
 from discord.ext import commands
