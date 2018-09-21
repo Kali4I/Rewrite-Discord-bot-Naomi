@@ -9,7 +9,9 @@ import discord
 from discord.ext import commands
 
 bot = commands.Bot(command_prefix='n!')
-bot.session = aiohttp.ClientSession()
+
+async def start_session():
+    bot.session = aiohttp.ClientSession()
 
 bot.remove_command('help')
 
@@ -31,6 +33,8 @@ if __name__ == '__main__':
 @bot.event
 async def on_ready():
     print(f'[{time.ctime()}] Подключение успешно осуществлено!\nВ сети: {bot.user}')
+
+    await start_session()
 
     async def presence():
         sleeping = 12
