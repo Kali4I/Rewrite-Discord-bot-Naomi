@@ -49,9 +49,10 @@ class Member(object):
         --------------
         <query> - название.
         """
+        bot.session = aiohttp.ClientSession(loop=bot.loop)
         async with ctx.typing():
             try:
-                async with self.bot.session.get(f"https://api.jikan.moe/search/manga/{query}") as response:
+                async with bot.session.get(f"https://api.jikan.moe/search/manga/{query}") as response:
                     data = await response.json()
                     embed = discord.Embed(color=random.randint(0x000000, 0xFFFFFF), timestamp=ctx.message.created_at, title=data["result"][0].get("title"))
                     embed.add_field(name="Описание:", value=f"{data['result'][0].get('description')}**[Read more about {data['result'][0].get('title')}...]({data['result'][0].get('url')})**", inline=True)
@@ -79,9 +80,10 @@ class Member(object):
         --------------
         <query> - название.
         """
+        bot.session = aiohttp.ClientSession(loop=bot.loop)
         async with ctx.typing():
             try:
-                async with self.bot.session.get(f"https://api.jikan.moe/search/anime/{query}") as response:
+                async with bot.session.get(f"https://api.jikan.moe/search/anime/{query}") as response:
                     data = await response.json()
                     embed = discord.Embed(color=random.randint(0x000000, 0xFFFFFF), timestamp=ctx.message.created_at, title=data["result"][0].get("title"))
                     embed.add_field(name="Описание:", value=f"{data['result'][0].get('description')}**[Read more about {data['result'][0].get('title')}...]({data['result'][0].get('url')})**", inline=True)

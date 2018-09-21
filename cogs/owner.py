@@ -34,11 +34,12 @@ class Owner(object):
 
         await ctx.send(embed=discord.Embed(color=0x29CAFF,
             title='Статистика хоста.',
-            description=f'ОЗУ всего: {psutil.virtual_memory().total} \n\
-                Частота ЦП: {psutil.cpu_freq()} \n\
+            description=f'Платформа: {platform.platform()}\n\
+                Оперативная память: \n\
+                - Использование: {psutil.virtual_memory().percent}%\n\
                 Использование ЦП: \n\
-                - Пользователем: {psutil.cpu_times_percent().user} \n\
-                - Системой: {psutil.cpu_times_percent().system}'))
+                - Пользователем: {psutil.cpu_times_percent().user}% \n\
+                - Не используется: {psutil.cpu_times_percent().idle}%'))
 
 
 
