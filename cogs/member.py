@@ -4,7 +4,6 @@ import whois
 import json
 import time
 import os
-import aiohttp
 import apiai
 import requests
 from discord.ext import commands
@@ -50,7 +49,6 @@ class Member(object):
         --------------
         <query> - название.
         """
-        session = aiohttp.ClientSession(loop=self.bot.loop)
         async with ctx.typing():
             try:
                 async with session.get(f"https://api.jikan.moe/search/manga/{query}") as response:
@@ -81,7 +79,6 @@ class Member(object):
         --------------
         <query> - название.
         """
-        session = aiohttp.ClientSession(loop=self.bot.loop)
         async with ctx.typing():
             try:
                 async with session.get(f"https://api.jikan.moe/search/anime/{query}") as response:

@@ -3,11 +3,14 @@ import sys
 import time
 import asyncio
 import traceback
+import aiohttp
 
 import discord
 from discord.ext import commands
 
 bot = commands.Bot(command_prefix='n!')
+bot.session = aiohttp.ClientSession()
+
 bot.remove_command('help')
 
 _cogs = ['cogs.member',
@@ -29,19 +32,19 @@ if __name__ == '__main__':
 async def on_ready():
     print(f'[{time.ctime()}] Подключение успешно осуществлено!\nВ сети: {bot.user}')
 
-    async def __presence():
-        _sleeping = 12
+    async def presence():
+        sleeping = 12
         while not bot.is_closed():
             await bot.change_presence(activity=discord.Streaming(name=f'{len(bot.guilds)} серверов!', url='https://www.twitch.tv/%none%'))
-            await asyncio.sleep(_sleeping)
-            await bot.change_presence(activity=discord.Streaming(name=f'{len(bot.users)} пользователей!', url='https://www.twitch.tv/%none%'))
-            await asyncio.sleep(_sleeping)
+            await asyncio.sleep(sleeping)
+            await bot.change_presence(activity=discord.Streaming(name=f'{len(bot.users)} участников!', url='https://www.twitch.tv/%none%'))
+            await asyncio.sleep(sleeping)
             await bot.change_presence(activity=discord.Streaming(name=f'{len(bot.emojis)} эмодзи!', url='https://www.twitch.tv/%none%'))
-            await asyncio.sleep(_sleeping)
+            await asyncio.sleep(sleeping)
             await bot.change_presence(activity=discord.Streaming(name=f'{len([x.name for x in bot.commands if not x.hidden])} команд!', url='https://www.twitch.tv/%none%'))
-            await asyncio.sleep(_sleeping)
+            await asyncio.sleep(sleeping)
             await bot.change_presence(activity=discord.Streaming(name=f'n!help', url='https://www.twitch.tv/%none%'))
-            await asyncio.sleep(_sleeping)
-    bot.loop.create_task(__presence())
+            await asyncio.sleep(sleeping)
+    bot.loop.create_task(presence())
 
 bot.run(os.getenv('TOKEN'), bot=True, reconnect=True)
