@@ -25,7 +25,7 @@ class Member(object):
 
 
 
-    @search.command(name='manga')
+    @commands.command(name='manga')
     async def manga(self, ctx, *, query: str):
         """Поиск манги.
 
@@ -55,7 +55,7 @@ class Member(object):
 
 
 
-    @search.command(name='anime')
+    @commands.command(name='anime')
     async def anime(self, ctx, *, query: str):
         """Поиск аниме.
 
