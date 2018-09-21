@@ -24,6 +24,22 @@ class Member(object):
 
 
 
+    @commands.command(name='random', aliases=['randuser', 'randomuser', 'rand-user'])
+    async def randomuser(self, ctx, *, message:str):
+        """Выбрать рандомного участника сервера.
+
+        Подробности:
+        --------------
+        <message> - Ваше сообщение.
+        """
+        await ctx.send(embed=discord.Embed(color=randint(0x000000, 0xFFFFFF)),
+            description=f'{choice([x.mention for x in ctx.guild.members])} {message}')
+
+
+
+
+
+
 
     @commands.command(name='manga')
     async def manga(self, ctx, *, query: str):
