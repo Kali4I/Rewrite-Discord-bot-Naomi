@@ -436,7 +436,10 @@ class HelpPaginator(Pages):
         if hasattr(self, '_is_bot'):
             github_url = 'https://github.com/AkiraSumato-01/Rewrite-Discord-Bot-Naomi'
             server_url = 'https://discord.gg/ZQfNQ43'
-            self.embed.add_field(name=f'Спасибо, что используете {self.bot.user.name}!', value=f'[[GitHub]]({github_url}) [[Наш Discord сервер]]({server_url})', inline=False)
+            invite_url = 'https://discordapp.com/oauth2/authorize?client_id=452534618520944649&scope=bot&permissions=490040390'
+            help_sign  = 'http://hostelcluj.com/wp-content/uploads/2015/07/Information_signal_64.png'
+            self.embed.add_field(name=f'Спасибо, что используете {self.bot.user.name}!', value=f'**[[GitHub]]({github_url}) [[Наш Discord сервер]]({server_url}) [[Пригласить меня]]({invite_url})**', inline=False)
+            self.embed.set_thumbnail(url=help_sign)
 
         self.embed.set_footer(text=f'"{self.prefix}help [команда]" для подробного описание команды.')
 

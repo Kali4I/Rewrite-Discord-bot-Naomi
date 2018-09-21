@@ -24,6 +24,67 @@ class Member(object):
 
 
 
+
+    @search.command(name='manga')
+    async def manga(self, ctx, *, query: str):
+        """Поиск манги.
+
+        Подробности:
+        --------------
+        <query> - название.
+        """
+        async with ctx.typing():
+            try:
+                async with self.bot.session.get(f"https://api.jikan.moe/search/manga/{query}") as response:
+                    data = await response.json()
+                    embed = discord.Embed(color=random.randint(0x000000, 0xFFFFFF), timestamp=ctx.message.created_at, title=data["result"][0].get("title"))
+                    embed.add_field(name="Описание:", value=f"{data['result'][0].get('description')}**[Read more about {data['result'][0].get('title')}...]({data['result'][0].get('url')})**", inline=True)
+                    embed.add_field(name="Оценка на MyAnimeList:", value=f"**{data['result'][0].get('score')}/10**", inline=True)
+                    embed.add_field(name="Пользователей:", value=f"**{data['result'][0].get('members')}**", inline=True)
+                    embed.add_field(name="Тип:", value=f"**{data['result'][0].get('type')}**", inline=True)
+
+                    embed.set_thumbnail(url=data['result'][0].get('image_url'))
+                    embed.set_footer(text=f"Поиск манги - {query}", icon_url=ctx.author.avatar_url)
+                    await ctx.send(embed=embed)
+            except:
+                await ctx.send(f'По запросу ``{query}`` ничего не найдено..')
+
+
+
+
+
+
+
+    @search.command(name='anime')
+    async def anime(self, ctx, *, query: str):
+        """Поиск аниме.
+
+        Подробности:
+        --------------
+        <query> - название.
+        """
+        async with ctx.typing():
+            try:
+                async with self.bot.session.get(f"https://api.jikan.moe/search/anime/{query}") as response:
+                    data = await response.json()
+                    embed = discord.Embed(color=random.randint(0x000000, 0xFFFFFF), timestamp=ctx.message.created_at, title=data["result"][0].get("title"))
+                    embed.add_field(name="Описание:", value=f"{data['result'][0].get('description')}**[Read more about {data['result'][0].get('title')}...]({data['result'][0].get('url')})**", inline=True)
+                    embed.add_field(name="Эпизодов:", value=f"**{data['result'][0].get('episodes')}**", inline=True)
+                    embed.add_field(name="Оценка на MyAnimeList:", value=f"**{data['result'][0].get('score')}/10**", inline=True)
+                    embed.add_field(name="Пользователей:", value=f"**{data['result'][0].get('members')}**", inline=True)
+                    embed.add_field(name="Тип:", value=f"**{data['result'][0].get('type')}**", inline=True)
+
+                    embed.set_thumbnail(url=data['result'][0].get('image_url'))
+                    embed.set_footer(text=f"Поиск аниме - {query}", icon_url=ctx.author.avatar_url)
+                    await ctx.send(embed=embed)
+            except:
+                await ctx.send(f'По запросу ``{query}`` ничего не найдено..')
+
+
+
+
+
+
     @commands.command(name='hastebin')
     async def hastebin_post(self, ctx, *, code:str):
         """Отправить код на Hastebin.com.
@@ -383,7 +444,7 @@ class Member(object):
 
 
 
-    @commands.command(name='neko', aliases=['anime', 'catgirl', 'nekogirl'])
+    @commands.command(name='neko', aliases=['catgirl', 'nekogirl'])
     async def _catgirl(self, ctx, tag:str=None):
         """Отправляет аниме изображение [Только в NSFW-каналах]
 

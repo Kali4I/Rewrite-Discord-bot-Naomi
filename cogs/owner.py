@@ -5,6 +5,7 @@ import sys
 import traceback
 import textwrap
 import platform
+import psutil
 
 from discord.ext import commands
 from contextlib import redirect_stdout
@@ -14,6 +15,31 @@ class Owner(object):
 
     def __init__(self, bot):
         self.bot = bot
+
+
+
+
+
+
+
+    @commands.command(name='stats', hidden=True, aliases=['botstats', 'botstatus', 'status'])
+    @commands.is_owner()
+    async def botstats(self, ctx):
+        """Статистика хоста.
+
+        Подробности:
+        --------------
+        Аргументы не требуются.
+        """
+
+        await ctx.send(embed=discord.Embed(color=0x29CAFF,
+            title='Статистика хоста.',
+            description=f'ОЗУ всего: {psutil.virtual_memory().total} \n\
+                Частота ЦП: {psutil.cpu_freq()} \n\
+                Использование ЦП: \n\
+                - Пользователем: {psutil.cpu_times_percent().user} \n\
+                - Системой: {psutil.cpu_times_percent().system}'))
+
 
 
 
