@@ -32,8 +32,8 @@ class Member(object):
         --------------
         <message> - Ваше сообщение.
         """
-        await ctx.send(embed=discord.Embed(color=randint(0x000000, 0xFFFFFF)),
-            description=f'{choice([x.mention for x in ctx.guild.members])} {message}')
+        await ctx.send(embed=discord.Embed(color=randint(0x000000, 0xFFFFFF),
+            description=f'{choice([x.mention for x in ctx.guild.members])} {message}'))
 
 
 
