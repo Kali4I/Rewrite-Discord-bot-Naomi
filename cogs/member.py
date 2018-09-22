@@ -13,6 +13,8 @@ from mcstatus import MinecraftServer
 from utils.HelpPaginator import HelpPaginator, CannotPaginate
 from utils.HastebinPoster import post
 
+blocked = [437883431897268224]
+
 class Member(object):
     """Набор команд для участников сервера."""
 
@@ -118,6 +120,9 @@ class Member(object):
         <message> - описание вашей идеи.
         """
 
+        if ctx.author.id in blocked:
+            return await ctx.send('Нельзя.')
+
         try:
             ideas_guild = discord.utils.get(self.bot.guilds, id=457092470472179712)
             ideas_channel = discord.utils.get(ideas_guild.channels, id=483662616921767956)
@@ -142,6 +147,9 @@ class Member(object):
         --------------
         <message> - подробное описание проблемы.
         """
+
+        if ctx.author.id in blocked:
+            return await ctx.send('Нельзя.')
 
         try:
             rep_guild = discord.utils.get(self.bot.guilds, id=457092470472179712)

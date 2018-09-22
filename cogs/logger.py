@@ -8,7 +8,6 @@ class Logger(object):
     def __init__(self, bot):
         self.bot = bot
 
-
     async def on_member_ban(self, g, u):
         print(f'[{time.ctime()}] {u.name} ({u.id}) забанен на {g.name} ({g.id})')
 
