@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 from random import choice
+import traceback
 
 class Admin(object):
     """Набор команд для Администрирования."""
@@ -45,6 +46,8 @@ class Admin(object):
             await member.add_roles(mute, reason='Был приглушен через n!mute.')
         except discord.errors.Forbidden:
             await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xff0000).set_footer(text='У меня нет прав.'))
+        except Exception as e:
+            await ctx.send(f'```python\n{traceback.format_exc()}```')
         
         await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0x35FF81, description=f'Участник {member.mention} приглушен.\nПричина: {reason}'))
 
