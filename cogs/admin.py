@@ -38,7 +38,7 @@ class Admin(object):
                                           send_messages=False)
         
         try:
-            await member.add_roles([mute], reason='Был приглушен через n!mute.')
+            await member.add_roles(mute, reason='Был приглушен через n!mute.')
         except discord.errors.Forbidden:
             await ctx.send(embed=discord.Embed(color=0xff0000).set_footer(text='У меня нет прав.'))
         
@@ -70,7 +70,7 @@ class Admin(object):
             return await ctx.send(embed=discord.Embed(color=0xff0000, description=f'{member.mention} не приглушен!'))
 
         try:
-            await member.remove_roles([mute], reason='Приглушение убрано - n!unmute.')
+            await member.remove_roles(mute, reason='Приглушение убрано - n!unmute.')
         except discord.errors.Forbidden:
             await ctx.send(embed=discord.Embed(color=0xff0000).set_footer(text='У меня нет прав.'))
         
