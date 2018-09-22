@@ -13,6 +13,75 @@ class Admin(object):
 
 
 
+    @commands.command(name='mute')
+    async def mute(self, ctx, member:discord.Member, *, reason:str=None):
+        """Заглушить (выдать мут) пользователя в текстовых чатах.
+
+        Подробности:
+        --------------
+        <member> - участник.
+        [reason] - причина.
+        """
+        if not ctx.author.permissions_in(ctx.channel).manage_roles:
+            return await ctx.send(embed=discord.Embed(color=0xFF0000).set_footer(text='Нет прав.'))
+
+        mute = discord.utils.get(ctx.guild.roles, name='NaomiMute')
+
+        if not mute:
+            mute = await ctx.guild.create_role(name='NaomiMute',
+                                                colour=0xB4B4B4,
+                                                reason='Использована команда n!mute, но роль "NaomiMute" отсутствовала.')
+
+        for tchannel in ctx.guild.text_channels:
+            await tchannel.set_permissions(mute,
+                                          read_messages=True,
+                                          send_messages=False)
+        
+        try:
+            await member.add_roles([mute], reason='Был приглушен через n!mute.')
+        except discord.errors.Forbidden:
+            await ctx.send(embed=discord.Embed(color=0xff0000).set_footer(text='У меня нет прав.'))
+        
+        await ctx.send(embed=discord.Embed(color=0x35FF81, description='Участник {member.mention} приглушен.\nПричина: {reason}'))
+
+
+
+
+
+
+    @commands.command(name='unmute')
+    async def unmute(self, ctx, member:discord.Member, *, reason:str=None):
+        """Снять приглушение с участника.
+
+        Подробности:
+        --------------
+        <member> - участник.
+        [reason] - причина.
+        """
+        if not ctx.author.permissions_in(ctx.channel).manage_roles:
+            return await ctx.send(embed=discord.Embed(color=0xFF0000).set_footer(text='Нет прав.'))
+
+        mute = discord.utils.get(ctx.guild.roles, name='NaomiMute')
+
+        if not mute:
+            return await ctx.send(embed=discord.Embed(color=0xff0000, description='Не найдена роль "NaomiMute", а раз ее нет, то и снимать мут мне не с кого...'))
+
+        if mute not in member.roles:
+            return await ctx.send(embed=discord.Embed(color=0xff0000, description=f'{member.mention} не приглушен!'))
+
+        try:
+            await member.remove_roles([mute], reason='Приглушение убрано - n!unmute.')
+        except discord.errors.Forbidden:
+            await ctx.send(embed=discord.Embed(color=0xff0000).set_footer(text='У меня нет прав.'))
+        
+        await ctx.send(embed=discord.Embed(color=0x35FF81, description='Снято приглушение с участника {member.mention}.\nПричина: {reason}'))
+
+
+
+
+
+
+
     @commands.command(name='newname', aliases=['new-name', 'change-name', 'changename', 'newnick'])
     async def newname(self, ctx, member:discord.Member, *, nickname:str=None):
         """Сменить никнейм пользователя.
@@ -27,7 +96,7 @@ class Admin(object):
             return await ctx.send(embed=discord.Embed(color=0xFF0000).set_footer(text='Нет прав.'))
 
         try:
-            await member.edit(nick=nickname, reason='Запрошено пользователем.')
+            await member.edit(nick=nickname, reason='Запрошено, используя n!newname.')
         except discord.errors.Forbidden:
             await ctx.send(embed=discord.Embed(color=0xff0000).set_footer(text='У меня нет прав.'))
 
