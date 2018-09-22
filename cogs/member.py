@@ -34,7 +34,7 @@ class Member(object):
         --------------
         <message> - Ваше сообщение.
         """
-        await ctx.send(embed=discord.Embed(color=randint(0x000000, 0xFFFFFF),
+        await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=randint(0x000000, 0xFFFFFF),
             description=f'{choice([x.mention for x in ctx.guild.members])} {message}'))
 
 
@@ -54,7 +54,7 @@ class Member(object):
             try:
                 async with self.bot.session.get(f"https://api.jikan.moe/search/anime/{query}") as response:
                     data = await response.json()
-                    embed = discord.Embed(color=randint(0x000000, 0xFFFFFF), timestamp=ctx.message.created_at, title=data["result"][0].get("title"))
+                    embed = discord.Embed(timestamp=ctx.message.created_at, color=randint(0x000000, 0xFFFFFF), title=data["result"][0].get("title"))
                     embed.add_field(name="Описание:", value=f"{data['result'][0].get('description')}**[Read more about {data['result'][0].get('title')}...]({data['result'][0].get('url')})**", inline=True)
                     embed.add_field(name="Эпизодов:", value=f"**{data['result'][0].get('episodes')}**", inline=True)
                     embed.add_field(name="Оценка на MyAnimeList:", value=f"**{data['result'][0].get('score')}/10**", inline=True)
@@ -82,7 +82,7 @@ class Member(object):
         """
 
         link = await post(code)
-        await ctx.send(embed=discord.Embed(title='Ваш код был загружен на Hastebin:',
+        await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, title='Ваш код был загружен на Hastebin:',
                                         description=f'```{link}```'))
 
 
@@ -102,7 +102,7 @@ class Member(object):
         try:
             await ctx.author.edit(nick=nickname, reason='Запрошено пользователем.')
         except discord.errors.Forbidden:
-            await ctx.send(embed=discord.Embed(color=0xff0000).set_footer(text='У меня нет прав.'))
+            await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xff0000).set_footer(text='У меня нет прав.'))
 
 
 
@@ -128,7 +128,7 @@ class Member(object):
             ideas_channel = discord.utils.get(ideas_guild.channels, id=483662616921767956)
 
             await ctx.send('Ваша идея отправлена на наш Discord-сервер;\n Спасибо за помощь.')
-            await ideas_channel.send(embed=discord.Embed(color=0xF56415, 
+            await ideas_channel.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xF56415, 
                                 title='Идея от пользователя.',
                                 description='Отправил: %s\nОписание:```markup\n%s```\n\n%s' % (ctx.author, message, time.ctime())))
         except Exception as e:
@@ -156,7 +156,7 @@ class Member(object):
             rep_channel = discord.utils.get(rep_guild.channels, id=483662931377127424)
 
             await ctx.send('Ваш баг-репорт отправлен на наш Discord-сервер;\n Спасибо за помощь.')
-            await rep_channel.send(embed=discord.Embed(color=0xF56415, 
+            await rep_channel.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xF56415, 
                                 title='Новый баг-репорт!',
                                 description='Отправил: %s\nОписание:```markup\n%s```\n\n%s' % (ctx.author, message, time.ctime())))
         except Exception as e:
@@ -213,9 +213,9 @@ class Member(object):
             member = ctx.author
 
         if member.nick == '':
-            stats = discord.Embed(color=0x18C30B, title='Информация об участнике %s (%s) [%s]' % (member.nick, member.name, member.id))
+            stats = discord.Embed(timestamp=ctx.message.created_at, color=0x18C30B, title='Информация об участнике %s (%s) [%s]' % (member.nick, member.name, member.id))
         else:
-            stats = discord.Embed(color=0x18C30B, title='Информация об участнике %s [%s]' % (member.name, member.id))
+            stats = discord.Embed(timestamp=ctx.message.created_at, color=0x18C30B, title='Информация об участнике %s [%s]' % (member.name, member.id))
 
         if member.name == self.bot.user.name:
             owner = (await self.bot.application_info()).owner
@@ -255,7 +255,7 @@ class Member(object):
         Аргументы не требуются.
         """
 
-        stats = discord.Embed(color=0x18C30B, title='Информация о сервере %s [%s]' % (ctx.guild.name, ctx.guild.id))
+        stats = discord.Embed(timestamp=ctx.message.created_at, color=0x18C30B, title='Информация о сервере %s [%s]' % (ctx.guild.name, ctx.guild.id))
         stats.add_field(name='Регион', value=ctx.guild.region)
         stats.add_field(name='Всего эмодзи', value=len(ctx.guild.emojis))
         stats.add_field(name='Всего участников', value=len(ctx.guild.members))
@@ -288,14 +288,14 @@ class Member(object):
         content = request.json()
 
         try:
-            stats = discord.Embed(color=0x18C30B, title='Статистика игрока %s' % content['data']['name'])
+            stats = discord.Embed(timestamp=ctx.message.created_at, color=0x18C30B, title='Статистика игрока %s' % content['data']['name'])
             stats.add_field(name='UUID', value=content['data']['uuid'])
             stats.add_field(name='Всего сыграно', value=content['data']['total_time_play'])
             stats.add_field(name='В сети?', value=str(content['data']['online']).replace('1', 'Да').replace('0', 'Нет'))
             stats.add_field(name='Лицензия?', value=str(content['data']['license']).replace('1', 'Да').replace('0', 'Нет'))
             stats.add_field(name='Последний раз в сети', value=time.time() - content['data']['last_play'])
         except:
-            stats = discord.Embed(color=0xff0000).set_footer(text='mcplayer [ник]')
+            stats = discord.Embed(timestamp=ctx.message.created_at, color=0xff0000).set_footer(text='mcplayer [ник]')
 
         await ctx.send(embed=stats)
 
@@ -317,14 +317,14 @@ class Member(object):
         status = server.status()
 
         try:
-            stats = discord.Embed(color=0x18C30B, description="```%s```" % ''.join([x['text'] for x in status.description['extra']]))
+            stats = discord.Embed(timestamp=ctx.message.created_at, color=0x18C30B, description="```%s```" % ''.join([x['text'] for x in status.description['extra']]))
             stats.add_field(name='Адрес', value=server.host)
             stats.add_field(name='Порт', value=server.port)
             stats.add_field(name='Игроки', value='%s/%s' % (status.players.online, status.players.max))
             stats.add_field(name='Задержка', value='%s мс' % status.latency)
             stats.add_field(name='Ядро', value=status.version.name)
         except:
-            stats = discord.Embed(color=0xff0000).set_footer(text='mcstats [адрес_существующего_сервера]')
+            stats = discord.Embed(timestamp=ctx.message.created_at, color=0xff0000).set_footer(text='mcstats [адрес_существующего_сервера]')
 
         await ctx.send(embed=stats)
 
@@ -377,7 +377,7 @@ class Member(object):
 
         whois_info = whois.whois(domain)
 
-        hostinfo = discord.Embed(color=0xff0000, title=f'WHOIS-информация для {domain}')
+        hostinfo = discord.Embed(timestamp=ctx.message.created_at, color=0xff0000, title=f'WHOIS-информация для {domain}')
 
         try:
             expdata = str(whois_info["expiration_date"][0])
@@ -457,7 +457,7 @@ class Member(object):
 
         try:
             if not ctx.channel.is_nsfw():
-                return await ctx.send(embed=discord.Embed(color=0xff0000).set_footer(text='Вы не в NSFW канале!'))
+                return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xff0000).set_footer(text='Вы не в NSFW канале!'))
         except:
             pass
 
@@ -470,7 +470,7 @@ class Member(object):
                 'classic', 'kuni', 'pat', 'kiss', 'femdom', 'neko', 'cuddle',
                 'erok', 'fox_girl', 'boobs', 'smallboobs', 'hug', 'ero', 'wallpaper']
 
-        n = discord.Embed(color=0xF13875)
+        n = discord.Embed(timestamp=ctx.message.created_at, color=0xF13875)
 
         if tag is None:
             n.set_image(url=nekos.img(choice(tags)))
@@ -507,22 +507,22 @@ class Member(object):
             return False
         
         if len(b) >= 8 and b.count('**') != 0:
-            return await ctx.send(embed=discord.Embed(color=0xfA0000).set_footer(text='Недопустимо по причине снижения производительности.'))
+            return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xfA0000).set_footer(text='Недопустимо по причине снижения производительности.'))
 
         else:
             try: __eval = str(eval(b))
             except ZeroDivisionError: __eval = '∞'
             except Exception as e:
-                return await ctx.send(embed=discord.Embed(color=0xf0a302).set_footer(text='Выражение имеет ошибку.\nИсправьте его.'))
+                return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xf0a302).set_footer(text='Выражение имеет ошибку.\nИсправьте его.'))
 
             if len(__eval) > 12 and not __eval.isnumeric():
-                await ctx.send(embed=discord.Embed(color=0xf0a302, description=f'```css\n{numbers}\n({b})\n```(Указаны первые 12 цифр)\n{__eval[:12]}\n\nОкругленный:\n{round(float(__eval))}').set_footer(text='calc [матем.выражение]'))
+                await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xf0a302, description=f'```css\n{numbers}\n({b})\n```(Указаны первые 12 цифр)\n{__eval[:12]}\n\nОкругленный:\n{round(float(__eval))}').set_footer(text='calc [матем.выражение]'))
 
             elif len(__eval) > 12 and __eval.isnumeric():
-                await ctx.send(embed=discord.Embed(color=0xf0a302, description=f'```css\n{numbers}\n({b})\n```(Указаны первые 12 цифр)\n{__eval[:12]}').set_footer(text='calc [матем.выражение]'))
+                await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xf0a302, description=f'```css\n{numbers}\n({b})\n```(Указаны первые 12 цифр)\n{__eval[:12]}').set_footer(text='calc [матем.выражение]'))
 
             else:
-                await ctx.send(embed=discord.Embed(color=0xf0a302, description=f'```css\n{numbers}\n({b})\n```{__eval}').set_footer(text='calc [матем.выражение]'))
+                await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xf0a302, description=f'```css\n{numbers}\n({b})\n```{__eval}').set_footer(text='calc [матем.выражение]'))
 
 
 
@@ -561,7 +561,7 @@ class Member(object):
 
         _image_url = f'http://lemmmy.pw/osusig/sig.php?colour=hex{osu_desk_color}&uname={player}&mode={game_mode["num"]}&pp=1&countryrank&removeavmargin&flagshadow&flagstroke&darktriangles&opaqueavatar&avatarrounding=5&onlineindicator=undefined&xpbar&xpbarhex'
 
-        osu_st = discord.Embed(color=_colour, title=f'Статистика {player} в {game_mode["name"]}')
+        osu_st = discord.Embed(timestamp=ctx.message.created_at, color=_colour, title=f'Статистика {player} в {game_mode["name"]}')
         osu_st.set_image(url=_image_url)
         osu_st.set_footer(text='osu [ник_игрока] | lemmy.pw')
         await ctx.send(embed=osu_st)
@@ -585,13 +585,13 @@ class Member(object):
             member = ctx.author
 
         if member.avatar_url is None:
-            a = discord.Embed(color=0xfA0000, title=f'Аватарка {member}')
+            a = discord.Embed(timestamp=ctx.message.created_at, color=0xfA0000, title=f'Аватарка {member}')
             a.set_image(url=member.default_avatar_url)
             a.set_footer(text='avatar [@пользователь]')
             await ctx.send(embed=a)
 
         else:
-            a = discord.Embed(color=0xfA0000, title=f'Аватарка {member}')
+            a = discord.Embed(timestamp=ctx.message.created_at, color=0xfA0000, title=f'Аватарка {member}')
             a.set_image(url=member.avatar_url_as(static_format='png', size=1024))
             a.set_footer(text='avatar [@пользователь]')
             await ctx.send(embed=a)

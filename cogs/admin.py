@@ -23,7 +23,7 @@ class Admin(object):
         [reason] - причина.
         """
         if not ctx.author.permissions_in(ctx.channel).manage_roles:
-            return await ctx.send(embed=discord.Embed(color=0xFF0000).set_footer(text='Нет прав.'))
+            return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xFF0000).set_footer(text='Нет прав.'))
 
         mute = discord.utils.get(ctx.guild.roles, name='NaomiMute')
 
@@ -40,9 +40,9 @@ class Admin(object):
         try:
             await member.add_roles(mute, reason='Был приглушен через n!mute.')
         except discord.errors.Forbidden:
-            await ctx.send(embed=discord.Embed(color=0xff0000).set_footer(text='У меня нет прав.'))
+            await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xff0000).set_footer(text='У меня нет прав.'))
         
-        await ctx.send(embed=discord.Embed(color=0x35FF81, description='Участник {member.mention} приглушен.\nПричина: {reason}'))
+        await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0x35FF81, description=f'Участник {member.mention} приглушен.\nПричина: {reason}'))
 
 
 
@@ -59,22 +59,22 @@ class Admin(object):
         [reason] - причина.
         """
         if not ctx.author.permissions_in(ctx.channel).manage_roles:
-            return await ctx.send(embed=discord.Embed(color=0xFF0000).set_footer(text='Нет прав.'))
+            return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xFF0000).set_footer(text='Нет прав.'))
 
         mute = discord.utils.get(ctx.guild.roles, name='NaomiMute')
 
         if not mute:
-            return await ctx.send(embed=discord.Embed(color=0xff0000, description='Не найдена роль "NaomiMute", а раз ее нет, то и снимать мут мне не с кого...'))
+            return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xff0000, description='Не найдена роль "NaomiMute", а раз ее нет, то и снимать мут мне не с кого...'))
 
         if mute not in member.roles:
-            return await ctx.send(embed=discord.Embed(color=0xff0000, description=f'{member.mention} не приглушен!'))
+            return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xff0000, description=f'{member.mention} не приглушен!'))
 
         try:
             await member.remove_roles(mute, reason='Приглушение убрано - n!unmute.')
         except discord.errors.Forbidden:
-            await ctx.send(embed=discord.Embed(color=0xff0000).set_footer(text='У меня нет прав.'))
+            await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xff0000).set_footer(text='У меня нет прав.'))
         
-        await ctx.send(embed=discord.Embed(color=0x35FF81, description='Снято приглушение с участника {member.mention}.\nПричина: {reason}'))
+        await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0x35FF81, description=f'Снято приглушение с участника {member.mention}.\nПричина: {reason}'))
 
 
 
@@ -93,12 +93,12 @@ class Admin(object):
         """
 
         if not ctx.author.permissions_in(ctx.channel).manage_nicknames:
-            return await ctx.send(embed=discord.Embed(color=0xFF0000).set_footer(text='Нет прав.'))
+            return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xFF0000).set_footer(text='Нет прав.'))
 
         try:
             await member.edit(nick=nickname, reason='Запрошено, используя n!newname.')
         except discord.errors.Forbidden:
-            await ctx.send(embed=discord.Embed(color=0xff0000).set_footer(text='У меня нет прав.'))
+            await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xff0000).set_footer(text='У меня нет прав.'))
 
 
 
@@ -116,7 +116,7 @@ class Admin(object):
         """
 
         if not ctx.author.permissions_in(ctx.channel).manage_messages:
-            return await ctx.send(embed=discord.Embed(color=0xFF0000).set_footer(text='Нет прав.'))
+            return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xFF0000).set_footer(text='Нет прав.'))
 
         def is_member(m):
             return m.author == member
@@ -138,7 +138,7 @@ class Admin(object):
         """
 
         if not ctx.author.permissions_in(ctx.channel).manage_messages:
-            return await ctx.send(embed=discord.Embed(color=0xFF0000).set_footer(text='Нет прав.'))
+            return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xFF0000).set_footer(text='Нет прав.'))
 
         await ctx.channel.purge(limit=count)
 
@@ -158,7 +158,7 @@ class Admin(object):
         """
 
         if not ctx.author.permissions_in(ctx.channel).ban_members:
-            return await ctx.send(embed=discord.Embed(color=0xFF0000).set_footer(text='Нет прав.'))
+            return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xFF0000).set_footer(text='Нет прав.'))
 
         if not reason:
             reason = 'отсутствует.'
@@ -166,10 +166,10 @@ class Admin(object):
             await ctx.guild.ban(user=member, reason=reason)
 
         except discord.errors.Forbidden:
-            return await ctx.send(embed=discord.Embed(color=0xff0000).set_footer(text='У меня нет прав.'))
+            return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xff0000).set_footer(text='У меня нет прав.'))
 
         else:
-            return await ctx.send(embed=discord.Embed(color=0x00ff00, description=f'Пользователь {member} забанен!\nПричина: {reason}.').set_footer(text='ban [@пользователь] [причина]'))
+            return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0x00ff00, description=f'Пользователь {member} забанен!\nПричина: {reason}.').set_footer(text='ban [@пользователь] [причина]'))
 
 
 
@@ -190,7 +190,7 @@ class Admin(object):
             reason = 'отсутствует.'
 
         if not ctx.author.permissions_in(ctx.channel).ban_members:
-            return await ctx.send(embed=discord.Embed(color=0xFF0000).set_footer(text='Нет прав.'))
+            return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xFF0000).set_footer(text='Нет прав.'))
 
         try:
             ban_entries = await ctx.guild.bans()
@@ -200,7 +200,7 @@ class Admin(object):
                 if user == member:
                     await ctx.guild.unban(user=user, reason=reason)
         except discord.errors.Forbidden:
-            return await ctx.send(embed=discord.Embed(color=0xFF0000).set_footer(text='У меня нет прав.'))
+            return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xFF0000).set_footer(text='У меня нет прав.'))
 
 
 
@@ -217,18 +217,18 @@ class Admin(object):
         """
 
         if not ctx.author.permissions_in(ctx.channel).ban_members:
-            return await ctx.send(embed=discord.Embed(color=0xFF0000).set_footer(text='Нет прав.'))
+            return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xFF0000).set_footer(text='Нет прав.'))
 
         try:
             bans = await ctx.guild.bans()
 
         except discord.errors.Forbidden:
-            return await ctx.send(embed=discord.Embed(color=0xff0000).set_footer(text='У меня нет прав.'))
+            return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xff0000).set_footer(text='У меня нет прав.'))
 
         if len(bans) <= 0:
-            return await ctx.send(embed=discord.Embed(color=0xff0000).set_footer(text='Забаненные пользователи отсутствуют.'))
+            return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xff0000).set_footer(text='Забаненные пользователи отсутствуют.'))
 
-        return await ctx.send(embed=discord.Embed(color=0xff0000, description=f'Забаненные пользователи:\n{", ".join([user.user.name for user in bans])}').set_footer(text='banlist'))
+        return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xff0000, description=f'Забаненные пользователи:\n{", ".join([user.user.name for user in bans])}').set_footer(text='banlist'))
 
 
 
@@ -246,7 +246,7 @@ class Admin(object):
         """
 
         if not ctx.author.permissions_in(ctx.channel).kick_members:
-            return await ctx.send(embed=discord.Embed(color=0xFF0000).set_footer(text='Нет прав.'))
+            return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xFF0000).set_footer(text='Нет прав.'))
 
         if not reason:
             reason = 'отсутствует.'
@@ -255,10 +255,10 @@ class Admin(object):
             await member.kick(reason=reason)
 
         except discord.errors.Forbidden:
-            return await ctx.send(embed=discord.Embed(color=0xff0000).set_footer(text='У меня нет прав.'))
+            return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xff0000).set_footer(text='У меня нет прав.'))
 
         else:
-            return await ctx.send(embed=discord.Embed(color=0x00ff00, description=f'Пользователь {member} был кикнут.\nПричина: {reason}.').set_footer(text='kick [@пользователь] [причина]'))
+            return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0x00ff00, description=f'Пользователь {member} был кикнут.\nПричина: {reason}.').set_footer(text='kick [@пользователь] [причина]'))
 
 
 
