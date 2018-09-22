@@ -35,8 +35,7 @@ class Admin(object):
         try:
             if not mute:
                 mute = await ctx.guild.create_role(name='NaomiMute',
-                                                    color='#B4B4B4',
-                                                    reason='Использована команда n!mute, но роль "NaomiMute" отсутствовала.')
+                            reason='Использована команда n!mute, но роль "NaomiMute" отсутствовала.')
 
             for tchannel in ctx.guild.text_channels:
                 await tchannel.set_permissions(mute,
