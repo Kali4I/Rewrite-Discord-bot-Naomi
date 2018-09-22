@@ -14,6 +14,7 @@ class Admin(object):
 
 
     @commands.command(name='mute')
+    @commands.guild_only()
     async def mute(self, ctx, member:discord.Member, *, reason:str=None):
         """Заглушить (выдать мут) пользователя в текстовых чатах.
 
@@ -27,10 +28,13 @@ class Admin(object):
 
         mute = discord.utils.get(ctx.guild.roles, name='NaomiMute')
 
+        if not reason:
+            reason = 'отсутствует'
+
         try:
             if not mute:
                 mute = await ctx.guild.create_role(name='NaomiMute',
-                                                    colour=0xB4B4B4,
+                                                    color=0xB4B4B4,
                                                     reason='Использована команда n!mute, но роль "NaomiMute" отсутствовала.')
 
             for tchannel in ctx.guild.text_channels:
@@ -50,6 +54,7 @@ class Admin(object):
 
 
     @commands.command(name='unmute')
+    @commands.guild_only()
     async def unmute(self, ctx, member:discord.Member, *, reason:str=None):
         """Снять приглушение с участника.
 
@@ -62,6 +67,9 @@ class Admin(object):
             return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xFF0000).set_footer(text='Нет прав.'))
 
         mute = discord.utils.get(ctx.guild.roles, name='NaomiMute')
+
+        if not reason:
+            reason = 'отсутствует'
 
         try:
             if not mute:
@@ -83,6 +91,7 @@ class Admin(object):
 
 
     @commands.command(name='newname', aliases=['new-name', 'change-name', 'changename', 'newnick'])
+    @commands.guild_only()
     async def newname(self, ctx, member:discord.Member, *, nickname:str=None):
         """Сменить никнейм пользователя.
 
@@ -106,6 +115,7 @@ class Admin(object):
 
 
     @commands.command(name='cleanup')
+    @commands.guild_only()
     async def cleanup(self, ctx, member:discord.Member, count:int=None):
         """Удалить последние `count` сообщений участника `member`.
 
@@ -129,6 +139,7 @@ class Admin(object):
 
 
     @commands.command(name='purge', aliases=['clean', 'clear', 'clearchat'])
+    @commands.guild_only()
     async def purge(self, ctx, count:int):
         """Удалить последние `count` сообщений в чате.
 
@@ -148,6 +159,7 @@ class Admin(object):
 
 
     @commands.command(name='ban')
+    @commands.guild_only()
     async def ban(self, ctx, member:discord.Member, *, reason:str=None):
         """Заблокировать пользователя на сервере.
 
@@ -177,6 +189,7 @@ class Admin(object):
 
 
     @commands.command(name='unban', aliases=['pardon'])
+    @commands.guild_only()
     async def unban(self, ctx, member:discord.Member, *, reason:str=None):
         """Разблокировать пользователя на этом Discord сервере.
 
@@ -208,6 +221,7 @@ class Admin(object):
 
 
     @commands.command(name='banlist', aliases=['bans'])
+    @commands.guild_only()
     async def banlist(self, ctx):
         """Список заблокированных здесь пользователей.
 
@@ -236,6 +250,7 @@ class Admin(object):
 
 
     @commands.command(name='kick')
+    @commands.guild_only()
     async def kick(self, ctx, member:discord.Member, *, reason:str=None):
         """Выгнать пользователя с сервера.
 

@@ -91,6 +91,7 @@ class Member(object):
 
 
     @commands.command(name='myname', aliases=['my-name'])
+    @commands.guild_only()
     async def myname(self, ctx, *, nickname:str=None):
         """Сменить Ваш никнейм.
 
@@ -200,6 +201,7 @@ class Member(object):
 
 
     @commands.command(name='userinfo', aliases=['user-info'])
+    @command.guild_only()
     async def userinfo(self, ctx, member:discord.Member=None):
         """Информация об участнике сервера.
 
@@ -247,6 +249,7 @@ class Member(object):
 
 
     @commands.command(name='guild', aliases=['server'])
+    @command.guild_only()
     async def guild(self, ctx):
         """Информация о гильдии (Discord-сервере).
 
@@ -409,8 +412,8 @@ class Member(object):
 
 
 
-    @commands.command(name='helloworld', description='Hello World!!', aliases=['hw'])
-    async def _helloworld(self, ctx):
+    @commands.command(name='helloworld', aliases=['hw'])
+    async def helloworld(self, ctx):
         await ctx.send('Hello, %s' % ctx.author.mention)
 
 
@@ -419,7 +422,7 @@ class Member(object):
 
 
     @commands.command(name='say', aliases=['repeat', 'msg'])
-    async def _say(self, ctx, *, msg:str):
+    async def say(self, ctx, *, msg:str):
         """Повторить сообщение пользователя.
 
         Подробности:
@@ -438,7 +441,7 @@ class Member(object):
 
 
     @commands.command(name='neko', aliases=['catgirl', 'nekogirl'])
-    async def _catgirl(self, ctx, tag:str=None):
+    async def catgirl(self, ctx, tag:str=None):
         """Отправляет аниме изображение [Только в NSFW-каналах]
 
         Подробности:
@@ -490,7 +493,7 @@ class Member(object):
 
 
     @commands.command(name='calc', aliases=['calculator', 'calculate'])
-    async def _calc(self, ctx, *, numbers:str):
+    async def calc(self, ctx, *, numbers:str):
         """Калькулятор.
 
         Подробности:

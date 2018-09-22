@@ -124,6 +124,10 @@ class Owner(object):
             await ctx.send(f'**`Модуль {cog} успешно выгружен`**')
 
 
+
+
+
+
     @commands.command(name='reload', hidden=True)
     @commands.is_owner()
     async def cog_reload(self, ctx, *, cog: str):
@@ -141,6 +145,10 @@ class Owner(object):
             await ctx.send(f'**`Ошибка при перезагрузке модуля {cog}:`** \n{type(e).__name__} - {e}')
         else:
             await ctx.send(f'**`Модуль {cog} успешно перезагружен`**')
+
+
+
+
 
 
     @commands.command(name='execute', aliases=['exec', 'eval'], hidden=True)
@@ -207,6 +215,9 @@ class Owner(object):
             await ctx.message.delete()
         except discord.errors.Forbidden:
             pass
+
+
+
 
 
 
