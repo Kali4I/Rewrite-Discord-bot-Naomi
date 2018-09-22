@@ -35,7 +35,7 @@ class Admin(object):
         try:
             if not mute:
                 mute = await ctx.guild.create_role(name='NaomiMute',
-                                                    color=0xB4B4B4,
+                                                    color='#B4B4B4',
                                                     reason='Использована команда n!mute, но роль "NaomiMute" отсутствовала.')
 
             for tchannel in ctx.guild.text_channels:
@@ -61,7 +61,7 @@ class Admin(object):
     async def unmute(self, ctx, member:discord.Member, *, reason:str=None):
         """Снять приглушение с участника.
 
-        Подробности:
+        Подробности:z
         --------------
         <member> - участник.
         [reason] - причина.
