@@ -27,17 +27,17 @@ class Admin(object):
 
         mute = discord.utils.get(ctx.guild.roles, name='NaomiMute')
 
-        if not mute:
-            mute = await ctx.guild.create_role(name='NaomiMute',
-                                                colour=0xB4B4B4,
-                                                reason='Использована команда n!mute, но роль "NaomiMute" отсутствовала.')
-
-        for tchannel in ctx.guild.text_channels:
-            await tchannel.set_permissions(mute,
-                                          read_messages=True,
-                                          send_messages=False)
-        
         try:
+            if not mute:
+                mute = await ctx.guild.create_role(name='NaomiMute',
+                                                    colour=0xB4B4B4,
+                                                    reason='Использована команда n!mute, но роль "NaomiMute" отсутствовала.')
+
+            for tchannel in ctx.guild.text_channels:
+                await tchannel.set_permissions(mute,
+                                              read_messages=True,
+                                              send_messages=False)
+            
             await member.add_roles(mute, reason='Был приглушен через n!mute.')
         except discord.errors.Forbidden:
             await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xff0000).set_footer(text='У меня нет прав.'))
@@ -63,13 +63,13 @@ class Admin(object):
 
         mute = discord.utils.get(ctx.guild.roles, name='NaomiMute')
 
-        if not mute:
-            return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xff0000, description='Не найдена роль "NaomiMute", а раз ее нет, то и снимать мут мне не с кого...'))
-
-        if mute not in member.roles:
-            return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xff0000, description=f'{member.mention} не приглушен!'))
-
         try:
+            if not mute:
+                return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xff0000, description='Не найдена роль "NaomiMute", а раз ее нет, то и снимать мут мне не с кого...'))
+
+            if mute not in member.roles:
+                return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xff0000, description=f'{member.mention} не приглушен!'))
+
             await member.remove_roles(mute, reason='Приглушение убрано - n!unmute.')
         except discord.errors.Forbidden:
             await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xff0000).set_footer(text='У меня нет прав.'))
