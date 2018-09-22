@@ -201,7 +201,7 @@ class Member(object):
 
 
     @commands.command(name='userinfo', aliases=['user-info'])
-    @command.guild_only()
+    @commands.guild_only()
     async def userinfo(self, ctx, member:discord.Member=None):
         """Информация об участнике сервера.
 
@@ -249,7 +249,7 @@ class Member(object):
 
 
     @commands.command(name='guild', aliases=['server'])
-    @command.guild_only()
+    @commands.guild_only()
     async def guild(self, ctx):
         """Информация о гильдии (Discord-сервере).
 
