@@ -19,11 +19,10 @@ _cogs = ['cogs.member.fun',
          'cogs.member.info',
          'cogs.member.music',
          'cogs.member.utils',
-         'cogs.system.logger',
          'cogs.system.error_handler',
+         'cogs.system.logger',
          'cogs.admin',
-         'cogs.owner',
-         'cogs.music']
+         'cogs.owner']
 
 if __name__ == '__main__':
     for extension in _cogs:
@@ -50,7 +49,7 @@ async def on_ready():
             await asyncio.sleep(sleeping)
             await bot.change_presence(activity=discord.Streaming(name=f'{len([x.name for x in bot.commands if not x.hidden])} команд!', url='https://www.twitch.tv/%none%'))
             await asyncio.sleep(sleeping)
-            await bot.change_presence(activity=discord.Streaming(name=f'n!help', url='https://www.twitch.tv/%none%'))
+            await bot.change_presence(activity=discord.Streaming(name=f'{os.getenv('PREFIX')}help', url='https://www.twitch.tv/%none%'))
             await asyncio.sleep(sleeping)
     bot.loop.create_task(presence())
 
