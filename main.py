@@ -8,7 +8,9 @@ import aiohttp
 import discord
 from discord.ext import commands
 
-bot = commands.Bot(command_prefix=os.getenv('PREFIX'))
+prefix = os.getenv("PREFIX")
+
+bot = commands.Bot(command_prefix=prefix)
 
 async def start_session():
     bot.session = aiohttp.ClientSession()
@@ -49,7 +51,7 @@ async def on_ready():
             await asyncio.sleep(sleeping)
             await bot.change_presence(activity=discord.Streaming(name=f'{len([x.name for x in bot.commands if not x.hidden])} команд!', url='https://www.twitch.tv/%none%'))
             await asyncio.sleep(sleeping)
-            await bot.change_presence(activity=discord.Streaming(name=f'{os.getenv('PREFIX')}help', url='https://www.twitch.tv/%none%'))
+            await bot.change_presence(activity=discord.Streaming(name=f'{prefix}help', url='https://www.twitch.tv/%none%'))
             await asyncio.sleep(sleeping)
     bot.loop.create_task(presence())
 
