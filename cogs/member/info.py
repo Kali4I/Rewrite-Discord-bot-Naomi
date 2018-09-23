@@ -42,11 +42,8 @@ class Info(object):
         try:
             resp['error']
 
-        except KeyError:
-            pass
-
-        else:
-            await ctx.send(f'Что-то пошло не так.\n*Может быть, {ctx.author.mention} ввел несуществующую валюту?')
+        if type(resp) is dict:
+            return await ctx.send(f'Что-то пошло не так.\n*Может быть, {ctx.author.mention} ввел несуществующую валюту?')
 
         price =  'price_' + currency.lower()
 
