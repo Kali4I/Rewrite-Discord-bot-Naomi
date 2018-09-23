@@ -39,9 +39,6 @@ class Info(object):
         request = requests.get(f'https://api.coinmarketcap.com/v1/ticker/{cryptocurrency}/?convert={currency}')
         resp = request.json()
 
-        try:
-            resp['error']
-
         if type(resp) is dict:
             return await ctx.send(f'Что-то пошло не так.\n*Может быть, {ctx.author.mention} ввел несуществующую валюту?')
 
