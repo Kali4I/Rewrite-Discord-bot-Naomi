@@ -22,31 +22,6 @@ class Owner(object):
 
 
 
-    @commands.command(name='stats', hidden=True, aliases=['botstats', 'botstatus', 'status'])
-    @commands.is_owner()
-    async def botstats(self, ctx):
-        """Статистика хоста.
-
-        Подробности:
-        --------------
-        Аргументы не требуются.
-        """
-
-        await ctx.send(embed=discord.Embed(color=0x29CAFF,
-            title='Статистика хоста.',
-            description=f'Платформа: {platform.platform()}\n\
-                Оперативная память: \n\
-                - Использование: {psutil.virtual_memory().percent}%\n\
-                Использование ЦП: \n\
-                - Пользователем: {psutil.cpu_times_percent().user}% \n\
-                - Не используется: {psutil.cpu_times_percent().idle}%'))
-
-
-
-
-
-
-
     @commands.command(name='ping', hidden=True)
     @commands.is_owner()
     async def ping(self, ctx):

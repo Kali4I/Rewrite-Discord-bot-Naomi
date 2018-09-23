@@ -502,8 +502,6 @@ class HelpPaginator(Pages):
                               'На этом все.\n' \
                               '__**Не вводите в команды кавычки и скобки!**__'))
 
-        #self.embed.add_field(name='Как использовать справочник?', value='Описание аргументов.')
-
         for name, value in entries:
             self.embed.add_field(name=name, value=value, inline=False)
 

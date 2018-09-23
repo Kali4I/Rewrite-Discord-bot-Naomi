@@ -8,19 +8,22 @@ import aiohttp
 import discord
 from discord.ext import commands
 
-bot = commands.Bot(command_prefix='n!')
+bot = commands.Bot(command_prefix=os.getenv('PREFIX'))
 
 async def start_session():
     bot.session = aiohttp.ClientSession()
 
 bot.remove_command('help')
 
-_cogs = ['cogs.member',
+_cogs = ['cogs.member.fun',
+         'cogs.member.info',
+         'cogs.member.music',
+         'cogs.member.utils',
+         'cogs.system.logger',
+         'cogs.system.error_handler',
          'cogs.admin',
          'cogs.owner',
-         'cogs.music',
-         'cogs.logger',
-         'cogs.error_handler']
+         'cogs.music']
 
 if __name__ == '__main__':
     for extension in _cogs:
