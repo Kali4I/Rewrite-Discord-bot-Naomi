@@ -3,6 +3,7 @@ from random import randint, choice
 import discord
 import apiai
 import nekos
+import json
 import os
 
 class Fun(object):
