@@ -1,5 +1,6 @@
 from discord.ext import commands
 from random import randint
+import discord
 import json
 import requests
 import time
@@ -85,7 +86,7 @@ class Info(object):
                     embed.set_thumbnail(url=data['result'][0].get('image_url'))
                     embed.set_footer(text=f"Поиск аниме - {query}", icon_url=ctx.author.avatar_url)
                     await ctx.send(embed=embed)
-                    
+
             except KeyError:
                 await ctx.send(f'По запросу ``{query}`` ничего не найдено..')
 

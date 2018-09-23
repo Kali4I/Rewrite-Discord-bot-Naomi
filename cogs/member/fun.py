@@ -1,5 +1,6 @@
 from discord.ext import commands
 from random import randint, choice
+import discord
 import apiai
 import nekos
 import os
