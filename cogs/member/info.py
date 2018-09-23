@@ -113,10 +113,10 @@ class Info(object):
         embed = discord.Embed(timestamp=ctx.message.created_at, color=randint(0x000000, 0xFFFFFF),
                     title=f'Спасибо, что используете {self.bot.user.name}!',
                     description=f'**[[GitHub]]({github_url}) [[Наш Discord сервер]]({server_url}) [[Пригласить меня]]({invite_url})**\n\n\
-                    {naomiserver} Серверов: {len(bot.guilds)}\n\
-                    {naomiusers} Участников: {len(bot.users)}\n\
-                    {naomicmds} Команд: {len([x.name for x in bot.commands if not x.hidden])}\n\
-                    :smiley: Эмодзи: {len(bot.emojis)}\n\n\
+                    {naomiserver} Серверов: {len(self.bot.guilds)}\n\
+                    {naomiusers} Участников: {len(self.bot.users)}\n\
+                    {naomicmds} Команд: {len([x.name for x in self.bot.commands if not x.hidden])}\n\
+                    :smiley: Эмодзи: {len(self.bot.emojis)}\n\n\
                     {naomiram} RAM: {psutil.virtual_memory().percent}%\n\
                     {naomicpu} CPU: {psutil.cpu_times_percent().user}%')
 
