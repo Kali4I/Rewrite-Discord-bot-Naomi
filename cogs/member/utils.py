@@ -9,7 +9,7 @@ blocked = [437883431897268224]
 
 class Utils(object):
     """Команды пользователей // Utils"""
-    def __init__(self, arg):
+    def __init__(self, bot):
         self.bot = bot
 
 

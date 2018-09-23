@@ -11,7 +11,7 @@ from mcstatus import MinecraftServer
 
 class Info(object):
     """Команды пользователей // Info"""
-    def __init__(self, arg):
+    def __init__(self, bot):
         self.bot = bot
 
 

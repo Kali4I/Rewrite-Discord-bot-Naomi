@@ -7,7 +7,7 @@ import os
 
 class Fun(object):
     """Команды пользователей // Fun"""
-    def __init__(self, arg):
+    def __init__(self, bot):
         self.bot = bot
 
 
