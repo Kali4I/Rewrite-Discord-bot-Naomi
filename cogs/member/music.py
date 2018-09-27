@@ -353,11 +353,33 @@ class Music:
         Аргументы не требуются.
         """
 
+        try:
+            channel = ctx.author.voice.channel
+        except AttributeError:
+            await ctx.send(":notes: Вы не подключены к голосовому каналу.", delete_after=20)
+
+        if not ctx.guild.voice_client:
+            return await ctx.send(':notes: Я не нахожусь в голосовом канале.', delete_after=20)
+
+        await ctx.guild.voice_client.disconnect()
+        await ctx.send(':notes: Успешно.', delete_after=20)
+
+
+
+    @commands.command(name='reconnect', aliases=['rc'])
+    async def reconnect_(self, ctx):
+        try:
+            channel = ctx.author.voice.channel
+            
+        except AttributeError:
+            return await ctx.send(":notes: Вы не подключены к голосовому каналу.", delete_after=20)
+
         if ctx.guild.voice_client:
             await ctx.guild.voice_client.disconnect()
-            await ctx.send(':notes: Успешно.', delete_after=20)
-        else:
-            await ctx.send(':notes: Я не нахожусь в голосовом канале.', delete_after=20)
+
+        await channel.connect()
+
+
 
     @commands.command(name='connect', aliases=['join', 'j'])
     async def connect_(self, ctx, *, channel: discord.VoiceChannel=None):
@@ -382,15 +404,19 @@ class Music:
             try:
                 await vc.move_to(channel)
             except asyncio.TimeoutError:
-                raise VoiceConnectionError(f'Переход в <{channel}> закончилось неудачей;\n Timeout.')
+                return await ctx.send(':notes: :x: Переход в <{channel}> не удался...\nПревышено время ожидания. Попробуйте еще раз.')
+                #raise VoiceConnectionError(f'Переход в <{channel}> закончилось неудачей;\n Timeout.')
         else:
             try:
                 await channel.connect()
             except asyncio.TimeoutError:
-                raise VoiceConnectionError(f'Подключение к <{channel}> закончилось неудачей;\n Timeout.')
+                return await ctx.send(':notes: :x: Подключение к <{channel}> не удалось...\nПревышено время ожидания. Попробуйте еще раз.')
+                # raise VoiceConnectionError(f'Подключение к <{channel}> закончилось неудачей;\n Timeout.')
 
         await ctx.send(f":notes: Голосовой канал: **{channel}**", delete_after=20)
         
+
+
     @commands.command(name='play', aliases=['sing', 'p'])
     async def play_(self, ctx, *, search: str):
         """Проигрывание музыки.
@@ -416,6 +442,8 @@ class Music:
         # If download is True, source will be a discord.FFmpegPCMAudio with a VolumeTransformer.
         source = await YTDLSource.create_source(ctx, search, loop=self.bot.loop, download=False)
         await player.queue.put(source)
+
+
 
     @commands.command(name='playing', aliases=['np', 'current', 'currentsong', 'now_playing'])
     async def now_playing_(self, ctx):
