@@ -197,14 +197,8 @@ class MusicPlayer:
                 vc.stop()
 
             if control == 'stop':
+                await context.invoke(self.bot.get_command("stop"))
                 await channel.send('**:notes: Проигрывание завершено.**', delete_after=5)
-                await self._cog.cleanup(guild)
-
-                try:
-                    await vc.disconnect()
-                    self.music_controller.cancel()
-                except:
-                    pass
 
             if control == 'vol_up':
                 player = self._cog.get_player(context)
@@ -344,7 +338,7 @@ class Music:
 
         return player
 
-    @commands.command(name='disconnect', aliases=['leave', 'l'])
+    @commands.command(name='stop', aliases=['leave', 'l', 'disconnect'])
     async def disconnect_(self, ctx):
         """Отключить меня от голосового канала.
 
@@ -370,7 +364,7 @@ class Music:
     async def reconnect_(self, ctx):
         try:
             channel = ctx.author.voice.channel
-            
+
         except AttributeError:
             return await ctx.send(":notes: Вы не подключены к голосовому каналу.", delete_after=20)
 
@@ -404,13 +398,13 @@ class Music:
             try:
                 await vc.move_to(channel)
             except asyncio.TimeoutError:
-                return await ctx.send(':notes: :x: Переход в <{channel}> не удался...\nПревышено время ожидания. Попробуйте еще раз.')
+                return await ctx.send(f':notes: :x: Переход в <{channel}> не удался...\nПревышено время ожидания. Попробуйте еще раз.')
                 #raise VoiceConnectionError(f'Переход в <{channel}> закончилось неудачей;\n Timeout.')
         else:
             try:
                 await channel.connect()
             except asyncio.TimeoutError:
-                return await ctx.send(':notes: :x: Подключение к <{channel}> не удалось...\nПревышено время ожидания. Попробуйте еще раз.')
+                return await ctx.send(f':notes: :x: Подключение к <{channel}> не удалось...\nПревышено время ожидания. Попробуйте еще раз.')
                 # raise VoiceConnectionError(f'Подключение к <{channel}> закончилось неудачей;\n Timeout.')
 
         await ctx.send(f":notes: Голосовой канал: **{channel}**", delete_after=20)
