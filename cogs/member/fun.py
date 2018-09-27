@@ -6,6 +6,10 @@ import nekos
 import json
 import os
 
+from utils.NekosWrapper import (get_neko, 
+                                NekoNotInTags,
+                                tags)
+
 class Fun(object):
     """Команды пользователей // Fun"""
     def __init__(self, bot):
@@ -136,27 +140,12 @@ class Fun(object):
                 return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xff0000).set_footer(text='Вы не в NSFW канале!'))
         except:
             pass
-
-        tags = ['feet', 'yuri', 'trap', 'futanari', 'hololewd', 'lewdkemo',
-                'solog', 'feetg', 'cum', 'erokemo', 'les', 'lewdk', 'ngif',
-                'tickle', 'lewd', 'feed', 'eroyuri', 'eron', 'cum_jpg',
-                'bj', 'nsfw_neko_gif', 'solo', 'kemonomimi', 'nsfw_avatar', 'poke',
-                'anal', 'slap', 'hentai', 'avatar', 'erofeet', 'holo', 'keta',
-                'blowjob', 'pussy', 'tits', 'holoero', 'pussy_jpg', 'pwankg',
-                'classic', 'kuni', 'pat', 'kiss', 'femdom', 'neko', 'cuddle',
-                'erok', 'fox_girl', 'boobs', 'smallboobs', 'hug', 'ero', 'wallpaper']
-
         n = discord.Embed(timestamp=ctx.message.created_at, color=0xF13875)
 
-        if tag is None:
-            n.set_image(url=nekos.img(choice(tags)))
+        if tag not in [x for x in tags]:
+            n.add_field(name='Доступные теги:', value=', '.join(tags))
 
-        else:
-            if tag in [x for x in tags]:
-                n.set_image(url=nekos.img(tag))
-
-            else:
-                n.add_field(name='Доступные теги:', value=', '.join(tags))
+        n.set_image(url=get_neko(tag))
 
         await ctx.send(embed=n)
 

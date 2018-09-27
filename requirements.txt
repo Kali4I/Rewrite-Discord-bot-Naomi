@@ -1,6 +1,5 @@
 aiohttp
 git+https://github.com/Rapptz/discord.py@rewrite#egg=discord.py[voice]
-git+https://github.com/Nekos-life/nekos.py
 pillow
 psutil
 requests
