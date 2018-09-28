@@ -182,14 +182,14 @@ class Info(object):
         if member.name == self.bot.user.name:
             owner = (await self.bot.application_info()).owner
 
-            stats.add_field(name='Создал аккаунт', value=self.bot.user.created_at)
-            stats.add_field(name='Цвет никнейма', value=self.bot.user.colour)
-            stats.add_field(name='Кол-во ролей', value=len(self.bot.user.roles))
-            stats.add_field(name='Высшая роль', value=self.bot.user.top_role.name)
+            stats.add_field(name='Создал аккаунт', value=member.created_at)
+            stats.add_field(name='Цвет никнейма', value=member.colour)
+            stats.add_field(name='Кол-во ролей', value=len(member.roles))
+            stats.add_field(name='Высшая роль', value=member.top_role.name)
             stats.add_field(name='Бот?', value=str(member.bot).replace('True', 'Да').replace('False', 'Нет'))
             stats.add_field(name='Серверов со мной', value=len(self.bot.guilds))
             stats.add_field(name='Мой разработчик', value=owner)
-            stats.set_thumbnail(url=self.bot.user.avatar_url)
+            stats.set_thumbnail(url=member.avatar_url)
 
         else:
             stats.add_field(name='Присоединился', value=member.joined_at)
