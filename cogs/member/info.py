@@ -255,7 +255,7 @@ class Info(object):
             stats.add_field(name='Всего сыграно', value=content['data']['total_time_play'])
             stats.add_field(name='В сети?', value=str(content['data']['online']).replace('1', 'Да').replace('0', 'Нет'))
             stats.add_field(name='Лицензия?', value=str(content['data']['license']).replace('1', 'Да').replace('0', 'Нет'))
-            stats.add_field(name='Последний раз в сети', value=time.time() - content['data']['last_play'])
+            # stats.add_field(name='Последний раз в сети', value=time.time() - content['data']['last_play'])
         except:
             stats = discord.Embed(timestamp=ctx.message.created_at, color=0xff0000).set_footer(text='mcplayer [ник]')
 
