@@ -5,7 +5,7 @@ import time
 
 from utils.HastebinPoster import post
 
-blocked = [437883431897268224]
+blocked = [437883431897268224, 453929194485710865]
 
 class Utils(object):
     """Команды пользователей // Utils"""
@@ -90,7 +90,7 @@ class Utils(object):
         """
 
         if ctx.author.id in blocked:
-            return await ctx.send('Нельзя.')
+            return await ctx.send('Тебе нельзя, ты плохой.')
 
         try:
             ideas_guild = discord.utils.get(self.bot.guilds, id=457092470472179712)
@@ -118,7 +118,7 @@ class Utils(object):
         """
 
         if ctx.author.id in blocked:
-            return await ctx.send('Нельзя.')
+            return await ctx.send('Тебе нельзя, ты плохой.')
 
         try:
             rep_guild = discord.utils.get(self.bot.guilds, id=457092470472179712)
