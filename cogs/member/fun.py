@@ -140,14 +140,16 @@ class Fun(object):
                 return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xff0000).set_footer(text='Вы не в NSFW канале!'))
         except:
             pass
-        n = discord.Embed(timestamp=ctx.message.created_at, color=0xF13875)
 
-        if tag not in [x for x in tags]:
-            n.add_field(name='Доступные теги:', value=', '.join(tags))
+        nekoframe = discord.Embed(timestamp=ctx.message.created_at, color=0xF13875)
 
-        n.set_image(url=get_neko(tag))
+        if tag not in tags:
+            nekoframe.add_field(name='Доступные теги:', value=', '.join(tags))
 
-        await ctx.send(embed=n)
+        else:
+            nekoframe.set_image(url=get_neko(tag))
+
+        await ctx.send(embed=nekoframe)
 
 
 
