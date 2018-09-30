@@ -17,17 +17,17 @@ async def start_session():
 
 bot.remove_command('help')
 
-_cogs = ['cogs.member.fun',
-         'cogs.member.info',
-         'cogs.member.music',
-         'cogs.member.utils',
-         'cogs.system.error_handler',
-         'cogs.system.logger',
-         'cogs.admin',
-         'cogs.owner']
+extensions = ['cogs.member.fun',
+              'cogs.member.info',
+              'cogs.member.music',
+              'cogs.member.utils',
+              'cogs.system.error_handler',
+              'cogs.system.logger',
+              'cogs.admin',
+              'cogs.owner']
 
 if __name__ == '__main__':
-    for extension in _cogs:
+    for extension in extensions:
         try:
             bot.load_extension(extension)
         except Exception as e:

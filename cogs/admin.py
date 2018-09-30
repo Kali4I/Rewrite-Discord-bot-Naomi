@@ -1,4 +1,5 @@
 import discord
+import asyncio
 from discord.ext import commands
 from random import choice
 import traceback
@@ -37,16 +38,38 @@ class Admin(object):
                 mute = await ctx.guild.create_role(name='NaomiMute',
                             reason='Использована команда n!mute, но роль "NaomiMute" отсутствовала.')
 
-            for tchannel in ctx.guild.text_channels:
-                await tchannel.set_permissions(mute,
-                                              read_messages=True,
-                                              send_messages=False)
+                try:
+                    def message_check(m):
+                        return m.author.id == ctx.author.id
+                    
+                    await ctx.send(f'Команда {ctx.prefix}mute использована первый раз на этом сервере.\nМогу-ли я внести правки в настройки каналов и ролей для корректной работы этой команды? (Да/Нет)')
+                    msg = await self.bot.wait_for('message', check=message_check, timeout=30.0)
+
+                    if msg.lower() == 'да':
+                        await ctx.send('Будет сделано! c:')
+
+                        for tchannel in ctx.guild.text_channels:
+                            await tchannel.set_permissions(mute,
+                                                        read_messages=True,
+                                                        send_messages=False)
+                        
+                        for role in ctx.guild.roles:
+                            await role.edit(permissions=send_messages=False)
+
+                    if msg.lower() == 'нет':
+                        await ctx.send('В таком случае, команда может работать некорректно.')
+
+                except asyncio.TimeoutError:
+                    await ctx.send('Я не столь терпелива, чтобы ждать ответа так долго...', delete_after=10)
+                    return False
             
             await member.add_roles(mute, reason='Был приглушен через n!mute.')
+
         except discord.errors.Forbidden:
-            await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xff0000).set_footer(text='У меня нет прав.'))
-        except Exception as e:
-            await ctx.send(f'```python\n{traceback.format_exc()}```')
+            return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xff0000).set_footer(text='У меня нет прав.'))
+
+        except Exception:
+            return await ctx.send(f'```python\n{traceback.format_exc()}```')
         
         await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0x35FF81, description=f'Участник {member.mention} приглушен.\nПричина: {reason}'))
 
@@ -81,9 +104,10 @@ class Admin(object):
                 return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xff0000, description=f'{member.mention} не приглушен!'))
 
             await member.remove_roles(mute, reason='Приглушение убрано - n!unmute.')
+
         except discord.errors.Forbidden:
-            await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xff0000).set_footer(text='У меня нет прав.'))
-        
+            return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xff0000).set_footer(text='У меня нет прав.'))
+
         await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0x35FF81, description=f'Снято приглушение с участника {member.mention}.\nПричина: {reason}'))
 
 
@@ -108,8 +132,9 @@ class Admin(object):
 
         try:
             await member.edit(nick=nickname, reason='Запрошено, используя n!newname.')
+
         except discord.errors.Forbidden:
-            await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xff0000).set_footer(text='У меня нет прав.'))
+            return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xff0000).set_footer(text='У меня нет прав.'))
 
 
 
@@ -133,7 +158,11 @@ class Admin(object):
         def is_member(m):
             return m.author == member
 
-        await ctx.channel.purge(limit=count, check=is_member)
+        try:
+            await ctx.channel.purge(limit=count, check=is_member)
+
+        except discord.errors.Forbidden:
+            return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xff0000).set_footer(text='У меня нет прав.'))
 
 
 
@@ -153,7 +182,11 @@ class Admin(object):
         if not ctx.author.permissions_in(ctx.channel).manage_messages:
             return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xFF0000).set_footer(text='Нет прав.'))
 
-        await ctx.channel.purge(limit=count)
+        try:
+            await ctx.channel.purge(limit=count)
+
+        except discord.errors.Forbidden:
+            return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xff0000).set_footer(text='У меня нет прав.'))
 
 
 
@@ -214,8 +247,10 @@ class Admin(object):
             for user in banned_users:
                 if user == member:
                     await ctx.guild.unban(user=user, reason=reason)
+
         except discord.errors.Forbidden:
-            return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xFF0000).set_footer(text='У меня нет прав.'))
+            await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xFF0000).set_footer(text='У меня нет прав.'))
+            return False
 
 
 

@@ -24,7 +24,7 @@ class Logger(object):
         print(f'[{time.ctime()}] Меня пригласили на {g.name}, еее!')
 
     async def on_guild_remove(self, g):
-        print(f'[{time.ctime()}] Меня кикнули из {g.name}, обидка :с')
+        print(f'[{time.ctime()}] Меня отключили от {g.name}, обидка :с')
 
 
 def setup(bot):

@@ -15,6 +15,26 @@ class Owner(object):
 
     def __init__(self, bot):
         self.bot = bot
+    
+
+
+
+
+
+    @commands.command(name='quit', aliases=['removeguild', 'guildl', 'quitserver', 'guildleave'], hidden=True)
+    @commands.is_owner()
+    async def quit_(self, ctx, guild: discord.Guild):
+        """Отключить меня от сервера.
+
+        Подробности:
+        --------------
+        <guild> - сервер.
+        """
+        try:
+            await guild.leave()
+
+        except:
+            ctx.send(f'Возникла ошибка:\n{traceback.format_exc()}')
 
 
 
