@@ -54,7 +54,7 @@ class Admin(object):
                                                         send_messages=False)
 
                         mute_perms = discord.Permissions()
-                        mute_perms.update(send_messages=True)
+                        mute_perms.update(send_messages=False)
 
                         for role in ctx.guild.roles:
                             await role.edit(permissions=mute_perms)
