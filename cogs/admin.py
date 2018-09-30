@@ -46,15 +46,15 @@ class Admin(object):
                     msg = await self.bot.wait_for('message', check=message_check, timeout=30.0)
 
                     if msg.content.lower() == 'да':
-                        await ctx.send('Будет сделано! c:')
+                        logmsg = await ctx.send('Будет сделано! c:')
+
+                        mute_perms = discord.Permissions()
+                        mute_perms.update(send_messages=False)
 
                         for tchannel in ctx.guild.text_channels:
                             await tchannel.set_permissions(mute,
                                                         read_messages=True,
                                                         send_messages=False)
-
-                        mute_perms = discord.Permissions()
-                        mute_perms.update(send_messages=False)
 
                         for role in ctx.guild.roles:
                             await role.edit(permissions=mute_perms)
@@ -63,9 +63,8 @@ class Admin(object):
                         await ctx.send('В таком случае, команда может работать некорректно.')
 
                 except asyncio.TimeoutError:
-                    await ctx.send('Я не столь терпелива, чтобы ждать ответа так долго...', delete_after=10)
-                    return False
-            
+                    return await ctx.send('Я не столь терпелива, чтобы ждать ответа так долго...\nПросто повторно введите команду.', delete_after=10)
+
             await member.add_roles(mute, reason='Был приглушен через n!mute.')
 
         except discord.errors.Forbidden:
