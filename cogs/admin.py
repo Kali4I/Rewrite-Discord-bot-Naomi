@@ -45,7 +45,7 @@ class Admin(object):
                     await ctx.send(f'Команда {ctx.prefix}mute использована первый раз на этом сервере.\nМогу-ли я внести правки в настройки каналов и ролей для корректной работы этой команды? (Да/Нет)')
                     msg = await self.bot.wait_for('message', check=message_check, timeout=30.0)
 
-                    if msg.lower() == 'да':
+                    if msg.content.lower() == 'да':
                         await ctx.send('Будет сделано! c:')
 
                         for tchannel in ctx.guild.text_channels:
@@ -59,7 +59,7 @@ class Admin(object):
                         for role in ctx.guild.roles:
                             await role.edit(permissions=mute_perms)
 
-                    if msg.lower() == 'нет':
+                    if msg.content.lower() == 'нет':
                         await ctx.send('В таком случае, команда может работать некорректно.')
 
                 except asyncio.TimeoutError:
