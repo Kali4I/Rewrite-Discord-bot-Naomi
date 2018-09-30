@@ -48,9 +48,6 @@ class Admin(object):
                     if msg.content.lower() == 'да':
                         await ctx.send('Будет сделано! c:')
 
-                        mute_perms = discord.Permissions()
-                        mute_perms.update(send_messages=False)
-
                         for tchannel in ctx.guild.text_channels:
                             try:
                                 await tchannel.set_permissions(mute,
@@ -60,12 +57,16 @@ class Admin(object):
                             except discord.errors.Forbidden:
                                 pass
 
+                        mute_perms = discord.Permissions()
+                        mute_perms.update(send_messages=False)
+
                         for role in ctx.guild.roles:
-                            try:
-                                await role.edit(permissions=mute_perms)
-                                
-                            except discord.errors.Forbidden:
-                                pass
+                            if role != ctx.guild.default_role:
+                                try:
+                                    await role.edit(permissions=mute_perms)
+                                    
+                                except discord.errors.Forbidden:
+                                    pass
 
                     if msg.content.lower() == 'нет':
                         await ctx.send('В таком случае, команда может работать некорректно.')
