@@ -51,9 +51,9 @@ class Admin(object):
                         for tchannel in ctx.guild.text_channels:
                             try:
                                 await tchannel.set_permissions(mute,
-                                                            read_messages=True,
-                                                            send_messages=False)
-                            
+                                                               read_messages=True,
+                                                               send_messages=False)
+
                             except discord.errors.Forbidden:
                                 pass
 
@@ -72,17 +72,29 @@ class Admin(object):
                         await ctx.send('В таком случае, команда может работать некорректно.')
 
                 except asyncio.TimeoutError:
-                    return await ctx.send('Я не столь терпелива, чтобы ждать ответа так долго...\nПросто повторно введите команду.', delete_after=10)
+                    await ctx.send('Я не столь терпелива, чтобы ждать ответа так долго...\nПросто повторно введите команду.', delete_after=10)
+                    await asyncio.sleep(10)
+                    await ctx.message.delete()
+                    return False
 
             await member.add_roles(mute, reason='Был приглушен через n!mute.')
 
         except discord.errors.Forbidden:
-            return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xff0000).set_footer(text='У меня нет прав.'))
+            await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xff0000).set_footer(text='У меня нет прав.'), delete_after=20)
+            await asyncio.sleep(20)
+            await ctx.message.delete()
+            return False
 
         except Exception:
-            return await ctx.send(f'```python\n{traceback.format_exc()}```')
+            await ctx.send(f'```python\n{traceback.format_exc()}```', delete_after=20)
+            await asyncio.sleep(20)
+            await ctx.message.delete()
+            return False
         
-        await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0x35FF81, description=f'Участник {member.mention} приглушен.\nПричина: {reason}'))
+        await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0x35FF81, description=f'Участник {member.mention} приглушен.\nПричина: {reason}'), delete_after=20)
+        await asyncio.sleep(20)
+        await ctx.message.delete()
+        return True
 
 
 
@@ -94,7 +106,7 @@ class Admin(object):
     async def unmute(self, ctx, member:discord.Member, *, reason:str=None):
         """Снять приглушение с участника.
 
-        Подробности:z
+        Подробности:
         --------------
         <member> - участник.
         [reason] - причина.
@@ -114,12 +126,18 @@ class Admin(object):
             if mute not in member.roles:
                 return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xff0000, description=f'{member.mention} не приглушен!'))
 
-            await member.remove_roles(mute, reason='Приглушение убрано - n!unmute.')
+            await member.remove_roles(mute, reason='Приглушение снято - n!unmute.')
 
         except discord.errors.Forbidden:
-            return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xff0000).set_footer(text='У меня нет прав.'))
+            await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xff0000).set_footer(text='У меня нет прав.'), delete_after=20)
+            await asyncio.sleep(20)
+            await ctx.message.delete()
+            return False
 
-        await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0x35FF81, description=f'Снято приглушение с участника {member.mention}.\nПричина: {reason}'))
+        await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0x35FF81, description=f'Снято приглушение с участника {member.mention}.\nПричина: {reason}'), delete_after=20)
+        await asyncio.sleep(20)
+        await ctx.message.delete()
+        return True
 
 
 
@@ -139,13 +157,19 @@ class Admin(object):
         """
 
         if not ctx.author.permissions_in(ctx.channel).manage_nicknames:
-            return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xFF0000).set_footer(text='Нет прав.'))
+            await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xFF0000).set_footer(text='Нет прав.'), delete_after=20)
+            await asyncio.sleep(20)
+            await ctx.message.delete()
+            return False
 
         try:
             await member.edit(nick=nickname, reason='Запрошено, используя n!newname.')
 
         except discord.errors.Forbidden:
-            return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xff0000).set_footer(text='У меня нет прав.'))
+            await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xff0000).set_footer(text='У меня нет прав.'), delete_after=20)
+            await asyncio.sleep(20)
+            await ctx.message.delete()
+            return False
 
 
 
@@ -164,7 +188,10 @@ class Admin(object):
         """
 
         if not ctx.author.permissions_in(ctx.channel).manage_messages:
-            return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xFF0000).set_footer(text='Нет прав.'))
+            await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xFF0000).set_footer(text='Нет прав.'), delete_after=20)
+            await asyncio.sleep(20)
+            await ctx.message.delete()
+            return False
 
         def is_member(m):
             return m.author == member
@@ -173,7 +200,10 @@ class Admin(object):
             await ctx.channel.purge(limit=count, check=is_member)
 
         except discord.errors.Forbidden:
-            return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xff0000).set_footer(text='У меня нет прав.'))
+            await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xff0000).set_footer(text='У меня нет прав.'), delete_after=20)
+            await asyncio.sleep(20)
+            await ctx.message.delete()
+            return False
 
 
 
@@ -191,13 +221,19 @@ class Admin(object):
         """
 
         if not ctx.author.permissions_in(ctx.channel).manage_messages:
-            return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xFF0000).set_footer(text='Нет прав.'))
+            await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xFF0000).set_footer(text='Нет прав.'), delete_after=20)
+            await asyncio.sleep(20)
+            await ctx.message.delete()
+            return False
 
         try:
             await ctx.channel.purge(limit=count)
 
         except discord.errors.Forbidden:
-            return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xff0000).set_footer(text='У меня нет прав.'))
+            await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xff0000).set_footer(text='У меня нет прав.'), delete_after=20)
+            await asyncio.sleep(20)
+            await ctx.message.delete()
+            return False
 
 
 
@@ -216,7 +252,10 @@ class Admin(object):
         """
 
         if not ctx.author.permissions_in(ctx.channel).ban_members:
-            return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xFF0000).set_footer(text='Нет прав.'))
+            await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xFF0000).set_footer(text='Нет прав.'), delete_after=20)
+            await asyncio.sleep(20)
+            await ctx.message.delete()
+            return False
 
         if not reason:
             reason = 'отсутствует.'
@@ -224,10 +263,16 @@ class Admin(object):
             await ctx.guild.ban(user=member, reason=reason)
 
         except discord.errors.Forbidden:
-            return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xff0000).set_footer(text='У меня нет прав.'))
+            await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xff0000).set_footer(text='У меня нет прав.'), delete_after=20)
+            await asyncio.sleep(20)
+            await ctx.message.delete()
+            return False
 
         else:
-            return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0x00ff00, description=f'Пользователь {member} забанен!\nПричина: {reason}.').set_footer(text='ban [@пользователь] [причина]'))
+            await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0x00ff00, description=f'Пользователь {member} забанен!\nПричина: {reason}.').set_footer(text='ban [@пользователь] [причина]'), delete_after=20)
+            await asyncio.sleep(20)
+            await ctx.message.delete()
+            return False
 
 
 
@@ -249,7 +294,10 @@ class Admin(object):
             reason = 'отсутствует.'
 
         if not ctx.author.permissions_in(ctx.channel).ban_members:
-            return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xFF0000).set_footer(text='Нет прав.'))
+            await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xFF0000).set_footer(text='Нет прав.'), delete_after=20)
+            await asyncio.sleep(20)
+            await ctx.message.delete()
+            return False
 
         try:
             ban_entries = await ctx.guild.bans()
@@ -279,13 +327,19 @@ class Admin(object):
         """
 
         if not ctx.author.permissions_in(ctx.channel).ban_members:
-            return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xFF0000).set_footer(text='Нет прав.'))
+            await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xFF0000).set_footer(text='Нет прав.'), delete_after=20)
+            await asyncio.sleep(20)
+            await ctx.message.delete()
+            return False
 
         try:
             bans = await ctx.guild.bans()
 
         except discord.errors.Forbidden:
-            return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xff0000).set_footer(text='У меня нет прав.'))
+            await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xff0000).set_footer(text='У меня нет прав.'), delete_after=20)
+            await asyncio.sleep(20)
+            await ctx.message.delete()
+            return False
 
         if len(bans) <= 0:
             return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xff0000).set_footer(text='Забаненные пользователи отсутствуют.'))
@@ -309,7 +363,10 @@ class Admin(object):
         """
 
         if not ctx.author.permissions_in(ctx.channel).kick_members:
-            return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xFF0000).set_footer(text='Нет прав.'))
+            await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xFF0000).set_footer(text='Нет прав.'), delete_after=20)
+            await asyncio.sleep(20)
+            await ctx.message.delete()
+            return False
 
         if not reason:
             reason = 'отсутствует.'
@@ -318,10 +375,16 @@ class Admin(object):
             await member.kick(reason=reason)
 
         except discord.errors.Forbidden:
-            return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xff0000).set_footer(text='У меня нет прав.'))
+            await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xff0000).set_footer(text='У меня нет прав.'), delete_after=20)
+            await asyncio.sleep(20)
+            await ctx.message.delete()
+            return False
 
         else:
-            return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0x00ff00, description=f'Пользователь {member} был кикнут.\nПричина: {reason}.').set_footer(text='kick [@пользователь] [причина]'))
+            await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0x00ff00, description=f'Пользователь {member} был кикнут.\nПричина: {reason}.').set_footer(text='kick [@пользователь] [причина]'), delete_after=20)
+            await asyncio.sleep(20)
+            await ctx.message.delete()
+            return True
 
 
 
