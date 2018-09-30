@@ -41,7 +41,7 @@ class Admin(object):
                 try:
                     def message_check(m):
                         return m.author.id == ctx.author.id
-                    
+
                     await ctx.send(f'Команда {ctx.prefix}mute использована первый раз на этом сервере.\nМогу-ли я внести правки в настройки каналов и ролей для корректной работы этой команды? (Да/Нет)')
                     msg = await self.bot.wait_for('message', check=message_check, timeout=30.0)
 
@@ -52,9 +52,12 @@ class Admin(object):
                             await tchannel.set_permissions(mute,
                                                         read_messages=True,
                                                         send_messages=False)
-                        
+
+                        mute_perms = discord.Permissions()
+                        mute_perms.update(send_messages=True)
+
                         for role in ctx.guild.roles:
-                            await role.edit(permissions=send_messages=False)
+                            await role.edit(permissions=mute_perms)
 
                     if msg.lower() == 'нет':
                         await ctx.send('В таком случае, команда может работать некорректно.')
