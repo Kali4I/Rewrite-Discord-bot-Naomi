@@ -55,13 +55,7 @@ class ErrorHandler:
 
         await rep_channel.send(embed=discord.Embed(color=0xF56415, 
                                 title='ErrorHandler обнаружил ошибку!',
-                                                   description=f'Вызвано участником: {ctx.author}\nПодробности ошибки:```python\n{traceback.format_exc()}```\n```python\n{type(error).__name__}: {error}```'))
-
-
-
-
-
-
+                                description=f'Вызвано участником: {ctx.author}\nПодробности ошибки:```python\n{traceback.format_exc()}```\n```python\n{type(error).__name__}: {error}```'))
 
 def setup(bot):
     bot.add_cog(ErrorHandler(bot))

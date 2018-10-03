@@ -26,7 +26,6 @@ class Logger(object):
     async def on_guild_remove(self, g):
         print(f'[{time.ctime()}] Меня отключили от {g.name}, обидка :с')
 
-
 def setup(bot):
     bot.add_cog(Logger(bot))
     print('[logger.py] Логгер загружен.')

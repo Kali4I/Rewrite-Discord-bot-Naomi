@@ -14,11 +14,6 @@ class Info(object):
     def __init__(self, bot):
         self.bot = bot
 
-
-
-
-
-
     @commands.command(name='cryptoprice')
     async def cryptoprice(self, ctx, cryptocurrency=None, currency=None):
         """Стоимость криптовалют.
@@ -53,11 +48,6 @@ class Info(object):
         await ctx.send(embed=discord.Embed(color=0xF4F624, title=f'Стоимость криптовалюты {cryptocurrency}.',
                description=f'USD: `{resp[0]["price_usd"]}`\n{currency.upper()}: `{resp[0][price]}`'))
 
-
-
-
-
-
     @commands.command(name='anime', aliases=['search-anime', 'anime-search'])
     async def anime(self, ctx, *, query: str):
         """Поиск аниме.
@@ -85,11 +75,6 @@ class Info(object):
 
             except KeyError:
                 await ctx.send(f'По запросу ``{query}`` ничего не найдено..')
-
-
-
-
-
 
     @commands.command(name='about', aliases=['info'])
     async def about(self, ctx):
@@ -121,13 +106,7 @@ class Info(object):
                     :smiley: Эмодзи: {len(self.bot.emojis)}\n\n\
                     {naomiram} RAM: {psutil.virtual_memory().percent}%\n\
                     {naomicpu} CPU: {psutil.cpu_times_percent().user}%')
-
         await ctx.send(embed=embed)
-
-
-
-
-
 
     @commands.command(name='help', aliases=['commands', 'cmds'])
     async def thelp(self, ctx, *, command:str=None):
@@ -156,11 +135,6 @@ class Info(object):
             await p.paginate()
         except Exception as e:
             await ctx.send(e)
-
-
-
-
-
 
     @commands.command(name='userinfo', aliases=['user-info'])
     @commands.guild_only()
@@ -201,13 +175,7 @@ class Info(object):
             stats.add_field(name='Высшая роль', value=member.top_role.name)
             stats.add_field(name='Бот?', value=str(member.bot).replace('True', 'Да').replace('False', 'Нет'))
             stats.set_thumbnail(url=member.avatar_url)
-
         await ctx.send(embed=stats)
-
-
-
-
-
 
     @commands.command(name='guild', aliases=['server'])
     @commands.guild_only()
@@ -231,13 +199,7 @@ class Info(object):
         stats.add_field(name='Пользователей', value=len([x.name for x in ctx.guild.members if not x.bot]))
         stats.add_field(name='Ботов', value=len([x.name for x in ctx.guild.members if x.bot]))
         stats.set_thumbnail(url=ctx.guild.icon_url)
-
         await ctx.send(embed=stats)
-
-
-
-
-
 
     @commands.command(name='mcplayer', aliases=['mcuser'])
     async def mcplayer(self, ctx, nickname:str):
@@ -260,13 +222,7 @@ class Info(object):
             # stats.add_field(name='Последний раз в сети', value=time.time() - content['data']['last_play'])
         except:
             stats = discord.Embed(timestamp=ctx.message.created_at, color=0xff0000).set_footer(text='mcplayer [ник]')
-
         await ctx.send(embed=stats)
-
-
-
-
-
 
     @commands.command(name='mcstats', aliases=['mcserver', 'mcserv', 'mcinfo', 'mcstatus'])
     async def mcstats(self, ctx, adress:str):
@@ -289,13 +245,7 @@ class Info(object):
             stats.add_field(name='Ядро', value=status.version.name)
         except:
             stats = discord.Embed(timestamp=ctx.message.created_at, color=0xff0000).set_footer(text='mcstats [адрес_существующего_сервера]')
-
         await ctx.send(embed=stats)
-
-
-
-
-
 
     @commands.command(name='osu', aliases=['osu!'])
     async def osu(self, ctx, player:str, mode:str=None):
@@ -333,11 +283,6 @@ class Info(object):
         osu_st.set_image(url=_image_url)
         osu_st.set_footer(text='osu [ник_игрока] | lemmy.pw')
         await ctx.send(embed=osu_st)
-
-
-
-
-
 
 def setup(bot):
     bot.add_cog(Info(bot))

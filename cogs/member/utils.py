@@ -12,12 +12,6 @@ class Utils(object):
     def __init__(self, bot):
         self.bot = bot
 
-
-
-
-
-
-
     @commands.command(name='hostinfo', aliases=['host', 'whois'])
     async def hostinfo(self, ctx, domain:str):
         """WHOIS-информация о домене.
@@ -53,13 +47,7 @@ class Utils(object):
         hostinfo.add_field(name="Дата создания:", value=crtdata, inline=True)
         hostinfo.add_field(name="Регион:", value=whois_info["country"], inline=True)
         hostinfo.set_footer(text='hostinfo [домен]')
-
         await ctx.send(embed=hostinfo)
-
-
-
-
-
 
     @commands.command(name='hastebin')
     async def hastebin_post(self, ctx, *, code:str):
@@ -74,12 +62,6 @@ class Utils(object):
         await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, title='Ваш код был загружен на Hastebin:',
                                         description=f'```{link}```'))
 
-
-
-
-
-
-
     @commands.command(name='idea', aliases=['myidea', 'my-idea'])
     async def idea(self, ctx, *, message:str):
         """Поделиться Вашей идеей для меня.
@@ -90,7 +72,7 @@ class Utils(object):
         """
 
         if ctx.author.id in blocked:
-            return await ctx.send('Тебе нельзя, ты плохой.')
+            return await ctx.send('Вам запрещен доступ к этой команде.')
 
         try:
             ideas_guild = discord.utils.get(self.bot.guilds, id=457092470472179712)
@@ -103,11 +85,6 @@ class Utils(object):
         except Exception as e:
             await ctx.send('Не удалось отправить.\n%s' % e)
 
-
-
-
-
-
     @commands.command(name='bug', aliases=['bugreport', 'bug-report', 'report-bug'])
     async def bugreport(self, ctx, *, message:str):
         """Сообщить о проблеме / баге.
@@ -118,7 +95,7 @@ class Utils(object):
         """
 
         if ctx.author.id in blocked:
-            return await ctx.send('Тебе нельзя, ты плохой.')
+            return await ctx.send('Вам запрещен доступ к этой команде.')
 
         try:
             rep_guild = discord.utils.get(self.bot.guilds, id=457092470472179712)
@@ -130,11 +107,6 @@ class Utils(object):
                                 description='Отправил: %s\nОписание:```markup\n%s```\n\n%s' % (ctx.author, message, time.ctime())))
         except Exception as e:
             await ctx.send('Не удалось отправить репорт.\n%s' % e)
-
-
-
-
-
 
     @commands.command(name='calc', aliases=['calculator', 'calculate'])
     async def calc(self, ctx, *, numbers:str):
@@ -170,12 +142,6 @@ class Utils(object):
 
             else:
                 await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xf0a302, description=f'```css\n{numbers}\n({b})\n```{__eval}').set_footer(text='calc [матем.выражение]'))
-
-
-
-
-
-
 
 def setup(bot):
     bot.add_cog(Utils(bot))

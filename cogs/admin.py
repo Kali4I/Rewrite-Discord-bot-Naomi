@@ -10,11 +10,6 @@ class Admin(object):
     def __init__(self, bot):
         self.bot = bot
 
-
-
-
-
-
     @commands.command(name='mute')
     @commands.guild_only()
     async def mute(self, ctx, member:discord.Member, *, reason:str=None):
@@ -96,11 +91,6 @@ class Admin(object):
         await ctx.message.delete()
         return True
 
-
-
-
-
-
     @commands.command(name='unmute')
     @commands.guild_only()
     async def unmute(self, ctx, member:discord.Member, *, reason:str=None):
@@ -139,12 +129,6 @@ class Admin(object):
         await ctx.message.delete()
         return True
 
-
-
-
-
-
-
     @commands.command(name='newname', aliases=['new-name', 'change-name', 'changename', 'newnick'])
     @commands.guild_only()
     async def newname(self, ctx, member:discord.Member, *, nickname:str=None):
@@ -170,11 +154,6 @@ class Admin(object):
             await asyncio.sleep(20)
             await ctx.message.delete()
             return False
-
-
-
-
-
 
     @commands.command(name='cleanup')
     @commands.guild_only()
@@ -205,11 +184,6 @@ class Admin(object):
             await ctx.message.delete()
             return False
 
-
-
-
-
-
     @commands.command(name='purge', aliases=['clean', 'clear', 'clearchat'])
     @commands.guild_only()
     async def purge(self, ctx, count:int):
@@ -234,11 +208,6 @@ class Admin(object):
             await asyncio.sleep(20)
             await ctx.message.delete()
             return False
-
-
-
-
-
 
     @commands.command(name='ban')
     @commands.guild_only()
@@ -274,11 +243,6 @@ class Admin(object):
             await ctx.message.delete()
             return False
 
-
-
-
-
-
     @commands.command(name='unban', aliases=['pardon'])
     @commands.guild_only()
     async def unban(self, ctx, member:discord.Member, *, reason:str=None):
@@ -311,11 +275,6 @@ class Admin(object):
             await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xFF0000).set_footer(text='У меня нет прав.'))
             return False
 
-
-
-
-
-
     @commands.command(name='banlist', aliases=['bans'])
     @commands.guild_only()
     async def banlist(self, ctx):
@@ -345,11 +304,6 @@ class Admin(object):
             return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xff0000).set_footer(text='Забаненные пользователи отсутствуют.'))
 
         return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xff0000, description=f'Забаненные пользователи:\n{", ".join([user.user.name for user in bans])}').set_footer(text='banlist'))
-
-
-
-
-
 
     @commands.command(name='kick')
     @commands.guild_only()
@@ -385,11 +339,6 @@ class Admin(object):
             await asyncio.sleep(20)
             await ctx.message.delete()
             return True
-
-
-
-
-
 
 def setup(bot):
     bot.add_cog(Admin(bot))

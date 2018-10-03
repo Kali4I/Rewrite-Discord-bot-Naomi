@@ -15,11 +15,6 @@ class Owner(object):
 
     def __init__(self, bot):
         self.bot = bot
-    
-
-
-
-
 
     @commands.command(name='quit', aliases=['removeguild', 'guildl', 'quitserver', 'guildleave'], hidden=True)
     @commands.is_owner()
@@ -36,12 +31,6 @@ class Owner(object):
         except:
             ctx.send(f'Возникла ошибка:\n{traceback.format_exc()}')
 
-
-
-
-
-
-
     @commands.command(name='ping', hidden=True)
     @commands.is_owner()
     async def ping(self, ctx):
@@ -56,11 +45,6 @@ class Owner(object):
         diff = resp.created_at - ctx.message.created_at
         await resp.edit(content=f':ping_pong: Pong!\nЗадержка API: {1000*diff.total_seconds():.1f}мс.\nЗадержка {self.bot.user.name}: {round(self.bot.latency * 1000)}мс')
 
-
-
-
-
-
     @commands.command(hidden=True, aliases=['r'])
     @commands.is_owner()
     async def restart(self, ctx):
@@ -74,10 +58,16 @@ class Owner(object):
         await ctx.send(embed=discord.Embed(color=0x13CFEB).set_footer(text="Перезагружаемся..."))
         os.execl(sys.executable, sys.executable, * sys.argv)
 
+    @commands.command(name='#exception', hidden=True)
+    @commands.is_owner()
+    async def exception(self, ctx):
+        """Выдать исключение.
 
-
-
-
+        Подробности:
+        --------------
+        Аргументы не требуются.
+        """
+        raise RuntimeError('Вызвано разработчиком.')
 
     @commands.command(name='load', hidden=True)
     @commands.is_owner()
@@ -96,11 +86,6 @@ class Owner(object):
         else:
             await ctx.send(f'**`Модуль {cog} успешно загружен`**')
 
-
-
-
-
-
     @commands.command(name='unload', hidden=True)
     @commands.is_owner()
     async def cog_unload(self, ctx, *, cog: str):
@@ -117,11 +102,6 @@ class Owner(object):
             await ctx.send(f'**`Ошибка при выгрузке модуля {cog}:`** \n{type(e).__name__} - {e}')
         else:
             await ctx.send(f'**`Модуль {cog} успешно выгружен`**')
-
-
-
-
-
 
     @commands.command(name='reload', hidden=True)
     @commands.is_owner()
@@ -140,11 +120,6 @@ class Owner(object):
             await ctx.send(f'**`Ошибка при перезагрузке модуля {cog}:`** \n{type(e).__name__} - {e}')
         else:
             await ctx.send(f'**`Модуль {cog} успешно перезагружен`**')
-
-
-
-
-
 
     @commands.command(name='execute', aliases=['exec', 'eval'], hidden=True)
     @commands.is_owner()
@@ -210,11 +185,6 @@ class Owner(object):
             await ctx.message.delete()
         except discord.errors.Forbidden:
             pass
-
-
-
-
-
 
 def setup(bot):
     bot.add_cog(Owner(bot))

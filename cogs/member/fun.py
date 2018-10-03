@@ -15,11 +15,6 @@ class Fun(object):
     def __init__(self, bot):
         self.bot = bot
 
-
-
-
-
-
     @commands.command(name='random', aliases=['randuser', 'randomuser', 'rand-user'])
     async def randomuser(self, ctx, *, message:str):
         """Выбрать рандомного участника сервера.
@@ -30,11 +25,6 @@ class Fun(object):
         """
         await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=randint(0x000000, 0xFFFFFF),
             description=f'{choice([x.mention for x in ctx.guild.members])} {message}'))
-
-
-
-
-
 
     @commands.command(name='myname', aliases=['my-name'])
     @commands.guild_only()
@@ -50,11 +40,6 @@ class Fun(object):
             await ctx.author.edit(nick=nickname, reason='Запрошено пользователем.')
         except discord.errors.Forbidden:
             await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xff0000).set_footer(text='У меня нет прав.'))
-
-
-
-
-
 
     @commands.command(name='talk', aliases=['t'])
     async def talk(self, ctx, *, message:str):
@@ -84,19 +69,9 @@ class Fun(object):
                                 'Извиняюсь, но я не знаю, как ответить...'])
             await ctx.send(no_answer)
 
-
-
-
-
-
     @commands.command(name='helloworld', aliases=['hw'])
     async def helloworld(self, ctx):
         await ctx.send('Hello, %s' % ctx.author.mention)
-
-
-
-
-
 
     @commands.command(name='say', aliases=['repeat', 'msg'])
     async def say(self, ctx, *, msg:str):
@@ -111,11 +86,6 @@ class Fun(object):
         except:
             pass
         await ctx.send(msg)
-
-
-
-
-
 
     @commands.command(name='neko', aliases=['catgirl', 'nekogirl'])
     async def catgirl(self, ctx, tag:str=None):
@@ -151,11 +121,6 @@ class Fun(object):
 
         await ctx.send(embed=nekoframe)
 
-
-
-
-
-
     @commands.command(name='avatar', aliases=['useravatar'])
     async def avatar(self, ctx, member:discord.Member=None):
         """Выдает аватарку пользователя.
@@ -180,12 +145,6 @@ class Fun(object):
             a.set_image(url=member.avatar_url_as(static_format='png', size=1024))
             a.set_footer(text='avatar [@пользователь]')
             await ctx.send(embed=a)
-
-
-
-
-
-
 
 def setup(bot):
     bot.add_cog(Fun(bot))
