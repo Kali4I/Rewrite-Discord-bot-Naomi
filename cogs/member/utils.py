@@ -1,16 +1,32 @@
 from discord.ext import commands
+from random import randint
 import discord
 import whois
 import time
 
 from utils.HastebinPoster import post
 
-blocked = [437883431897268224, 453929194485710865]
-
 class Utils(object):
     """Команды пользователей // Utils"""
     def __init__(self, bot):
         self.bot = bot
+    
+    @commands.command(name='random')
+    async def random_(self, ctx, from_: int = None, to: int = None):
+        """Сгенерировать случайное число.
+
+        Подробности:
+        --------------
+        <from_> - от...
+        <to> - до...
+        """
+
+        if not from_:
+            from_ = 0
+        if not to:
+            to = 100
+        
+        await ctx.send(f'Рандомное число: **`{randint(from_, to)}`**')
 
     @commands.command(name='hostinfo', aliases=['host', 'whois'])
     async def hostinfo(self, ctx, domain:str):
@@ -25,20 +41,18 @@ class Utils(object):
 
         hostinfo = discord.Embed(timestamp=ctx.message.created_at, color=0xff0000, title=f'WHOIS-информация для {domain}')
 
-        try:
-            expdata = str(whois_info["expiration_date"][0])
-        except:
-            expdata = str(whois_info["expiration_date"])
+        crtdate = whois_info["creation_date"]
+        expdate = whois_info["expiration_date"]
+        domain = whois_info["domain_name"]
 
-        try:
-            crtdata = str(whois_info["creation_date"][0])
-        except:
-            crtdata = str(whois_info["creation_date"])
+        if type(expdate).__name__ == 'list':
+             expdata = whois_info["expiration_date"][0]
+        
+        if type(crtdate).__name__ == 'list':
+            whois_info["creation_date"][0]
 
-        try:
+        if type(domain).__name__ == 'list':
             domain = whois_info["domain_name"][0]
-        except:
-            domain = whois_info["domain_name"]
 
         hostinfo.add_field(name="Домен:", value=domain, inline=True)
         hostinfo.add_field(name="Регистратор:", value=whois_info["registrar"], inline=True)
@@ -62,52 +76,6 @@ class Utils(object):
         await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, title='Ваш код был загружен на Hastebin:',
                                         description=f'```{link}```'))
 
-    @commands.command(name='idea', aliases=['myidea', 'my-idea'])
-    async def idea(self, ctx, *, message:str):
-        """Поделиться Вашей идеей для меня.
-
-        Подробности:
-        --------------
-        <message> - описание вашей идеи.
-        """
-
-        if ctx.author.id in blocked:
-            return await ctx.send('Вам запрещен доступ к этой команде.')
-
-        try:
-            ideas_guild = discord.utils.get(self.bot.guilds, id=457092470472179712)
-            ideas_channel = discord.utils.get(ideas_guild.channels, id=483662616921767956)
-
-            await ctx.send('Ваша идея отправлена на наш Discord-сервер;\n Спасибо за помощь.')
-            await ideas_channel.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xF56415, 
-                                title='Идея от пользователя.',
-                                description='Отправил: %s\nОписание:```markup\n%s```\n\n%s' % (ctx.author, message, time.ctime())))
-        except Exception as e:
-            await ctx.send('Не удалось отправить.\n%s' % e)
-
-    @commands.command(name='bug', aliases=['bugreport', 'bug-report', 'report-bug'])
-    async def bugreport(self, ctx, *, message:str):
-        """Сообщить о проблеме / баге.
-
-        Подробности:
-        --------------
-        <message> - подробное описание проблемы.
-        """
-
-        if ctx.author.id in blocked:
-            return await ctx.send('Вам запрещен доступ к этой команде.')
-
-        try:
-            rep_guild = discord.utils.get(self.bot.guilds, id=457092470472179712)
-            rep_channel = discord.utils.get(rep_guild.channels, id=483662931377127424)
-
-            await ctx.send('Ваш баг-репорт отправлен на наш Discord-сервер;\n Спасибо за помощь.')
-            await rep_channel.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xF56415, 
-                                title='Новый баг-репорт!',
-                                description='Отправил: %s\nОписание:```markup\n%s```\n\n%s' % (ctx.author, message, time.ctime())))
-        except Exception as e:
-            await ctx.send('Не удалось отправить репорт.\n%s' % e)
-
     @commands.command(name='calc', aliases=['calculator', 'calculate'])
     async def calc(self, ctx, *, numbers:str):
         """Калькулятор.
@@ -129,9 +97,13 @@ class Utils(object):
             return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xfA0000).set_footer(text='Недопустимо по причине снижения производительности.'))
 
         else:
-            try: __eval = str(eval(b))
-            except ZeroDivisionError: __eval = '∞'
-            except Exception as e:
+            try:
+                __eval = str(eval(b))
+
+            except ZeroDivisionError:
+                __eval = '∞'
+
+            except:
                 return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xf0a302).set_footer(text='Выражение имеет ошибку.\nИсправьте его.'))
 
             if len(__eval) > 12 and not __eval.isnumeric():
