@@ -11,7 +11,7 @@ class Utils(object):
     def __init__(self, bot):
         self.bot = bot
     
-    @commands.command(name='random')
+    @commands.command(name='randint', aliases=['rval', 'rvalue'])
     async def random_(self, ctx, from_: int = None, to: int = None):
         """Сгенерировать случайное число.
 
