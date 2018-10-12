@@ -10,7 +10,7 @@ from utils.HelpPaginator import HelpPaginator, CannotPaginate
 from mcstatus import MinecraftServer
 
 class Info(object):
-    """Команды пользователей // Info"""
+    """Команды пользователей - Info"""
     def __init__(self, bot):
         self.bot = bot
 
@@ -48,7 +48,7 @@ class Info(object):
         await ctx.send(embed=discord.Embed(color=0xF4F624, title=f'Стоимость криптовалюты {cryptocurrency}.',
                description=f'USD: `{resp[0]["price_usd"]}`\n{currency.upper()}: `{resp[0][price]}`'))
 
-    @commands.command(name='anime', aliases=['search-anime', 'anime-search'])
+    @commands.command(name='anime', aliases=['search-anime', 'aninfo'])
     async def anime(self, ctx, *, query: str):
         """Поиск аниме.
 
@@ -187,7 +187,9 @@ class Info(object):
         Аргументы не требуются.
         """
 
-        stats = discord.Embed(timestamp=ctx.message.created_at, color=0x18C30B, title='Информация о сервере %s [%s]' % (ctx.guild.name, ctx.guild.id))
+        stats = discord.Embed(timestamp=ctx.message.created_at,
+            color=0x18C30B,
+            title='Информация о сервере %s [%s]' % (ctx.guild.name, ctx.guild.id))
         stats.add_field(name='Регион', value=ctx.guild.region)
         stats.add_field(name='Всего эмодзи', value=len(ctx.guild.emojis))
         stats.add_field(name='Всего участников', value=len(ctx.guild.members))
@@ -221,16 +223,16 @@ class Info(object):
             stats.add_field(name='Лицензия?', value=str(content['data']['license']).replace('1', 'Да').replace('0', 'Нет'))
             # stats.add_field(name='Последний раз в сети', value=time.time() - content['data']['last_play'])
         except:
-            stats = discord.Embed(timestamp=ctx.message.created_at, color=0xff0000).set_footer(text='mcplayer [ник]')
+            stats = discord.Embed(timestamp=ctx.message.created_at, color=0xff0000).set_footer(text=ctx.prefix + 'mcplayer [ник]')
         await ctx.send(embed=stats)
 
-    @commands.command(name='mcstats', aliases=['mcserver', 'mcserv', 'mcinfo', 'mcstatus'])
+    @commands.command(name='mcstats', aliases=['mcserver'])
     async def mcstats(self, ctx, adress:str):
         """Статистика сервера Minecraft.
 
         Подробности:
         --------------
-        <adress> - IP адрес или домен сервера Minecraft.
+        <adress> - IP адрес сервера Minecraft.
         """
 
         server = MinecraftServer.lookup(adress)
@@ -244,7 +246,8 @@ class Info(object):
             stats.add_field(name='Задержка', value='%s мс' % status.latency)
             stats.add_field(name='Ядро', value=status.version.name)
         except:
-            stats = discord.Embed(timestamp=ctx.message.created_at, color=0xff0000).set_footer(text='mcstats [адрес_существующего_сервера]')
+            stats = discord.Embed(timestamp=ctx.message.created_at, color=0xff0000).set_footer(text=ctx.prefix + 'mcstats [адрес_существующего_сервера]')
+
         await ctx.send(embed=stats)
 
     @commands.command(name='osu', aliases=['osu!'])
@@ -281,7 +284,7 @@ class Info(object):
 
         osu_st = discord.Embed(timestamp=ctx.message.created_at, color=_colour, title=f'Статистика {player} в {game_mode["name"]}')
         osu_st.set_image(url=_image_url)
-        osu_st.set_footer(text='osu [ник_игрока] | lemmy.pw')
+        osu_st.set_footer(text=ctx.prefix + 'osu [ник_игрока] | lemmy.pw')
         await ctx.send(embed=osu_st)
 
 def setup(bot):

@@ -15,10 +15,32 @@ class Owner(object):
 
     def __init__(self, bot):
         self.bot = bot
+    
+    @commands.group(name='sysinfo', pass_context=True)
+    async def system_info(self, ctx):
+        """Системная информация.
+        
+        Подробности:
+        --------------
+        Аргументы не требуются."""
 
-    @commands.command(name='quit', aliases=['removeguild', 'guildl', 'quitserver', 'guildleave'], hidden=True)
+        await ctx.send(f'{ctx.author.mention}, наблюдайте...\n\
+            ```css\n\
+            {ctx.prefix}sysinfo cpu\n\
+            {ctx.prefix}sysinfo ram\n\
+            {ctx.prefix}sysinfo disk\n\
+            {ctx.prefix}sysinfo os')
+    
+    @system_info.command(name='cpu')
+    async def system_info__cpu(self, ctx):
+        cpu_loads = [f'{x}%' for x in psutil.cpu_percent(interval=None, percpu=True)]
+        await ctx.send(embed=discord.Embed(
+            title=f'Системная информация | {ctx.prefix}sysinfo',
+            description=f'Загрузка ЦП:{cpu_loads}'))
+
+    @commands.command(name='quit', aliases=['quitserver'], hidden=True)
     @commands.is_owner()
-    async def quit_(self, ctx, guild: discord.Guild):
+    async def quit_guild(self, ctx, guild: discord.Guild):
         """Отключить меня от сервера.
 
         Подробности:
@@ -156,7 +178,7 @@ class Owner(object):
                     with redirect_stdout(stdout):
                         function = await virtexec()
 
-                except Exception as e:
+                except:
                     stdout = io.StringIO()
                     value = stdout.getvalue()
 

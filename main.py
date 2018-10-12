@@ -12,6 +12,7 @@ prefix = os.getenv("PREFIX")
 
 bot = commands.Bot(command_prefix=prefix)
 
+
 async def start_session():
     bot.session = aiohttp.ClientSession()
 
@@ -33,6 +34,7 @@ if __name__ == '__main__':
         except Exception as e:
             print(f'[{time.ctime()}] Не удалось загрузить модуль {extension}.', file=sys.stderr)
             traceback.print_exc()
+
 
 @bot.event
 async def on_ready():

@@ -1,8 +1,8 @@
-import traceback
-import sys
 import discord
-import time
 from discord.ext import commands
+import sys
+import time
+import traceback
 
 """
 Error handler by EvieePy
@@ -11,6 +11,7 @@ Error handler by EvieePy
 Edited by AkiraSumato-01 for Rewrite-Discord-Bot-Naomi
     (https://github.com/AkiraSumato-01/Rewrite-Discord-Bot-Naomi)
 """
+
 
 class ErrorHandler:
     """Модуль обработки и оповещения об исключениях."""
@@ -26,19 +27,22 @@ class ErrorHandler:
         # This prevents any commands with local handlers being handled here in on_command_error.
         if hasattr(ctx.command, 'on_error'):
             return
-        
+
         ignored = (commands.CommandNotFound, commands.UserInputError)
-        
+
         # Allows us to check for original exceptions raised and sent to CommandInvokeError.
         # If nothing is found. We keep the exception passed to on_command_error.
         error = getattr(error, 'original', error)
-        
+
         # Anything in ignored will return and prevent anything happening.
         if isinstance(error, ignored):
             return
 
         elif isinstance(error, commands.DisabledCommand):
             return await ctx.send(f'Команда "{ctx.command}" отключена.')
+
+        elif isinstance(error, discord.NotFound):
+            return False
 
         elif isinstance(error, commands.NoPrivateMessage):
             try:
@@ -53,9 +57,10 @@ class ErrorHandler:
         rep_guild = discord.utils.get(self.bot.guilds, id=457092470472179712)
         rep_channel = discord.utils.get(rep_guild.channels, id=483662931377127424)
 
-        await rep_channel.send(embed=discord.Embed(color=0xF56415, 
-                                title='ErrorHandler обнаружил ошибку!',
-                                description=f'Вызвано участником: {ctx.author}\nПодробности ошибки:```python\n{traceback.format_exc()}```\n```python\n{type(error).__name__}: {error}```'))
+        await rep_channel.send(embed=discord.Embed(color=0xF56415,
+                                                   title='ErrorHandler обнаружил ошибку!',
+                                                   description=f'Вызвано участником: {ctx.author}\nПодробности ошибки:```python\n{traceback.format_exc()}```\n```python\n{type(error).__name__}: {error}```'))
+
 
 def setup(bot):
     bot.add_cog(ErrorHandler(bot))

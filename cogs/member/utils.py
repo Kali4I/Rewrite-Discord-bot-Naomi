@@ -7,7 +7,7 @@ import time
 from utils.HastebinPoster import post
 
 class Utils(object):
-    """Команды пользователей // Utils"""
+    """Команды пользователей - Utils"""
     def __init__(self, bot):
         self.bot = bot
     
@@ -21,12 +21,17 @@ class Utils(object):
         <to> - до...
         """
 
-        if not from_:
+        if not from_ or not from_.isnumeric():
             from_ = 0
-        if not to:
+        if not to or not to.isnumeric():
             to = 100
         
-        await ctx.send(f'Рандомное число: **`{randint(from_, to)}`**')
+        try:
+            int_ = randint(from_, to)
+        except:
+            int_ = randint(0, 100)
+
+        await ctx.send(f'Рандомное число: **`{int_}`**')
 
     @commands.command(name='hostinfo', aliases=['host', 'whois'])
     async def hostinfo(self, ctx, domain:str):
@@ -46,10 +51,10 @@ class Utils(object):
         domain = whois_info["domain_name"]
 
         if type(expdate).__name__ == 'list':
-             expdata = whois_info["expiration_date"][0]
+            expdate = whois_info["expiration_date"][0]
         
         if type(crtdate).__name__ == 'list':
-            whois_info["creation_date"][0]
+            crtdate = whois_info["creation_date"][0]
 
         if type(domain).__name__ == 'list':
             domain = whois_info["domain_name"][0]
@@ -57,10 +62,10 @@ class Utils(object):
         hostinfo.add_field(name="Домен:", value=domain, inline=True)
         hostinfo.add_field(name="Регистратор:", value=whois_info["registrar"], inline=True)
         hostinfo.add_field(name="Whois-сервер:", value=whois_info["whois_server"], inline=True)
-        hostinfo.add_field(name="Дата окончания:", value=expdata, inline=True)
-        hostinfo.add_field(name="Дата создания:", value=crtdata, inline=True)
+        hostinfo.add_field(name="Дата окончания:", value=expdate, inline=True)
+        hostinfo.add_field(name="Дата создания:", value=crtdate, inline=True)
         hostinfo.add_field(name="Регион:", value=whois_info["country"], inline=True)
-        hostinfo.set_footer(text='hostinfo [домен]')
+        hostinfo.set_footer(text=ctx.prefix + 'hostinfo [домен]')
         await ctx.send(embed=hostinfo)
 
     @commands.command(name='hastebin')
@@ -93,27 +98,34 @@ class Utils(object):
         except:
             return False
         
-        if len(b) >= 8 and b.count('**') != 0:
-            return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xfA0000).set_footer(text='Недопустимо по причине снижения производительности.'))
+        if len(b) >= 16 and b.count('**') == 1 or b.count('**') => 2 and len(b) >= 8:
+            return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xfA0000).set_footer(text=ctx.prefix + 'Недопустимо по причине снижения производительности.'))
 
         else:
             try:
-                __eval = str(eval(b))
+                eval_ = str(eval(b))
 
             except ZeroDivisionError:
-                __eval = '∞'
+                eval_ = '∞'
 
             except:
-                return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xf0a302).set_footer(text='Выражение имеет ошибку.\nИсправьте его.'))
+                return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xf0a302).set_footer(text=ctx.prefix + 'Выражение имеет ошибку.\nИсправьте его.'))
 
-            if len(__eval) > 12 and not __eval.isnumeric():
-                await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xf0a302, description=f'```css\n{numbers}\n({b})\n```(Указаны первые 12 цифр)\n{__eval[:12]}\n\nОкругленный:\n{round(float(__eval))}').set_footer(text='calc [матем.выражение]'))
+            if len(eval_) > 12 and not eval_.isnumeric():
+                await ctx.send(embed=discord.Embed(
+                    timestamp=ctx.message.created_at,
+                    color=0xf0a302,
+                    description=f'```css\n{numbers}\n({b})\
+                    \n```(Указаны первые 12 цифр)\
+                    \n{eval_[:12]}\
+                    \n\nОкругленный:\
+                    \n{round(float(eval_))}').set_footer(text=ctx.prefix + 'calc [матем.выражение]'))
 
-            elif len(__eval) > 12 and __eval.isnumeric():
-                await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xf0a302, description=f'```css\n{numbers}\n({b})\n```(Указаны первые 12 цифр)\n{__eval[:12]}').set_footer(text='calc [матем.выражение]'))
+            elif len(eval_) > 12 and eval_.isnumeric():
+                await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xf0a302, description=f'```css\n{numbers}\n({b})\n```(Указаны первые 12 цифр)\n{eval_[:12]}').set_footer(text=ctx.prefix + 'calc [матем.выражение]'))
 
             else:
-                await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xf0a302, description=f'```css\n{numbers}\n({b})\n```{__eval}').set_footer(text='calc [матем.выражение]'))
+                await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xf0a302, description=f'```css\n{numbers}\n({b})\n```{eval_}').set_footer(text=ctx.prefix + 'calc [матем.выражение]'))
 
 def setup(bot):
     bot.add_cog(Utils(bot))

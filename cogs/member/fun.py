@@ -8,22 +8,23 @@ import os
 
 from utils.NekosWrapper import (get_neko, 
                                 NekoNotInTags,
-                                tags)
+                                nekos_tags)
 
 class Fun(object):
-    """Команды пользователей // Fun"""
+    """Команды пользователей - Fun"""
     def __init__(self, bot):
         self.bot = bot
 
     @commands.command(name='random', aliases=['randuser', 'randomuser', 'rand-user'])
-    async def randomuser(self, ctx, *, message:str):
+    async def randomuser(self, ctx, *, message: str):
         """Выбрать рандомного участника сервера.
 
         Подробности:
         --------------
         <message> - Ваше сообщение.
         """
-        await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=randint(0x000000, 0xFFFFFF),
+        await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at,
+            color=randint(0x000000, 0xFFFFFF),
             description=f'{choice([x.mention for x in ctx.guild.members])} {message}'))
 
     @commands.command(name='myname', aliases=['my-name'])
@@ -39,7 +40,7 @@ class Fun(object):
         try:
             await ctx.author.edit(nick=nickname, reason='Запрошено пользователем.')
         except discord.errors.Forbidden:
-            await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xff0000).set_footer(text='У меня нет прав.'))
+            await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xff0000).set_footer(text=ctx.prefix + 'У меня нет прав.'))
 
     @commands.command(name='talk', aliases=['t'])
     async def talk(self, ctx, *, message:str):
@@ -96,25 +97,20 @@ class Fun(object):
         [tag] - тег (если не указан, выбирается рандомно).
 
         Список тегов:
-            feet, yuri, trap, futanari, hololewd, lewdkemo, solog,
-            feetg, cum, erokemo, les, lewdk, ngif, tickle, lewd,
-            feed, eroyuri, eron, cum_jpg, bj, nsfw_neko_gif, solo,
-            kemonomimi, nsfw_avatar, poke, anal, slap, hentai, avatar,
-            erofeet, holo, keta, blowjob, pussy, tits, holoero,
-            pussy_jpg, pwankg, classic, kuni, pat, kiss, femdom, neko,
-            cuddle, erok, fox_girl, boobs, smallboobs, hug, ero, wallpaper
-        """
+            {}
+        """.format(', '.join(nekos_tags))
 
         try:
             if not ctx.channel.is_nsfw():
-                return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xff0000).set_footer(text='Вы не в NSFW канале!'))
+                return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xff0000).set_footer(text=ctx.prefix + 'Вы не в NSFW канале!'))
         except:
             pass
 
         nekoframe = discord.Embed(timestamp=ctx.message.created_at, color=0xF13875)
 
-        if tag not in tags:
-            nekoframe.add_field(name='Доступные теги:', value=', '.join(tags))
+        if tag not in nekos_tags:
+            nekoframe.add_field(name='Доступные теги:',
+                                value=', '.join(nekos_tags))
 
         else:
             nekoframe.set_image(url=get_neko(tag))
@@ -137,13 +133,13 @@ class Fun(object):
         if member.avatar_url is None:
             a = discord.Embed(timestamp=ctx.message.created_at, color=0xfA0000, title=f'Аватарка {member}')
             a.set_image(url=member.default_avatar_url)
-            a.set_footer(text='avatar [@пользователь]')
+            a.set_footer(text=ctx.prefix + 'avatar [@пользователь]')
             await ctx.send(embed=a)
 
         else:
             a = discord.Embed(timestamp=ctx.message.created_at, color=0xfA0000, title=f'Аватарка {member}')
             a.set_image(url=member.avatar_url_as(static_format='png', size=1024))
-            a.set_footer(text='avatar [@пользователь]')
+            a.set_footer(text=ctx.prefix + 'avatar [@пользователь]')
             await ctx.send(embed=a)
 
 def setup(bot):

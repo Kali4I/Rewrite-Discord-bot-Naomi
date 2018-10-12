@@ -4,6 +4,7 @@ from discord.ext import commands
 from random import choice
 import traceback
 
+
 class Admin(object):
     """Набор команд для Администрирования."""
 
@@ -12,7 +13,7 @@ class Admin(object):
 
     @commands.command(name='mute')
     @commands.guild_only()
-    async def mute(self, ctx, member:discord.Member, *, reason:str=None):
+    async def mute(self, ctx, member: discord.Member, *, reason: str=None):
         """Заглушить (выдать мут) пользователя в текстовых чатах.
 
         Подробности:
@@ -31,7 +32,7 @@ class Admin(object):
         try:
             if not mute:
                 mute = await ctx.guild.create_role(name='NaomiMute',
-                            reason='Использована команда n!mute, но роль "NaomiMute" отсутствовала.')
+                                                   reason='Использована команда n!mute, но роль "NaomiMute" отсутствовала.')
 
                 try:
                     def message_check(m):
@@ -59,7 +60,7 @@ class Admin(object):
                             if role != ctx.guild.default_role:
                                 try:
                                     await role.edit(permissions=mute_perms)
-                                    
+
                                 except discord.errors.Forbidden:
                                     pass
 
@@ -85,7 +86,7 @@ class Admin(object):
             await asyncio.sleep(20)
             await ctx.message.delete()
             return False
-        
+
         await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0x35FF81, description=f'Участник {member.mention} приглушен.\nПричина: {reason}'), delete_after=20)
         await asyncio.sleep(20)
         await ctx.message.delete()
@@ -93,7 +94,7 @@ class Admin(object):
 
     @commands.command(name='unmute')
     @commands.guild_only()
-    async def unmute(self, ctx, member:discord.Member, *, reason:str=None):
+    async def unmute(self, ctx, member: discord.Member, *, reason: str=None):
         """Снять приглушение с участника.
 
         Подробности:
@@ -131,7 +132,7 @@ class Admin(object):
 
     @commands.command(name='newname', aliases=['new-name', 'change-name', 'changename', 'newnick'])
     @commands.guild_only()
-    async def newname(self, ctx, member:discord.Member, *, nickname:str=None):
+    async def newname(self, ctx, member: discord.Member, *, nickname: str=None):
         """Сменить никнейм пользователя.
 
         Подробности:
@@ -157,7 +158,7 @@ class Admin(object):
 
     @commands.command(name='cleanup')
     @commands.guild_only()
-    async def cleanup(self, ctx, member:discord.Member, count:int=None):
+    async def cleanup(self, ctx, member: discord.Member, count: int=None):
         """Удалить последние `count` сообщений участника `member`.
 
         Подробности:
@@ -186,7 +187,7 @@ class Admin(object):
 
     @commands.command(name='purge', aliases=['clean', 'clear', 'clearchat'])
     @commands.guild_only()
-    async def purge(self, ctx, count:int):
+    async def purge(self, ctx, count: int):
         """Удалить последние `count` сообщений в чате.
 
         Подробности:
@@ -211,7 +212,7 @@ class Admin(object):
 
     @commands.command(name='ban')
     @commands.guild_only()
-    async def ban(self, ctx, member:discord.Member, *, reason:str=None):
+    async def ban(self, ctx, member: discord.Member, *, reason: str=None):
         """Заблокировать пользователя на сервере.
 
         Подробности:
@@ -245,7 +246,7 @@ class Admin(object):
 
     @commands.command(name='unban', aliases=['pardon'])
     @commands.guild_only()
-    async def unban(self, ctx, member:discord.Member, *, reason:str=None):
+    async def unban(self, ctx, member: discord.Member, *, reason: str=None):
         """Разблокировать пользователя на этом Discord сервере.
 
         Подробности:
@@ -307,7 +308,7 @@ class Admin(object):
 
     @commands.command(name='kick')
     @commands.guild_only()
-    async def kick(self, ctx, member:discord.Member, *, reason:str=None):
+    async def kick(self, ctx, member: discord.Member, *, reason: str=None):
         """Выгнать пользователя с сервера.
 
         Подробности:
@@ -339,6 +340,7 @@ class Admin(object):
             await asyncio.sleep(20)
             await ctx.message.delete()
             return True
+
 
 def setup(bot):
     bot.add_cog(Admin(bot))
