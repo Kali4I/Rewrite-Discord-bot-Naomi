@@ -98,7 +98,7 @@ class Utils(object):
         except:
             return False
         
-        if len(b) >= 16 and b.count('**') == 1 or b.count('**') => 2 and len(b) >= 8:
+        if len(b) >= 16 and b.count('**') == 1 or b.count('**') >= 2 and len(b) >= 8:
             return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xfA0000).set_footer(text=ctx.prefix + 'Недопустимо по причине снижения производительности.'))
 
         else:
