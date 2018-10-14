@@ -44,6 +44,13 @@ class ErrorHandler:
         elif isinstance(error, discord.NotFound):
             return False
 
+        elif isinstance(error, discord.errors.Forbidden):
+            try:
+                await ctx.message.add_reaction('❌')
+                return await ctx.author.send('У меня недостаточно прав.')
+            except:
+                return False
+
         elif isinstance(error, commands.NoPrivateMessage):
             try:
                 return await ctx.author.send(f'Команда "{ctx.command}" не может быть выполнена в ЛС.')
@@ -58,8 +65,9 @@ class ErrorHandler:
         rep_channel = discord.utils.get(rep_guild.channels, id=483662931377127424)
 
         await rep_channel.send(embed=discord.Embed(color=0xF56415,
+                                                   timestamp=ctx.message.created_at,
                                                    title='ErrorHandler обнаружил ошибку!',
-                                                   description=f'Вызвано участником: {ctx.author}\nПодробности ошибки:```python\n{traceback.format_exc()}```\n```python\n{type(error).__name__}: {error}```'))
+                                                   description=f'Вызвано участником: {ctx.author}\nКоманда: {ctx.prefix}{ctx.command}\nПодробности ошибки: ```python\n{type(error).__name__}: {error}```\n```python\n{type(error).__name__}:\n{type(error).__doc__}```'))
 
 
 def setup(bot):
