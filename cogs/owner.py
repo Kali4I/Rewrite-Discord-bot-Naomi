@@ -17,26 +17,37 @@ class Owner(object):
         self.bot = bot
     
     @commands.group(name='sysinfo', pass_context=True)
-    async def system_info(self, ctx):
+    async def sysinfo(self, ctx, info=None):
         """Системная информация.
         
         Подробности:
         --------------
         Аргументы не требуются."""
 
-        await ctx.send(f'{ctx.author.mention}, наблюдайте...\n\
-            ```css\n\
-            {ctx.prefix}sysinfo cpu\n\
-            {ctx.prefix}sysinfo ram\n\
-            {ctx.prefix}sysinfo disk\n\
-            {ctx.prefix}sysinfo os')
-    
-    @system_info.command(name='cpu')
-    async def system_info__cpu(self, ctx):
-        cpu_loads = [f'{x}%' for x in psutil.cpu_percent(interval=None, percpu=True)]
+        pid = os.getpid()
+        py = psutil.Process(pid)
+
+        mem_percent_usage = py.memory_percent()
+        cpu_percent_usage = py.cpu_percent()
+        process_sys_name = py.name()
+        process_sys_username = py.username()
+
+        ram_load = psutil.virtual_memory().percent
+        cpu_load = ', '.join([f'{x}%' for x in psutil.cpu_percent(interval=None, percpu=True)])
+
+        main = f"""
+Загрузка ЦПУ (всего): {' '.join(cpu_load)}
+Загрузка ОЗУ (всего): {ram_load}
+Имя процесса: {process_sys_name}
+Имя пользователя: {process_sys_username}
+
+Потребление ОЗУ: {mem_percent_usage}
+Потребление ресурсов ЦПУ: {cpu_percent_usage}
+"""
+
         await ctx.send(embed=discord.Embed(
-            title=f'Системная информация | {ctx.prefix}sysinfo',
-            description=f'Загрузка ЦП:{cpu_loads}'))
+            title=f'Системная информация | {ctx.prefix}{ctx.command}',
+            description=main))
 
     @commands.command(name='quit', aliases=['quitserver'], hidden=True)
     @commands.is_owner()
