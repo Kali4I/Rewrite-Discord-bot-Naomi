@@ -36,13 +36,14 @@ class Owner(object):
         cpu_load = ', '.join([f'{x}%' for x in psutil.cpu_percent(interval=None, percpu=True)])
 
         main = f"""
-Загрузка ЦПУ (всего): {' '.join(cpu_load)}
-Загрузка ОЗУ (всего): {ram_load}
-Имя процесса: {process_sys_name}
-Имя пользователя: {process_sys_username}
+Загрузка ЦПУ (всего):
+- `{''.join(cpu_load)}`
+Загрузка ОЗУ (всего): `{ram_load}`
+Имя процесса: `{process_sys_name}`
+Имя пользователя: `{process_sys_username}`
 
-Потребление ОЗУ: {mem_percent_usage}
-Потребление ресурсов ЦПУ: {cpu_percent_usage}
+Потребление ОЗУ: `{mem_percent_usage}%`
+Потребление ресурсов ЦПУ: `{cpu_percent_usage}%`
 """
 
         await ctx.send(embed=discord.Embed(
