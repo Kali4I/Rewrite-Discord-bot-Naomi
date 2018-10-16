@@ -42,8 +42,8 @@ class Owner(object):
 Имя процесса: `{process_sys_name}`
 Имя пользователя: `{process_sys_username}`
 
-Потребление ОЗУ: `{mem_percent_usage}%`
-Потребление ресурсов ЦПУ: `{cpu_percent_usage}%`
+Потребление ОЗУ: `{round(mem_percent_usage)}%`
+Потребление ресурсов ЦПУ: `{round(cpu_percent_usage)}%`
 """
 
         await ctx.send(embed=discord.Embed(
