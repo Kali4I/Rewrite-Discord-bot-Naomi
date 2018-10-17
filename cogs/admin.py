@@ -41,11 +41,10 @@ class Admin(object):
                     question_msg = await ctx.send(f'Команда {ctx.prefix}mute использована первый раз на этом сервере.\nМогу-ли я внести правки в настройки каналов и ролей для корректной работы этой команды? (Да/Нет)')
                     msg = await self.bot.wait_for('message', check=message_check, timeout=30.0)
 
-                    if msg.content.lower() == 'да':
-                        counter_msg = await ctx.send('Хорошо, выполняю...')
+                    if msg.content.lower() in ['да', 'ага', 'угу']:
+                        counter_msg = await ctx.send('Хорошо, выполняю... \nМодификация каналов: в ожидании.\nМодификация ролей: в ожидании.')
 
                         x = 0
-
                         for tchannel in ctx.guild.text_channels:
                             try:
                                 await tchannel.set_permissions(mute,
@@ -54,25 +53,30 @@ class Admin(object):
                                                                add_reactions=False)
 
                             except discord.errors.Forbidden:
-                                await ctx.message.add_reaction('❌')
+                                return await ctx.message.add_reaction('❌')
                             
                             else:
                                 x += 1
-                                await counter_msg.edit(content=f'Хорошо, выполняю... {x}/{len(ctx.guild.text_channels)}')
+                                await counter_msg.edit(content=f'Хорошо, выполняю... \nМодификация каналов: {x}/{len(ctx.guild.text_channels)}\nМодификация ролей: в ожидании.')
 
 
                         mute_perms = discord.Permissions()
                         mute_perms.update(send_messages=False)
 
+                        x1 = 0
                         for role in ctx.guild.roles:
                             if role != ctx.guild.default_role:
                                 try:
                                     await role.edit(permissions=mute_perms)
 
                                 except discord.errors.Forbidden:
-                                    pass
+                                    return await ctx.message.add_reaction('❌')
+                                
+                                else:
+                                    x1 += 1
+                                    await counter_msg.edit(content=f'Хорошо, выполняю... \nМодификация каналов: Успешно закончено.\nМодификация ролей: {x1}/{len(ctx.guild.roles)}')
 
-                    if msg.content.lower() == 'нет':
+                    if msg.content.lower() in ['нет', 'не', 'не-а', 'неа']:
                         await ctx.send('В таком случае, команда может работать некорректно.')
 
                 except asyncio.TimeoutError:
