@@ -112,6 +112,9 @@ class Admin(object):
 
                     if msg.content.lower() in ['нет', 'не', 'не-а', 'неа']:
                         await ctx.send('В таком случае, команда может работать некорректно.')
+                    
+                    else:
+                        return await ctx.send(':x: Отменено.', delete_after=10)
 
                 except asyncio.TimeoutError:
                     await ctx.send('Я не столь терпелива, чтобы ждать ответа так долго...\nПросто повторно введите команду.', delete_after=10)
