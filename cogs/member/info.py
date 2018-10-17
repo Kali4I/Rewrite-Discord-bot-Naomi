@@ -63,7 +63,7 @@ class Info(object):
                     data = await response.json()
                     embed = discord.Embed(timestamp=ctx.message.created_at, color=randint(0x000000, 0xFFFFFF), title=data["result"][0].get("title"))
 
-                    embed.add_field(name="Описание:",               value=f"{data['result'][0].get('description')}**[Больше информации об {data['result'][0].get('title')}...]({data['result'][0].get('url')})**", inline=True)
+                    embed.add_field(name="Описание:",               value=f"{data['result'][0].get('description')} **[Больше информации об {data['result'][0].get('title')}...]({data['result'][0].get('url')})**", inline=True)
                     embed.add_field(name="Эпизодов:",               value=f"**{data['result'][0].get('episodes')}**", inline=True)
                     embed.add_field(name="Оценка на MyAnimeList:",  value=f"**{data['result'][0].get('score')}/10**", inline=True)
                     embed.add_field(name="Пользователей:",          value=f"**{data['result'][0].get('members')}**", inline=True)

@@ -38,20 +38,28 @@ class Admin(object):
                     def message_check(m):
                         return m.author.id == ctx.author.id
 
-                    await ctx.send(f'Команда {ctx.prefix}mute использована первый раз на этом сервере.\nМогу-ли я внести правки в настройки каналов и ролей для корректной работы этой команды? (Да/Нет)')
+                    question_msg = await ctx.send(f'Команда {ctx.prefix}mute использована первый раз на этом сервере.\nМогу-ли я внести правки в настройки каналов и ролей для корректной работы этой команды? (Да/Нет)')
                     msg = await self.bot.wait_for('message', check=message_check, timeout=30.0)
 
                     if msg.content.lower() == 'да':
-                        await ctx.send('Будет сделано! c:')
+                        counter_msg = await ctx.send('Хорошо, выполняю...')
+
+                        x = 0
 
                         for tchannel in ctx.guild.text_channels:
                             try:
                                 await tchannel.set_permissions(mute,
                                                                read_messages=True,
-                                                               send_messages=False)
+                                                               send_messages=False,
+                                                               add_reactions=False)
 
                             except discord.errors.Forbidden:
-                                pass
+                                await ctx.message.add_reaction('❌')
+                            
+                            else:
+                                x += 1
+                                await counter_msg.edit(content=f'Хорошо, выполняю... {x}/{len(ctx.guild.text_channels)}')
+
 
                         mute_perms = discord.Permissions()
                         mute_perms.update(send_messages=False)
@@ -90,6 +98,8 @@ class Admin(object):
         await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0x35FF81, description=f'Участник {member.mention} приглушен.\nПричина: {reason}'), delete_after=20)
         await asyncio.sleep(20)
         await ctx.message.delete()
+        await question_msg.delete()
+        await counter_msg.delete()
         return True
 
     @commands.command(name='unmute')
