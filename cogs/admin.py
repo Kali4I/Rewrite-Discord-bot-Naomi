@@ -10,6 +10,28 @@ class Admin(object):
 
     def __init__(self, bot):
         self.bot = bot
+    
+    @commands.command(name='resetmute')
+    @commands.guild_only()
+    async def resetmute(self, ctx):
+        """Удаляет роль NaomiMute сбрасывая настройки n!mute в исходное состояние.
+
+        Подробности:
+        --------------
+        Аргументы не требуются.
+        """
+        if not ctx.author.permissions_in(ctx.channel).manage_roles:
+            return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xFF0000).set_footer(text='Нет прав.'))
+
+        mute = discord.utils.get(ctx.guild.roles, name='NaomiMute')
+        if not mute:
+            return await ctx.send('Нечего сбрасывать.')
+        
+        try:
+            await mute.delete()
+
+        except discord.errors.Forbidden:
+            await ctx.message.add_reaction('❌')
 
     @commands.command(name='mute')
     @commands.guild_only()
@@ -31,8 +53,6 @@ class Admin(object):
 
         try:
             if not mute:
-                mute = await ctx.guild.create_role(name='NaomiMute',
-                                                   reason='Использована команда n!mute, но роль "NaomiMute" отсутствовала.')
 
                 try:
                     def message_check(m):
@@ -46,11 +66,14 @@ class Admin(object):
 > У всех ролей (кроме @everyone) будет убрано право "send_messages" (отправка сообщений);
 
 Добавление роли в настройки всех каналов нужно, чтобы роль недопускала возможности отправлять сообщения в канал, а удаление права отправки сообщений у других ролей нужно для корректной работы n!mute.```
-Могу-ли я внести правки в настройки каналов и ролей для корректной работы этой команды? (Да/Нет)''')
-                    msg = await self.bot.wait_for('message', check=message_check, timeout=30.0)
+Могу-ли я внести правки в настройки каналов и ролей для корректной работы этой команды? (Да/Нет)''', delete_after=60.0)
+                    msg = await self.bot.wait_for('message', check=message_check, timeout=60.0)
 
                     if msg.content.lower() in ['да', 'ага', 'угу']:
                         counter_msg = await ctx.send('Хорошо, выполняю... \nМодификация каналов: в ожидании.\nМодификация ролей: в ожидании.')
+
+                        mute = await ctx.guild.create_role(name='NaomiMute',
+                                                   reason='Использована команда n!mute, но роль "NaomiMute" отсутствовала.')
 
                         x = 0
                         for tchannel in ctx.guild.text_channels:
@@ -110,7 +133,6 @@ class Admin(object):
         await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0x35FF81, description=f'Участник {member.mention} приглушен.\nПричина: {reason}'), delete_after=20)
         await asyncio.sleep(20)
         await ctx.message.delete()
-        await question_msg.delete()
         await counter_msg.delete()
         return True
 
