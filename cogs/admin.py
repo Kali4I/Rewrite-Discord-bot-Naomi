@@ -32,6 +32,9 @@ class Admin(object):
 
         except discord.errors.Forbidden:
             await ctx.message.add_reaction('❌')
+        
+        else:
+            await ctx.message.add_reaction('✅')
 
     @commands.command(name='mute')
     @commands.guild_only()
@@ -58,7 +61,7 @@ class Admin(object):
                     def message_check(m):
                         return m.author.id == ctx.author.id
 
-                    question_msg = await ctx.send(f'''Команда {ctx.prefix}{ctx.command} использована первый раз на этом сервере.
+                    await ctx.send(f'''Команда {ctx.prefix}{ctx.command} использована первый раз на этом сервере.
 Для корректной работы команды мне нужно внести некоторые правки в текстовые каналы и роли на этом сервере.
 ```? Какие правки будут внесены?
 > Будет создана роль NaomiMute;
