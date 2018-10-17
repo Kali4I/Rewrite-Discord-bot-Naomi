@@ -15,14 +15,6 @@ class Info(object):
     def __init__(self, bot):
         self.bot = bot
 
-        emojiguild = discord.utils.get(self.bot.guilds, id=347635213670678528)
-
-        self.naomiserver = discord.utils.get(emojiguild.emojis, name='naomiserver')
-        self.naomiusers  = discord.utils.get(emojiguild.emojis, name='naomiusers')
-        self.naomicmds   = discord.utils.get(emojiguild.emojis, name='naomicmds')
-        self.naomiram    = discord.utils.get(emojiguild.emojis, name='naomiram')
-        self.naomicpu = discord.utils.get(emojiguild.emojis, name='naomicpu')
-
     @commands.command(name='cryptoprice')
     async def cryptoprice(self, ctx, cryptocurrency=None, currency=None):
         """Стоимость криптовалют.
