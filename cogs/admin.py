@@ -61,7 +61,7 @@ class Admin(object):
                                                                add_reactions=False)
 
                             except discord.errors.Forbidden:
-                                return await ctx.message.add_reaction('❌')
+                                pass
                             
                             else:
                                 x += 1
@@ -78,7 +78,7 @@ class Admin(object):
                                     await role.edit(permissions=mute_perms)
 
                                 except discord.errors.Forbidden:
-                                    return await ctx.message.add_reaction('❌')
+                                    pass
                                 
                                 else:
                                     x1 += 1
