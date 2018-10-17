@@ -9,10 +9,19 @@ import psutil
 from utils.HelpPaginator import HelpPaginator, CannotPaginate
 from mcstatus import MinecraftServer
 
+
 class Info(object):
     """Команды пользователей - Info"""
     def __init__(self, bot):
         self.bot = bot
+
+        emojiguild = discord.utils.get(self.bot.guilds, id=347635213670678528)
+
+        self.naomiserver = discord.utils.get(emojiguild.emojis, name='naomiserver')
+        self.naomiusers  = discord.utils.get(emojiguild.emojis, name='naomiusers')
+        self.naomicmds   = discord.utils.get(emojiguild.emojis, name='naomicmds')
+        self.naomiram    = discord.utils.get(emojiguild.emojis, name='naomiram')
+        self.naomicpu = discord.utils.get(emojiguild.emojis, name='naomicpu')
 
     @commands.command(name='cryptoprice')
     async def cryptoprice(self, ctx, cryptocurrency=None, currency=None):
@@ -43,7 +52,7 @@ class Info(object):
             resp[0][price]
 
         except KeyError:
-            await ctx.send(f'Что-то пошло не так.\n*Может быть, {ctx.author.mention} ввел несуществующую валюту?')
+            return await ctx.send(f'Что-то пошло не так.\n*Может быть, {ctx.author.mention} ввел несуществующую валюту?')
 
         await ctx.send(embed=discord.Embed(color=0xF4F624, title=f'Стоимость криптовалюты {cryptocurrency}.',
                description=f'USD: `{resp[0]["price_usd"]}`\n{currency.upper()}: `{resp[0][price]}`'))
@@ -85,14 +94,6 @@ class Info(object):
         Аргументы не требуются.
         """
 
-        emojiguild = discord.utils.get(self.bot.guilds, id=347635213670678528)
-
-        naomiserver = discord.utils.get(emojiguild.emojis, name='naomiserver')
-        naomiusers  = discord.utils.get(emojiguild.emojis, name='naomiusers')
-        naomicmds   = discord.utils.get(emojiguild.emojis, name='naomicmds')
-        naomiram    = discord.utils.get(emojiguild.emojis, name='naomiram')
-        naomicpu    = discord.utils.get(emojiguild.emojis, name='naomicpu')
-
         github_url = 'https://github.com/AkiraSumato-01/Rewrite-Discord-Bot-Naomi'
         server_url = 'https://discord.gg/ZQfNQ43'
         invite_url = 'https://discordapp.com/oauth2/authorize?client_id=452534618520944649&scope=bot&permissions=490040390'
@@ -100,12 +101,12 @@ class Info(object):
         embed = discord.Embed(timestamp=ctx.message.created_at, color=randint(0x000000, 0xFFFFFF),
                     title=f'Спасибо, что используете {self.bot.user.name}!',
                     description=f'**[[GitHub]]({github_url}) [[Наш Discord сервер]]({server_url}) [[Пригласить меня]]({invite_url})**\n\n\
-                    {naomiserver} Серверов: {len(self.bot.guilds)}\n\
-                    {naomiusers} Участников: {len(self.bot.users)}\n\
-                    {naomicmds} Команд: {len([x.name for x in self.bot.commands if not x.hidden])}\n\
+                    <:naomiserver:491308550707085312> Серверов: {len(self.bot.guilds)}\n\
+                    <:naomiusers:491313467962294296> Участников: {len(self.bot.users)}\n\
+                    <:naomicmds:491314340029530132> Команд: {len([x.name for x in self.bot.commands if not x.hidden])}\n\
                     :smiley: Эмодзи: {len(self.bot.emojis)}\n\n\
-                    {naomiram} RAM: {psutil.virtual_memory().percent}%\n\
-                    {naomicpu} CPU: {psutil.cpu_times_percent().user}%')
+                    <:naomiram:493341277966958602> RAM: {psutil.virtual_memory().percent}%\n\
+                    <:naomicpu:493341839953494031> CPU: {psutil.cpu_times_percent().user}%')
         await ctx.send(embed=embed)
 
     @commands.command(name='help', aliases=['commands', 'cmds'])
@@ -227,7 +228,7 @@ class Info(object):
         await ctx.send(embed=stats)
 
     @commands.command(name='mcstats', aliases=['mcserver'])
-    async def mcstats(self, ctx, adress:str):
+    async def mcstats(self, ctx, adress: str):
         """Статистика сервера Minecraft.
 
         Подробности:
@@ -235,8 +236,11 @@ class Info(object):
         <adress> - IP адрес сервера Minecraft.
         """
 
-        server = MinecraftServer.lookup(adress)
-        status = server.status()
+        try:
+            server = MinecraftServer.lookup(adress)
+            status = server.status()
+        except ConnectionRefusedError:
+            return await ctx.send(':x: Не удалось подключиться к серверу "%s".' % adress)
 
         try:
             stats = discord.Embed(timestamp=ctx.message.created_at, color=0x18C30B, description="```%s```" % ''.join([x['text'] for x in status.description['extra']]))
@@ -257,8 +261,7 @@ class Info(object):
         Подробности:
         --------------
         <player> - никнейм игрока osu!.
-        [mode] - режим игры.
-            (mania, catch, osu!, taiko)
+        [mode] - режим игры (mania, catch, osu!, taiko).
         """
 
         if not mode:

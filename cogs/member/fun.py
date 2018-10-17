@@ -14,6 +14,32 @@ class Fun(object):
     """Команды пользователей - Fun"""
     def __init__(self, bot):
         self.bot = bot
+    
+    @commands.command(name='prediction', aliases=['predict'])
+    async def prediction(self, ctx, *, message: str):
+        """Могущественное предсказание.
+
+        Подробности:
+        --------------
+        <message> - ваш вопрос.
+        """
+        possible = [
+            'Вероятно, нет.', 'Вряд ли...', 'Очень сомневаюсь.', 'Может быть.',
+            'Невозможно!', 'Мой ответ: Нет.', 'Вообще понятия не имею.',
+            'Возможно, но шансы очень малы.', 'Думаю, это возможно.', 'Не отрицаю :thinking:',
+            'Мой ответ: Да.', 'Полагаю, это так.', 'Несомненно.', 'Разумеется, да.']
+
+        if len(message) <= 1:
+            i_choice_it = randint(0, 5)
+            return await ctx.send('{0}, {1}'.format(ctx.author.mention, possible[i_choice_it]))
+
+        if len(message) >= 15:
+            i_choice_it = randint(0, 8)
+            return await ctx.send('{0}, {1}'.format(ctx.author.mention, possible[i_choice_it]))
+
+        if len(message) >= 2 and len(message) <= 14:
+            i_choice_it = randint(0, 14)
+            return await ctx.send('{0}, {1}'.format(ctx.author.mention, possible[i_choice_it]))
 
     @commands.command(name='random', aliases=['randuser', 'randomuser', 'rand-user'])
     async def randomuser(self, ctx, *, message: str):
@@ -29,7 +55,7 @@ class Fun(object):
 
     @commands.command(name='myname', aliases=['my-name'])
     @commands.guild_only()
-    async def myname(self, ctx, *, nickname:str=None):
+    async def myname(self, ctx, *, nickname: str = None):
         """Сменить Ваш никнейм.
 
         Подробности:
@@ -43,7 +69,7 @@ class Fun(object):
             await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xff0000).set_footer(text=ctx.prefix + 'У меня нет прав.'))
 
     @commands.command(name='talk', aliases=['t'])
-    async def talk(self, ctx, *, message:str):
+    async def talk(self, ctx, *, message: str):
         """Общение с ботом.
 
         Подробности:
@@ -75,21 +101,21 @@ class Fun(object):
         await ctx.send('Hello, %s' % ctx.author.mention)
 
     @commands.command(name='say', aliases=['repeat', 'msg'])
-    async def say(self, ctx, *, msg:str):
+    async def say(self, ctx, *, message: str):
         """Повторить сообщение пользователя.
 
         Подробности:
         --------------
-        <msg> - ваше сообщение.
+        <message> - ваше сообщение.
         """
         try:
             await ctx.message.delete()
         except:
             pass
-        await ctx.send(msg)
+        await ctx.send(message)
 
     @commands.command(name='neko', aliases=['catgirl', 'nekogirl'])
-    async def catgirl(self, ctx, tag:str=None):
+    async def catgirl(self, ctx, tag: str = None):
         """Отправляет аниме изображение [Только в NSFW-каналах]
 
         Подробности:
@@ -100,11 +126,8 @@ class Fun(object):
             {}
         """.format(', '.join(nekos_tags))
 
-        try:
-            if not ctx.channel.is_nsfw():
-                return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xff0000).set_footer(text=ctx.prefix + 'Вы не в NSFW канале!'))
-        except:
-            pass
+        if not ctx.channel.is_nsfw():
+            return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xff0000).set_footer(text=ctx.prefix + 'Вы не в NSFW канале!'))
 
         nekoframe = discord.Embed(timestamp=ctx.message.created_at, color=0xF13875)
 
@@ -118,19 +141,18 @@ class Fun(object):
         await ctx.send(embed=nekoframe)
 
     @commands.command(name='avatar', aliases=['useravatar'])
-    async def avatar(self, ctx, member:discord.Member=None):
+    async def avatar(self, ctx, member: discord.Member = None):
         """Выдает аватарку пользователя.
 
         Подробности:
         --------------
-        [member] - участник.
-            (если не указан, выдается аватарка автора команды)
+        [member] - участник (если не указан, выдается аватарка автора команды).
         """
 
         if not member:
             member = ctx.author
 
-        if member.avatar_url is None:
+        if not member.avatar_url:
             a = discord.Embed(timestamp=ctx.message.created_at, color=0xfA0000, title=f'Аватарка {member}')
             a.set_image(url=member.default_avatar_url)
             a.set_footer(text=ctx.prefix + 'avatar [@пользователь]')
