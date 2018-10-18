@@ -69,8 +69,8 @@ class Admin(object):
 > У всех ролей (кроме @everyone) будет убрано право "send_messages" (отправка сообщений);
 
 Добавление роли в настройки всех каналов нужно, чтобы роль недопускала возможности отправлять сообщения в канал, а удаление права отправки сообщений у других ролей нужно для корректной работы n!mute.```
-Могу-ли я внести правки в настройки каналов и ролей для корректной работы этой команды? (Да/Нет)''', delete_after=60.0)
-                    msg = await self.bot.wait_for('message', check=message_check, timeout=60.0)
+Могу-ли я внести правки в настройки каналов и ролей для корректной работы этой команды? (Да/Нет)''', delete_after=120.0)
+                    msg = await self.bot.wait_for('message', check=message_check, timeout=120.0)
 
                     if msg.content.lower() in ['да', 'ага', 'угу']:
                         counter_msg = await ctx.send('Хорошо, выполняю... \nМодификация каналов: в ожидании.\nМодификация ролей: в ожидании.')
@@ -110,7 +110,7 @@ class Admin(object):
                                     x1 += 1
                                     await counter_msg.edit(content=f'Хорошо, выполняю... \nМодификация каналов: Успешно закончено.\nМодификация ролей: {x1}/{len(ctx.guild.roles)}')
 
-                    if msg.content.lower() in ['нет', 'не', 'не-а', 'неа']:
+                    elif msg.content.lower() in ['нет', 'не', 'не-а', 'неа']:
                         await ctx.send('В таком случае, команда может работать некорректно.')
                     
                     else:
@@ -139,7 +139,6 @@ class Admin(object):
         await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0x35FF81, description=f'Участник {member.mention} приглушен.\nПричина: {reason}'), delete_after=20)
         await asyncio.sleep(20)
         await ctx.message.delete()
-        await counter_msg.delete()
         return True
 
     @commands.command(name='unmute')
