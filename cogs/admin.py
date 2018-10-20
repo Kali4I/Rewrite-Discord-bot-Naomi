@@ -128,9 +128,12 @@ class Admin(object):
                     await asyncio.sleep(10)
                     await ctx.message.delete()
                     return False
-            
-            if not len(failed_channels) == 0 or not len(failed_roles) == 0:
-                await ctx.send(f'Модификация завершена не полностью:\n\* Каналы: {", ".join(failed_channels)}\n* Роли: {", ".join(failed_roles)}')
+
+            try:
+                if not len(failed_channels) == 0 or not len(failed_roles) == 0:
+                    await ctx.send(f'Модификация завершена не полностью:\n-Каналы: {", ".join(failed_channels)}\n- Роли: {", ".join(failed_roles)}')
+            except:
+                pass
 
             await member.add_roles(mute, reason='Был приглушен через n!mute.')
 
