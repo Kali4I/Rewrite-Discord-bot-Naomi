@@ -1,3 +1,6 @@
+# python3.6
+# -*- coding: utf-8 -*-
+
 from discord.ext import commands
 from random import randint
 import discord
@@ -11,14 +14,19 @@ class Utils(object):
     def __init__(self, bot):
         self.bot = bot
     
-    @commands.command(name='randint', aliases=['rval', 'rvalue'])
+    @commands.command(name='randint', aliases=['rval'])
     async def random_(self, ctx, from_: int = None, to: int = None):
         """Сгенерировать случайное число.
 
-        Подробности:
-        --------------
-        <from_> - от...
-        <to> - до...
+        Аргументы:
+        `:from_` - от...
+        `:to` - до...
+        \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+        Например:
+        ```
+        n!rval 5 100
+        n!randint 500 2931
+        ```
         """
 
         if not from_ or not from_.isnumeric():
@@ -37,9 +45,13 @@ class Utils(object):
     async def hostinfo(self, ctx, domain:str):
         """WHOIS-информация о домене.
 
-        Подробности:
-        --------------
-        <domain> - домен (например google.com).
+        Аргументы:
+        `:domain` - домен / ip
+        \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+        Например:
+        ```
+        n!host google.com
+        ```
         """
 
         whois_info = whois.whois(domain)
@@ -68,32 +80,42 @@ class Utils(object):
         hostinfo.set_footer(text=ctx.prefix + 'hostinfo [домен]')
         await ctx.send(embed=hostinfo)
 
-    @commands.command(name='hastebin')
+    @commands.command(name='hastebin', pass_context=True)
     async def hastebin_post(self, ctx, *, code:str):
-        """Отправить код на Hastebin.com.
+        """Отправка текста на Hastebin.com
 
-        Подробности:
-        --------------
-        <code> - код для отправки на hastebin.com (без ```)
+        Аргументы:
+        `:code` - текст
+        \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+        Например:
+        ```
+        n!hastebin print('Hello World')
+        ```
         """
 
         link = await post(code)
         await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, title='Ваш код был загружен на Hastebin:',
                                         description=f'```{link}```'))
 
-    @commands.command(name='calc', aliases=['calculator', 'calculate'])
-    async def calc(self, ctx, *, numbers:str):
+    @commands.command(name='calc', aliases=['calculator', 'calculate'], pass_context=True)
+    async def calc(self, ctx, *, expression:str):
         """Калькулятор.
 
-        Подробности:
-        --------------
-        <numbers> - математическое выражение.
+        Аргументы:
+        `:expression` - математическое выражение
+        \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+        Например:
+        ```
+        n!calc 5 + 5
+        n!calculate 10 ^ 2
+        n!calculator (10 + 2) * 6
+        ```
         """
         from math import pi
         from re import sub
 
         try:
-            a = numbers.replace(':', '/').replace('^', '**').replace(',', '.')
+            a = expression.replace(':', '/').replace('^', '**').replace(',', '.')
             b = sub('[ йцукенгшщзхъфывапролджэячсмитьбюЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮQWERTYUIOPASDFGHJKLZXCVBNMqwertyuoasdfghjklzxcvbnm;!@#$=\'\"]', '', a)
         except:
             return False
@@ -115,17 +137,24 @@ class Utils(object):
                 await ctx.send(embed=discord.Embed(
                     timestamp=ctx.message.created_at,
                     color=0xf0a302,
-                    description=f'```css\n{numbers}\n({b})\
+                    description=f'```css\n{expression}\n({b})\
                     \n```(Указаны первые 12 цифр)\
                     \n{eval_[:12]}\
                     \n\nОкругленный:\
-                    \n{round(float(eval_))}').set_footer(text=ctx.prefix + 'calc [матем.выражение]'))
+                    \n{round(float(eval_))}').set_footer(text=ctx.prefix + ctx.command + ' [матем.выражение]'))
 
             elif len(eval_) > 12 and eval_.isnumeric():
-                await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xf0a302, description=f'```css\n{numbers}\n({b})\n```(Указаны первые 12 цифр)\n{eval_[:12]}').set_footer(text=ctx.prefix + 'calc [матем.выражение]'))
+                await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at,
+                    color=0xf0a302,
+                    description=f'```css\n\{expression}\n({b})\
+                    \n```(Указаны первые 12 цифр)\
+                    \n{eval_[:12]}').set_footer(text=ctx.prefix + ctx.command + ' [матем.выражение]'))
 
             else:
-                await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xf0a302, description=f'```css\n{numbers}\n({b})\n```{eval_}').set_footer(text=ctx.prefix + 'calc [матем.выражение]'))
+                await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at,
+                    color=0xf0a302,
+                    description=f'```css\n{expression}\n({b})\
+                    \n```{eval_}').set_footer(text=ctx.prefix + ctx.command + ' [матем.выражение]'))
 
 def setup(bot):
     bot.add_cog(Utils(bot))

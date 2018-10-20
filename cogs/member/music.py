@@ -1,3 +1,6 @@
+# python3.6
+# -*- coding: utf-8 -*-
+
 import discord
 from discord.ext import commands
 
@@ -340,11 +343,7 @@ class Music:
 
     @commands.command(name='stop', aliases=['leave', 'l', 'disconnect'])
     async def disconnect_(self, ctx):
-        """Отключить меня от голосового канала.
-
-        Подробности:
-        --------------
-        Аргументы не требуются.
+        """Остановить проигрыватель и отключить меня от голосового канала.
         """
 
         try:
@@ -362,6 +361,8 @@ class Music:
 
     @commands.command(name='reconnect', aliases=['rc'])
     async def reconnect_(self, ctx):
+        """Переподключить меня к голосовому каналу.
+        """
         try:
             channel = ctx.author.voice.channel
 
@@ -379,9 +380,14 @@ class Music:
     async def connect_(self, ctx, *, channel: discord.VoiceChannel=None):
         """Подключить меня к голосовому каналу.
 
-        Подробности:
-        --------------
-        [channel] - голосовой канал.
+        Аргументы:
+        `:channel` - название голосового канала
+        \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+        Например:
+        ```
+        n!connect музыка
+        n!join music
+        ```
         """
 
         if not channel:
@@ -413,11 +419,15 @@ class Music:
 
     @commands.command(name='play', aliases=['sing', 'p'])
     async def play_(self, ctx, *, search: str):
-        """Проигрывание музыки.
+        """Проигрывание музыки (видео YouTube).
 
-        Подробности:
-        --------------
-        <search> - название песни или ссылка на видео YouTube.
+        Аргументы:
+        `:search` - название песни или ссылка на видео YouTube
+        \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+        Например:
+        ```
+        n!play Nightcore - Mayday
+        ```
         """
         
         await ctx.trigger_typing()
@@ -441,11 +451,7 @@ class Music:
 
     @commands.command(name='playing', aliases=['np', 'current', 'currentsong', 'now_playing'])
     async def now_playing_(self, ctx):
-        """Что сейчас проигрывается.
-
-        Подробности:
-        --------------
-        Аргументы не требуются.
+        """Отобразить информацию о проигрываемом треке.
         """
 
         vc = ctx.voice_client

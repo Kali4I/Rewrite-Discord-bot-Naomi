@@ -15,10 +15,6 @@ class Admin(object):
     @commands.guild_only()
     async def resetmute(self, ctx):
         """Удаляет роль NaomiMute сбрасывая настройки n!mute в исходное состояние.
-
-        Подробности:
-        --------------
-        Аргументы не требуются.
         """
         if not ctx.author.permissions_in(ctx.channel).manage_roles:
             return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xFF0000).set_footer(text='Нет прав.'))
@@ -39,20 +35,24 @@ class Admin(object):
     @commands.command(name='mute')
     @commands.guild_only()
     async def mute(self, ctx, member: discord.Member, *, reason: str=None):
-        """Заглушить (выдать мут) пользователя в текстовых чатах.
+        """Приглушить участника (он не сможет отправлять сообщения).
 
-        Подробности:
-        --------------
-        <member> - участник.
-        [reason] - причина.
-
+        Аргументы:
+        `:member` - участник
+        `:reason` - причина
+        \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+        Например:
+        ```
+        n!mute @Username#1234 Спам
+        n!mute Username
+        ```
         Для корректной работы команды мне нужно внести некоторые правки в текстовые каналы и роли на этом сервере.
-        ```? Какие правки будут внесены?
+        [!?] Какие правки будут внесены?
         > Будет создана роль NaomiMute;
         > Роль NaomiMute будет добавлена в настройки доступа всех текстовых каналов;
         > У всех ролей (кроме @everyone) будет убрано право "send_messages" (отправка сообщений);```
-
         """
+
         if not ctx.author.permissions_in(ctx.channel).manage_roles:
             return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xFF0000).set_footer(text='Нет прав.'))
 
@@ -68,8 +68,7 @@ class Admin(object):
                     def message_check(m):
                         return m.author.id == ctx.author.id
 
-                    await ctx.send(f'''Команда {ctx.prefix}{ctx.command} использована первый раз на этом сервере.
-Могу-ли я внести правки в настройки каналов и ролей для корректной работы этой команды? (Да/Нет)''', delete_after=120.0)
+                    await ctx.send(f'Команда {ctx.prefix}{ctx.command} использована первый раз на этом сервере.\nМогу-ли я внести правки в настройки каналов и ролей для корректной работы этой команды? (Да/Нет)', delete_after=120.0)
                     msg = await self.bot.wait_for('message', check=message_check, timeout=120.0)
 
                     if msg.content.lower() in ['да', 'ага', 'угу']:
@@ -91,7 +90,10 @@ class Admin(object):
                             
                             else:
                                 x += 1
-                                await counter_msg.edit(content=f'Хорошо, выполняю... \nМодификация каналов: {x}/{len(ctx.guild.text_channels)}\nМодификация ролей: в ожидании.')
+                                try:
+                                    await counter_msg.edit(content=f'Хорошо, выполняю... \nМодификация каналов: {x}/{len(ctx.guild.text_channels)}\nМодификация ролей: в ожидании.')
+                                except:
+                                    pass
 
 
                         mute_perms = discord.Permissions()
@@ -108,11 +110,14 @@ class Admin(object):
                                 
                                 else:
                                     x1 += 1
+                                try:
                                     await counter_msg.edit(content=f'Хорошо, выполняю... \nМодификация каналов: Успешно закончено.\nМодификация ролей: {x1}/{len(ctx.guild.roles)}')
+                                except:
+                                    pass
 
                     elif msg.content.lower() in ['нет', 'не', 'не-а', 'неа']:
                         await ctx.send('В таком случае, команда может работать некорректно.')
-                    
+
                     else:
                         return await ctx.send(':x: Отменено.', delete_after=10)
 
@@ -146,10 +151,15 @@ class Admin(object):
     async def unmute(self, ctx, member: discord.Member, *, reason: str=None):
         """Снять приглушение с участника.
 
-        Подробности:
-        --------------
-        <member> - участник.
-        [reason] - причина.
+        Аргументы:
+        `:member` - участник
+        `:reason` - причина
+        \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+        Например:
+        ```
+        n!unmute @Username#1234
+        n!unmute Username Просто так
+        ```
         """
         if not ctx.author.permissions_in(ctx.channel).manage_roles:
             return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xFF0000).set_footer(text='Нет прав.'))
@@ -182,12 +192,17 @@ class Admin(object):
     @commands.command(name='newname', aliases=['new-name', 'change-name', 'changename', 'newnick'])
     @commands.guild_only()
     async def newname(self, ctx, member: discord.Member, *, nickname: str=None):
-        """Сменить никнейм пользователя.
+        """Сменить никнейм участника.
 
-        Подробности:
-        --------------
-        <member> - участник.
-        [nickname] - новый никнейм (ничего для сброса).
+        Аргументы:
+        `:member` - участник
+        `:nickname` - новый никнейм (оставьте пустым для сброса)
+        \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+        Например:
+        ```
+        n!newname @Username#1234 Топ пользователь
+        n!newname Username Я топ чел
+        ```
         """
 
         if not ctx.author.permissions_in(ctx.channel).manage_nicknames:
@@ -208,12 +223,17 @@ class Admin(object):
     @commands.command(name='cleanup')
     @commands.guild_only()
     async def cleanup(self, ctx, member: discord.Member, count: int=None):
-        """Удалить последние `count` сообщений участника `member`.
+        """Удалить сообщения конкретного участника.
 
-        Подробности:
-        --------------
-        <member> - участник, чьи сообщения удалить.
-        [count] - кол-во сообщений, которые будут удалены.
+        Аргументы:
+        `:member` - участник
+        `:count` - кол-во сообщений
+        \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+        Например:
+        ```
+        n!cleanup @Username#1234 5
+        n!cleanup Username 100
+        ```
         """
 
         if not ctx.author.permissions_in(ctx.channel).manage_messages:
@@ -221,6 +241,9 @@ class Admin(object):
             await asyncio.sleep(20)
             await ctx.message.delete()
             return False
+        
+        if count > 100:
+            return await ctx.send(f'Число сообщений не должно превышать {count}.')
 
         def is_member(m):
             return m.author == member
@@ -237,11 +260,15 @@ class Admin(object):
     @commands.command(name='purge', aliases=['clean', 'clear', 'clearchat'])
     @commands.guild_only()
     async def purge(self, ctx, count: int):
-        """Удалить последние `count` сообщений в чате.
+        """Удалить последние сообщения в чате.
 
-        Подробности:
-        --------------
-        <count> - кол-во сообщений, которые будут удалены.
+        Аргументы:
+        `:count` - кол-во сообщений.
+        \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+        Например:
+        ```
+        n!purge 100
+        ```
         """
 
         if not ctx.author.permissions_in(ctx.channel).manage_messages:
@@ -249,6 +276,9 @@ class Admin(object):
             await asyncio.sleep(20)
             await ctx.message.delete()
             return False
+
+        if count > 100:
+            return await ctx.send(f'Число сообщений не должно превышать {count}')
 
         try:
             await ctx.channel.purge(limit=count)
@@ -262,12 +292,17 @@ class Admin(object):
     @commands.command(name='ban')
     @commands.guild_only()
     async def ban(self, ctx, member: discord.Member, *, reason: str=None):
-        """Заблокировать пользователя на сервере.
+        """Заблокировать участника на сервере.
 
-        Подробности:
-        --------------
-        <member> - участник, которого нужно заблокировать.
-        [reason] - причина.
+        Аргументы:
+        `:member` - участник
+        `:reason` - причина
+        \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+        Например:
+        ```
+        n!ban Username Ты был плохим парнем
+        n!ban @Username#1234
+        ```
         """
 
         if not ctx.author.permissions_in(ctx.channel).ban_members:
@@ -296,12 +331,17 @@ class Admin(object):
     @commands.command(name='unban', aliases=['pardon'])
     @commands.guild_only()
     async def unban(self, ctx, member: discord.Member, *, reason: str=None):
-        """Разблокировать пользователя на этом Discord сервере.
+        """Разблокировать участника на сервере.
 
-        Подробности:
-        --------------
-        <member> - заблокированный пользователь.
-        [reason] - причина.
+        Аргументы:
+        `:member` - участник
+        `:reason` - причина
+        \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+        Например:
+        ```
+        n!unban @Username#1234 Ты хороший
+        n!unban Username
+        ```
         """
 
         if not reason:
@@ -328,11 +368,7 @@ class Admin(object):
     @commands.command(name='banlist', aliases=['bans'])
     @commands.guild_only()
     async def banlist(self, ctx):
-        """Список заблокированных здесь пользователей.
-
-        Подробности:
-        --------------
-        Аргументы не требуются.
+        """Список заблокированных участников.
         """
 
         if not ctx.author.permissions_in(ctx.channel).ban_members:
@@ -358,12 +394,17 @@ class Admin(object):
     @commands.command(name='kick')
     @commands.guild_only()
     async def kick(self, ctx, member: discord.Member, *, reason: str=None):
-        """Выгнать пользователя с сервера.
+        """Выгнать участника с сервера.
 
-        Подробности:
-        --------------
-        <member> - пользователь, которого нужно выгнать.
-        [reason] - причина.
+        Аргументы:
+        `:member` - участник
+        `:reason` - причина
+        \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+        Например:
+        ```
+        n!kick Username Ты плохой
+        n!kick @Username#1234
+        ```
         """
 
         if not ctx.author.permissions_in(ctx.channel).kick_members:

@@ -1,3 +1,6 @@
+# python3.6
+# -*- coding: utf-8 -*-
+
 from discord.ext import commands
 from random import randint
 import discord
@@ -19,13 +22,16 @@ class Info(object):
     async def cryptoprice(self, ctx, cryptocurrency=None, currency=None):
         """Стоимость криптовалют.
 
-        Подробности:
-        --------------
-        [cryptocurrency] - имя криптовалюты.
-            (По умолчанию: 'bitcoin')
-        [currency] - имя валюты.
-            (По умолчанию: 'RUB')
+        Аргументы:
+        `:cryptocurrency` - имя криптовалюты
+        `:currency` - имя валюты
+        \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+        Например:
+        ```
+        n!cryptoprice bitcoin rub
+        ```
         """
+
         if not cryptocurrency:
             cryptocurrency = 'bitcoin'
 
@@ -51,11 +57,16 @@ class Info(object):
 
     @commands.command(name='anime', aliases=['search-anime', 'aninfo'])
     async def anime(self, ctx, *, query: str):
-        """Поиск аниме.
+        """Поиск аниме по названию.
 
-        Подробности:
-        --------------
-        <query> - название.
+        Аргументы:
+        `:query` - название
+        \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+        Например:
+        ```
+        n!anime Re: Zero
+        n!aninfo Another
+        ```
         """
         async with ctx.typing():
             try:
@@ -80,10 +91,6 @@ class Info(object):
     @commands.command(name='about', aliases=['info'])
     async def about(self, ctx):
         """Некоторая информация обо мне.
-
-        Подробности:
-        --------------
-        Аргументы не требуются.
         """
 
         github_url = 'https://github.com/AkiraSumato-01/Rewrite-Discord-Bot-Naomi'
@@ -105,11 +112,15 @@ class Info(object):
     async def thelp(self, ctx, *, command:str=None):
         """Справочник по командам.
 
-        Подробности:
-        --------------
-        [command] - команда или категория, описание которой нужно показать.
-            (например, `help osu` - справка по команде osu
-             или `help Fun` - информация о категории 'Fun')
+        Аргументы:
+        `:command` - имя команды / категории.
+        \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+        Например:
+        ```
+        n!help anime
+        n!help Admin
+        n!help Fun
+        ```
         """
         try:
             if command is None:
@@ -132,12 +143,16 @@ class Info(object):
     @commands.command(name='userinfo', aliases=['user-info'])
     @commands.guild_only()
     async def userinfo(self, ctx, member:discord.Member=None):
-        """Информация об участнике сервера.
+        """Показать информацию об участнике сервера.
 
-        Подробности:
-        --------------
-        [member] - участник.
-            (если не указан, выдается информация об авторе команды)
+        Аргументы:
+        `:member` - участник сервера
+        \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+        Например:
+        ```
+        n!userinfo Username
+        n!userinfo @Username#1234
+        ```
         """
 
         if not member:
@@ -173,11 +188,7 @@ class Info(object):
     @commands.command(name='guild', aliases=['server'])
     @commands.guild_only()
     async def guild(self, ctx):
-        """Информация о гильдии (Discord-сервере).
-
-        Подробности:
-        --------------
-        Аргументы не требуются.
+        """Информация о сервере.
         """
 
         stats = discord.Embed(timestamp=ctx.message.created_at,
@@ -200,9 +211,14 @@ class Info(object):
     async def mcplayer(self, ctx, nickname:str):
         """Статистика игрока Minecraft.
 
-        Подробности:
-        --------------
-        <nickname> - никнейм игрока Minecraft.
+        Аргументы:
+        `:nickname` - никнейм игрока
+        \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+        Например:
+        ```
+        n!mcplayer AkiraSumato_01
+        n!mcuser Player
+        ```
         """
 
         request = requests.get('https://minecraft-statistic.net/api/player/info/' + nickname)
@@ -223,9 +239,14 @@ class Info(object):
     async def mcstats(self, ctx, adress: str):
         """Статистика сервера Minecraft.
 
-        Подробности:
-        --------------
-        <adress> - IP адрес сервера Minecraft.
+        Аргументы:
+        `:adress` - адрес сервера (домен / IP)
+        \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+        Например:
+        ```
+        n!mcserver hypixel.net
+        n!mcstats play.hypixel.net:25565
+        ```
         """
 
         try:
@@ -248,12 +269,16 @@ class Info(object):
 
     @commands.command(name='osu', aliases=['osu!'])
     async def osu(self, ctx, player:str, mode:str=None):
-        """Статистика игрока osu!.
+        """Статистика игрока osu!
 
-        Подробности:
-        --------------
-        <player> - никнейм игрока osu!.
-        [mode] - режим игры (mania, catch, osu!, taiko).
+        Аргументы:
+        `:player` - имя игрока
+        `:mode` - режим (osu!, taiko, mania, catch)
+        \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+        Например:
+        ```
+        n!osu AkiraSumato_01 mania
+        ```
         """
 
         if not mode:

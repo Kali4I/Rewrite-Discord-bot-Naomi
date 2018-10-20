@@ -17,12 +17,10 @@ class Owner(object):
         self.bot = bot
     
     @commands.group(name='sysinfo', pass_context=True)
-    async def sysinfo(self, ctx, info=None):
+    @commands.is_owner()
+    async def sysinfo(self, ctx):
         """Системная информация.
-        
-        Подробности:
-        --------------
-        Аргументы не требуются."""
+        """
 
         pid = os.getpid()
         py = psutil.Process(pid)
@@ -55,9 +53,13 @@ class Owner(object):
     async def quit_guild(self, ctx, guild: discord.Guild):
         """Отключить меня от сервера.
 
-        Подробности:
-        --------------
-        <guild> - сервер.
+        Аргументы:
+        `:guild` - имя сервера
+        \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+        Например:
+        ```
+        n!quit MyLittleGroup
+        ```
         """
         try:
             await guild.leave()
@@ -68,11 +70,7 @@ class Owner(object):
     @commands.command(name='ping', hidden=True)
     @commands.is_owner()
     async def ping(self, ctx):
-        """Проверка скорости ответа.
-
-        Подробности:
-        --------------
-        Аргументы не требуются.
+        """Измерение задержки API, клиента.
         """
 
         resp = await ctx.send('Тестируем...')
@@ -83,10 +81,6 @@ class Owner(object):
     @commands.is_owner()
     async def restart(self, ctx):
         """Перезагрузка.
-
-        Подробности:
-        --------------
-        Аргументы не требуются.
         """
 
         await ctx.send(embed=discord.Embed(color=0x13CFEB).set_footer(text="Перезагружаемся..."))
@@ -96,21 +90,22 @@ class Owner(object):
     @commands.is_owner()
     async def exception(self, ctx):
         """Выдать исключение.
-
-        Подробности:
-        --------------
-        Аргументы не требуются.
         """
+
         raise RuntimeError('Вызвано разработчиком.')
 
     @commands.command(name='load', hidden=True)
     @commands.is_owner()
     async def cog_load(self, ctx, *, cog: str):
-        """Загрузка модуля.
+        """Загрузить модуль.
 
-        Подробности:
-        --------------
-        <cog> - имя модуля (включая директорию).
+        Аргументы:
+        `:cog` - имя модуля (включая директорию)
+        \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+        Например:
+        ```
+        n!load cogs.member.utils
+        ```
         """
 
         try:
@@ -123,11 +118,15 @@ class Owner(object):
     @commands.command(name='unload', hidden=True)
     @commands.is_owner()
     async def cog_unload(self, ctx, *, cog: str):
-        """Выгрузка модуля.
+        """Выгрузить модуль.
 
-        Подробности:
-        --------------
-        <cog> - имя модуля (включая директорию).
+        Аргументы:
+        `:cog` - имя модуля (включая директорию)
+        \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+        Например:
+        ```
+        n!unload cogs.admin
+        ```
         """
 
         try:
@@ -142,9 +141,13 @@ class Owner(object):
     async def cog_reload(self, ctx, *, cog: str):
         """Перезагрузка модуля.
 
-        Подробности:
-        --------------
-        <cog> - имя модуля (включая директорию).
+        Аргументы:
+        `:cogs` - имя модуля (включая директорию)
+        \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+        Например:
+        ```
+        n!reload cogs.member.fun
+        ```
         """
 
         try:
@@ -158,11 +161,15 @@ class Owner(object):
     @commands.command(name='execute', aliases=['exec', 'eval'], hidden=True)
     @commands.is_owner()
     async def execute(self, ctx, *, code: str):
-        """Интерпретатор Python.
+        """Интерпретатор Python кода.
 
-        Подробности:
-        --------------
-        <code> - единичное выражение или блок кода Python.
+        Аргументы:
+        `:code` - код (Python 3)
+        \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+        Например:
+        ```
+        n!exec print('Hello World')
+        ```
         """
 
         async def v_execution():
