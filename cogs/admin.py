@@ -89,7 +89,7 @@ class Admin(object):
                                                                add_reactions=False)
 
                             except:
-                                failed_channels.append(tchannel.name)
+                                failed_channels.append(f'`{tchannel.name}`')
                             
                             else:
                                 x += 1
@@ -109,7 +109,7 @@ class Admin(object):
                                     await role.edit(permissions=mute_perms)
 
                                 except:
-                                    failed_roles.append(role.name)
+                                    failed_roles.append(f'`{role.name}`')
                                 
                                 else:
                                     x1 += 1
@@ -131,9 +131,7 @@ class Admin(object):
                     return False
             
             if not len(failed_channels) == 0 or not len(failed_roles) == 0:
-                await ctx.send(f'Модификация завершена не полностью:\n\
-                                \* Каналы: {", ".join(failed_channels)}\n\
-                                \* Роли: {", ".join(failed_roles)}')
+                await ctx.send(f'Модификация завершена не полностью:\n\* Каналы: {", ".join(failed_channels)}\n* Роли: {", ".join(failed_roles)}')
 
             await member.add_roles(mute, reason='Был приглушен через n!mute.')
 
