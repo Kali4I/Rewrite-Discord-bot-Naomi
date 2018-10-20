@@ -141,20 +141,20 @@ class Utils(object):
                     \n```(Указаны первые 12 цифр)\
                     \n{eval_[:12]}\
                     \n\nОкругленный:\
-                    \n{round(float(eval_))}').set_footer(text=ctx.prefix + ctx.command + ' [матем.выражение]'))
+                    \n{round(float(eval_))}').set_footer(text=ctx.prefix + 'calc [матем.выражение]'))
 
             elif len(eval_) > 12 and eval_.isnumeric():
                 await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at,
                     color=0xf0a302,
                     description=f'```css\n\{expression}\n({b})\
                     \n```(Указаны первые 12 цифр)\
-                    \n{eval_[:12]}').set_footer(text=ctx.prefix + ctx.command + ' [матем.выражение]'))
+                    \n{eval_[:12]}').set_footer(text=ctx.prefix + 'calc [матем.выражение]'))
 
             else:
                 await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at,
                     color=0xf0a302,
                     description=f'```css\n{expression}\n({b})\
-                    \n```{eval_}').set_footer(text=ctx.prefix + ctx.command + ' [матем.выражение]'))
+                    \n```{eval_}').set_footer(text=ctx.prefix + 'calc [матем.выражение]'))
 
 def setup(bot):
     bot.add_cog(Utils(bot))
