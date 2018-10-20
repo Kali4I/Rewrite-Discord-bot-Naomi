@@ -24,7 +24,7 @@ class Fun(object):
 
         Аргументы:
         `:message` - ваш вопрос
-        \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+        __                                            __
         Например:
         ```
         n!predict Я выиграю миллион?
@@ -54,7 +54,7 @@ class Fun(object):
 
         Аргументы:
         `:message` - сообщение.
-        \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+        __                                            __
         Например:
         ```
         n!randuser проиграл 5к рублей!
@@ -72,7 +72,7 @@ class Fun(object):
 
         Аргументы:
         `:nickname` - новый никнейм (оставьте пустым для сброса)
-        \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+        __                                            __
         Например:
         ```
         n!myname Рамочка
@@ -87,12 +87,12 @@ class Fun(object):
             await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xff0000).set_footer(text=ctx.prefix + 'У меня нет прав.'))
 
     @commands.command(name='talk', aliases=['t'])
-    async def talk(self, ctx, *, message: str):
+    async def talk(self, ctx, *, message: commands.clean_content):
         """Общение с ботом (используя Google DialogFlow).
 
         Аргументы:
         `:message` - ваше сообщение
-        \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+        __                                            __
         Например:
         ```
         n!talk Привет, что делаешь?
@@ -123,12 +123,12 @@ class Fun(object):
         await ctx.send('Hello, %s' % ctx.author.mention)
 
     @commands.command(name='say', aliases=['repeat', 'msg'])
-    async def say(self, ctx, *, message: str):
+    async def say(self, ctx, *, message: commands.clean_content):
         """Повторить ваше сообщение.
 
         Аргументы:
         `:message` - сообщение.
-        \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+        __                                            __
         Например:
         ```
         n!say Я - могущественный бот, мне нет равных. Но это не точно.
@@ -146,7 +146,7 @@ class Fun(object):
 
         Аргументы:
         `:tag` - тег (или "help" для списка тегов)
-        \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+        __                                            __
         Например:
         ```
         n!neko help
@@ -174,7 +174,7 @@ class Fun(object):
 
         Аргументы:
         `:member` - участник
-        \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+        __                                            __
         Например:
         ```
         n!avatar Username

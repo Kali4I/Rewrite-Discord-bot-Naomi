@@ -55,7 +55,7 @@ class Owner(object):
 
         Аргументы:
         `:guild` - имя сервера
-        \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+        __                                            __
         Например:
         ```
         n!quit MyLittleGroup
@@ -101,7 +101,7 @@ class Owner(object):
 
         Аргументы:
         `:cog` - имя модуля (включая директорию)
-        \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+        __                                            __
         Например:
         ```
         n!load cogs.member.utils
@@ -122,7 +122,7 @@ class Owner(object):
 
         Аргументы:
         `:cog` - имя модуля (включая директорию)
-        \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+        __                                            __
         Например:
         ```
         n!unload cogs.admin
@@ -143,7 +143,7 @@ class Owner(object):
 
         Аргументы:
         `:cogs` - имя модуля (включая директорию)
-        \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+        __                                            __
         Например:
         ```
         n!reload cogs.member.fun
@@ -165,7 +165,7 @@ class Owner(object):
 
         Аргументы:
         `:code` - код (Python 3)
-        \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+        __                                            __
         Например:
         ```
         n!exec print('Hello World')
@@ -174,6 +174,8 @@ class Owner(object):
 
         async def v_execution():
             async with ctx.channel.typing():
+                owner = (await self.bot.application_info()).owner
+
                 env = {
                     'channel': ctx.channel,
                     'author': ctx.author,
@@ -182,10 +184,9 @@ class Owner(object):
                     'client': self.bot,
                     'bot': self.bot,
                     'discord': discord,
-                    'ctx': ctx
+                    'ctx': ctx,
+                    'owner': owner
                 }
-
-                owner = (await self.bot.application_info()).owner
 
                 env.update(globals())
                 _code = ''.join(code).replace('```python', '').replace('```', '')

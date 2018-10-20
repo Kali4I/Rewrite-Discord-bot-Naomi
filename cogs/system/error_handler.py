@@ -61,6 +61,9 @@ class ErrorHandler:
         elif isinstance(error, commands.BadArgument):
             return await ctx.send(f'Получен неверный тип аргумента в команде "{ctx.command}".')
 
+        elif isinstance(error, commands.MissingRequiredArgument):
+            return await ctx.send(f'Не указаны ключевые {ctx.prefix}{ctx.command}.')
+
         rep_guild = discord.utils.get(self.bot.guilds, id=457092470472179712)
         rep_channel = discord.utils.get(rep_guild.channels, id=483662931377127424)
 

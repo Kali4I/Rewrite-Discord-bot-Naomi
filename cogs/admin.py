@@ -40,7 +40,7 @@ class Admin(object):
         Аргументы:
         `:member` - участник
         `:reason` - причина
-        \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+        __                                            __
         Например:
         ```
         n!mute @Username#1234 Спам
@@ -67,6 +67,9 @@ class Admin(object):
                 try:
                     def message_check(m):
                         return m.author.id == ctx.author.id
+                    
+                    failed_channels = []
+                    failed_roles = []
 
                     await ctx.send(f'Команда {ctx.prefix}{ctx.command} использована первый раз на этом сервере.\nМогу-ли я внести правки в настройки каналов и ролей для корректной работы этой команды? (Да/Нет)', delete_after=120.0)
                     msg = await self.bot.wait_for('message', check=message_check, timeout=120.0)
@@ -85,8 +88,8 @@ class Admin(object):
                                                                send_messages=False,
                                                                add_reactions=False)
 
-                            except discord.errors.Forbidden:
-                                pass
+                            except:
+                                failed_channels.append(tchannel.name)
                             
                             else:
                                 x += 1
@@ -105,8 +108,8 @@ class Admin(object):
                                 try:
                                     await role.edit(permissions=mute_perms)
 
-                                except discord.errors.Forbidden:
-                                    pass
+                                except:
+                                    failed_roles.append(role.name)
                                 
                                 else:
                                     x1 += 1
@@ -126,6 +129,11 @@ class Admin(object):
                     await asyncio.sleep(10)
                     await ctx.message.delete()
                     return False
+            
+            if not len(failed_channels) == 0 or not len(failed_roles) == 0:
+                await ctx.send(f'Модификация завершена не полностью:\n\
+                                \* Каналы: {", ".join(failed_channels)}\n\
+                                \* Роли: {", ".join(failed_roles)}')
 
             await member.add_roles(mute, reason='Был приглушен через n!mute.')
 
@@ -154,7 +162,7 @@ class Admin(object):
         Аргументы:
         `:member` - участник
         `:reason` - причина
-        \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+        __                                            __
         Например:
         ```
         n!unmute @Username#1234
@@ -197,7 +205,7 @@ class Admin(object):
         Аргументы:
         `:member` - участник
         `:nickname` - новый никнейм (оставьте пустым для сброса)
-        \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+        __                                            __
         Например:
         ```
         n!newname @Username#1234 Топ пользователь
@@ -228,7 +236,7 @@ class Admin(object):
         Аргументы:
         `:member` - участник
         `:count` - кол-во сообщений
-        \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+        __                                            __
         Например:
         ```
         n!cleanup @Username#1234 5
@@ -264,7 +272,7 @@ class Admin(object):
 
         Аргументы:
         `:count` - кол-во сообщений.
-        \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+        __                                            __
         Например:
         ```
         n!purge 100
@@ -297,7 +305,7 @@ class Admin(object):
         Аргументы:
         `:member` - участник
         `:reason` - причина
-        \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+        __                                            __
         Например:
         ```
         n!ban Username Ты был плохим парнем
@@ -336,7 +344,7 @@ class Admin(object):
         Аргументы:
         `:member` - участник
         `:reason` - причина
-        \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+        __                                            __
         Например:
         ```
         n!unban @Username#1234 Ты хороший
@@ -399,7 +407,7 @@ class Admin(object):
         Аргументы:
         `:member` - участник
         `:reason` - причина
-        \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+        __                                            __
         Например:
         ```
         n!kick Username Ты плохой
