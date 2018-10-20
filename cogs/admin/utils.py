@@ -10,30 +10,41 @@ class Admin(object):
 
     def __init__(self, bot):
         self.bot = bot
-    
+
+    @commands.command(name='pin')
+    @commands.has_permissions(manage_messages=True)
+    async def pin_message(self, ctx, *, message: commands.clean_content):
+        embed = discord.Embed(color=0x71f442,
+                              title='Закрепить это!',
+                              description=message)
+        embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
+        embed.set_footer(text=f'{ctx.prefix}{ctx.command}')
+        msg = await ctx.send(embed=embed)
+        await msg.pin()
+
     @commands.command(name='resetmute')
     @commands.guild_only()
+    @commands.has_permissions(manage_roles=True)
     async def resetmute(self, ctx):
         """Удаляет роль NaomiMute сбрасывая настройки n!mute в исходное состояние.
         """
-        if not ctx.author.permissions_in(ctx.channel).manage_roles:
-            return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xFF0000).set_footer(text='Нет прав.'))
 
         mute = discord.utils.get(ctx.guild.roles, name='NaomiMute')
         if not mute:
             return await ctx.send('Нечего сбрасывать.')
-        
+
         try:
             await mute.delete()
 
         except discord.errors.Forbidden:
             await ctx.message.add_reaction('❌')
-        
+
         else:
             await ctx.message.add_reaction('✅')
 
     @commands.command(name='mute')
     @commands.guild_only()
+    @commands.has_permissions(manage_roles=True)
     async def mute(self, ctx, member: discord.Member, *, reason: str=None):
         """Приглушить участника (он не сможет отправлять сообщения).
 
@@ -52,10 +63,6 @@ class Admin(object):
         > Роль NaomiMute будет добавлена в настройки доступа всех текстовых каналов;
         > У всех ролей (кроме @everyone) будет убрано право "send_messages" (отправка сообщений);```
         """
-
-        if not ctx.author.permissions_in(ctx.channel).manage_roles:
-            return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xFF0000).set_footer(text='Нет прав.'))
-
         mute = discord.utils.get(ctx.guild.roles, name='NaomiMute')
 
         if not reason:
@@ -67,7 +74,7 @@ class Admin(object):
                 try:
                     def message_check(m):
                         return m.author.id == ctx.author.id
-                    
+
                     failed_channels = []
                     failed_roles = []
 
@@ -80,7 +87,8 @@ class Admin(object):
                         mute = await ctx.guild.create_role(name='NaomiMute',
                                                    reason='Использована команда n!mute, но роль "NaomiMute" отсутствовала.')
 
-                        x = 0
+                        modified_channels = 0
+                        modified_roles = 0
                         for tchannel in ctx.guild.text_channels:
                             try:
                                 await tchannel.set_permissions(mute,
@@ -89,11 +97,11 @@ class Admin(object):
 
                             except:
                                 failed_channels.append(f'`{tchannel.name}`')
-                            
+
                             else:
-                                x += 1
+                                modified_channels += 1
                                 try:
-                                    await counter_msg.edit(content=f'Хорошо, выполняю... \nМодификация каналов: {x}/{len(ctx.guild.text_channels)}\nМодификация ролей: в ожидании.')
+                                    await counter_msg.edit(content=f'Хорошо, выполняю... \nМодификация каналов: {modified_channels}/{len(ctx.guild.text_channels)}\nМодификация ролей: в ожидании.')
                                 except:
                                     pass
 
@@ -101,7 +109,6 @@ class Admin(object):
                         mute_perms = discord.Permissions()
                         mute_perms.update(send_messages=False)
 
-                        x1 = 0
                         for role in ctx.guild.roles:
                             if role != ctx.guild.default_role:
                                 try:
@@ -109,11 +116,11 @@ class Admin(object):
 
                                 except:
                                     failed_roles.append(f'`{role.name}`')
-                                
+
                                 else:
-                                    x1 += 1
+                                    modified_roles += 1
                                 try:
-                                    await counter_msg.edit(content=f'Хорошо, выполняю... \nМодификация каналов: Успешно закончено.\nМодификация ролей: {x1}/{len(ctx.guild.roles)}')
+                                    await counter_msg.edit(content=f'Хорошо, выполняю... \nМодификация каналов: {modified_roles}/{len(ctx.guild.text_channels)}.\nМодификация ролей: {x1}/{len(ctx.guild.roles) - 1}')
                                 except:
                                     pass
 
@@ -131,7 +138,7 @@ class Admin(object):
 
             try:
                 if not len(failed_channels) == 0 or not len(failed_roles) == 0:
-                    await ctx.send(f'Модификация завершена не полностью:\n-Каналы: {", ".join(failed_channels)}\n- Роли: {", ".join(failed_roles)}')
+                    await ctx.send(f'Модификация завершена не полностью:\n- Каналы: {", ".join(failed_channels)}\n- Роли: {", ".join(failed_roles)}')
             except:
                 pass
 
@@ -156,6 +163,7 @@ class Admin(object):
 
     @commands.command(name='unmute')
     @commands.guild_only()
+    @commands.has_permissions(manage_roles=True)
     async def unmute(self, ctx, member: discord.Member, *, reason: str=None):
         """Снять приглушение с участника.
 
@@ -169,8 +177,6 @@ class Admin(object):
         n!unmute Username Просто так
         ```
         """
-        if not ctx.author.permissions_in(ctx.channel).manage_roles:
-            return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xFF0000).set_footer(text='Нет прав.'))
 
         mute = discord.utils.get(ctx.guild.roles, name='NaomiMute')
 
@@ -199,6 +205,7 @@ class Admin(object):
 
     @commands.command(name='newname', aliases=['new-name', 'change-name', 'changename', 'newnick'])
     @commands.guild_only()
+    @commands.has_permissions(manage_nicknames=True)
     async def newname(self, ctx, member: discord.Member, *, nickname: str=None):
         """Сменить никнейм участника.
 
@@ -213,12 +220,6 @@ class Admin(object):
         ```
         """
 
-        if not ctx.author.permissions_in(ctx.channel).manage_nicknames:
-            await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xFF0000).set_footer(text='Нет прав.'), delete_after=20)
-            await asyncio.sleep(20)
-            await ctx.message.delete()
-            return False
-
         try:
             await member.edit(nick=nickname, reason='Запрошено, используя n!newname.')
 
@@ -230,6 +231,7 @@ class Admin(object):
 
     @commands.command(name='cleanup')
     @commands.guild_only()
+    @commands.has_permissions(manage_messages=True)
     async def cleanup(self, ctx, member: discord.Member, count: int=None):
         """Удалить сообщения конкретного участника.
 
@@ -243,13 +245,6 @@ class Admin(object):
         n!cleanup Username 100
         ```
         """
-
-        if not ctx.author.permissions_in(ctx.channel).manage_messages:
-            await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xFF0000).set_footer(text='Нет прав.'), delete_after=20)
-            await asyncio.sleep(20)
-            await ctx.message.delete()
-            return False
-        
         if count > 100:
             return await ctx.send(f'Число сообщений не должно превышать {count}.')
 
@@ -267,6 +262,7 @@ class Admin(object):
 
     @commands.command(name='purge', aliases=['clean', 'clear', 'clearchat'])
     @commands.guild_only()
+    @commands.has_permissions(manage_messages=True)
     async def purge(self, ctx, count: int):
         """Удалить последние сообщения в чате.
 
@@ -278,13 +274,6 @@ class Admin(object):
         n!purge 100
         ```
         """
-
-        if not ctx.author.permissions_in(ctx.channel).manage_messages:
-            await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xFF0000).set_footer(text='Нет прав.'), delete_after=20)
-            await asyncio.sleep(20)
-            await ctx.message.delete()
-            return False
-
         if count > 100:
             return await ctx.send(f'Число сообщений не должно превышать {count}')
 
@@ -299,6 +288,7 @@ class Admin(object):
 
     @commands.command(name='ban')
     @commands.guild_only()
+    @commands.has_permissions(ban_members=True)
     async def ban(self, ctx, member: discord.Member, *, reason: str=None):
         """Заблокировать участника на сервере.
 
@@ -312,13 +302,6 @@ class Admin(object):
         n!ban @Username#1234
         ```
         """
-
-        if not ctx.author.permissions_in(ctx.channel).ban_members:
-            await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xFF0000).set_footer(text='Нет прав.'), delete_after=20)
-            await asyncio.sleep(20)
-            await ctx.message.delete()
-            return False
-
         if not reason:
             reason = 'отсутствует.'
         try:
@@ -338,6 +321,7 @@ class Admin(object):
 
     @commands.command(name='unban', aliases=['pardon'])
     @commands.guild_only()
+    @commands.has_permissions(ban_members=True)
     async def unban(self, ctx, member: discord.Member, *, reason: str=None):
         """Разблокировать участника на сервере.
 
@@ -351,15 +335,8 @@ class Admin(object):
         n!unban Username
         ```
         """
-
         if not reason:
             reason = 'отсутствует.'
-
-        if not ctx.author.permissions_in(ctx.channel).ban_members:
-            await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xFF0000).set_footer(text='Нет прав.'), delete_after=20)
-            await asyncio.sleep(20)
-            await ctx.message.delete()
-            return False
 
         try:
             ban_entries = await ctx.guild.bans()
@@ -375,16 +352,10 @@ class Admin(object):
 
     @commands.command(name='banlist', aliases=['bans'])
     @commands.guild_only()
+    @commands.has_permissions(ban_members=True)
     async def banlist(self, ctx):
         """Список заблокированных участников.
         """
-
-        if not ctx.author.permissions_in(ctx.channel).ban_members:
-            await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xFF0000).set_footer(text='Нет прав.'), delete_after=20)
-            await asyncio.sleep(20)
-            await ctx.message.delete()
-            return False
-
         try:
             bans = await ctx.guild.bans()
 
@@ -401,6 +372,7 @@ class Admin(object):
 
     @commands.command(name='kick')
     @commands.guild_only()
+    @commands.has_permissions(kick_members=True)
     async def kick(self, ctx, member: discord.Member, *, reason: str=None):
         """Выгнать участника с сервера.
 
@@ -414,13 +386,6 @@ class Admin(object):
         n!kick @Username#1234
         ```
         """
-
-        if not ctx.author.permissions_in(ctx.channel).kick_members:
-            await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xFF0000).set_footer(text='Нет прав.'), delete_after=20)
-            await asyncio.sleep(20)
-            await ctx.message.delete()
-            return False
-
         if not reason:
             reason = 'отсутствует.'
 

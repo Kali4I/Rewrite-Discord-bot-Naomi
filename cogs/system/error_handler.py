@@ -28,7 +28,7 @@ class ErrorHandler:
         if hasattr(ctx.command, 'on_error'):
             return
 
-        ignored = (commands.CommandNotFound, commands.UserInputError)
+        ignored = (commands.CommandNotFound) # commands.UserInputError
 
         # Allows us to check for original exceptions raised and sent to CommandInvokeError.
         # If nothing is found. We keep the exception passed to on_command_error.
@@ -37,9 +37,24 @@ class ErrorHandler:
         # Anything in ignored will return and prevent anything happening.
         if isinstance(error, ignored):
             return
+        
+        elif isinstance(error, commands.MissingPermissions):
+            embed = discord.Embed(color=0xFF0000).set_author(
+                    name='У вас нет прав.',
+                    icon_url='http://s1.iconbird.com/ico/2013/11/504/w128h1281385326489locked.png')
+            return await ctx.send(embed=embed)
+
+        elif isinstance(error, commands.MissingRequiredArgument):
+            embed = discord.Embed(color=0xFF0000).set_author(
+                    name='Не указаны ключевые аргументы для {ctx.prefix}{ctx.command}.',
+                    icon_url='http://s1.iconbird.com/ico/2013/11/504/w128h1281385326489locked.png')
+            return await ctx.send(embed=embed)
 
         elif isinstance(error, commands.DisabledCommand):
-            return await ctx.send(f'Команда "{ctx.command}" отключена.')
+            embed = discord.Embed(color=0xFF0000).set_author(
+                    name='Команда {ctx.prefix}{ctx.command} отключена.',
+                    icon_url='http://s1.iconbird.com/ico/2013/11/504/w128h1281385326489locked.png')
+            return await ctx.send(embed=embed)
 
         elif isinstance(error, discord.NotFound):
             return False
@@ -53,24 +68,33 @@ class ErrorHandler:
 
         elif isinstance(error, commands.NoPrivateMessage):
             try:
-                return await ctx.author.send(f'Команда "{ctx.command}" не может быть выполнена в ЛС.')
+                embed = discord.Embed(color=0xFF0000).set_author(
+                    name='Команда {ctx.prefix}{ctx.command} не может быть выполнена в ЛС.',
+                    icon_url='http://s1.iconbird.com/ico/2013/11/504/w128h1281385326489locked.png')
+                return await ctx.send(embed=embed)
             except:
                 pass
 
         # For this error example we check to see where it came from...
         elif isinstance(error, commands.BadArgument):
-            return await ctx.send(f'Получен неверный тип аргумента в команде "{ctx.command}".')
-
-        elif isinstance(error, commands.MissingRequiredArgument):
-            return await ctx.send(f'Не указаны ключевые аргументы для {ctx.prefix}{ctx.command}.')
+            embed = discord.Embed(color=0xFF0000).set_author(
+                    name='Получен неверный аргумент для {ctx.prefix}{ctx.command}.',
+                    icon_url='http://s1.iconbird.com/ico/2013/11/504/w128h1281385326489locked.png')
+            return await ctx.send(embed=embed)
 
         rep_guild = discord.utils.get(self.bot.guilds, id=457092470472179712)
         rep_channel = discord.utils.get(rep_guild.channels, id=483662931377127424)
 
-        await rep_channel.send(embed=discord.Embed(color=0xF56415,
-                                                   timestamp=ctx.message.created_at,
-                                                   title='ErrorHandler обнаружил ошибку!',
-                                                   description=f'Вызвано участником: {ctx.author}\nКоманда: {ctx.prefix}{ctx.command}\nПодробности ошибки: ```python\n{type(error).__name__}: {error}```\n```python\n{type(error).__name__}:\n{type(error).__doc__}```'))
+        embed = discord.Embed(
+                    color=0xF56415,
+                    timestamp=ctx.message.created_at,
+                    title='ErrorHandler обнаружил ошибку!',
+                    description=f'Вызвано участником: {ctx.author}\nКоманда: {ctx.prefix}{ctx.command}\nПодробности ошибки: ```python\n{type(error).__name__}: {error}```\n```python\n{type(error).__name__}:\n{type(error).__doc__}```'
+                    )
+        embed.set_author(
+                    name='Обработка исключения.',
+                    icon_url='http://s1.iconbird.com/ico/2013/11/504/w128h1281385326489locked.png')
+        await rep_channel.send(embed=embed)
 
 
 def setup(bot):
