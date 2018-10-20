@@ -25,7 +25,7 @@ extensions = ['cogs.member.fun',
               'cogs.member.utils',
               'cogs.system.error_handler',
               'cogs.system.logger',
-              'cogs.admin',
+              'cogs.admin.utils',
               'cogs.owner']
 
 if __name__ == '__main__':
