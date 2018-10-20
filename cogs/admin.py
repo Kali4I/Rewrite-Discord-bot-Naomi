@@ -84,7 +84,6 @@ class Admin(object):
                         for tchannel in ctx.guild.text_channels:
                             try:
                                 await tchannel.set_permissions(mute,
-                                                               read_messages=True,
                                                                send_messages=False,
                                                                add_reactions=False)
 
