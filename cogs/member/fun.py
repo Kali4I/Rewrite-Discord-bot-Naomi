@@ -45,7 +45,7 @@ class Fun(object):
             return await ctx.send('{0}, {1}'.format(ctx.author.mention, possible[i_choice_it]))
 
         if len(message) >= 2 and len(message) <= 14:
-            i_choice_it = randint(0, 14)
+            i_choice_it = randint(0, 13)
             return await ctx.send('{0}, {1}'.format(ctx.author.mention, possible[i_choice_it]))
 
     @commands.command(name='random', aliases=['randuser', 'randomuser', 'rand-user'])

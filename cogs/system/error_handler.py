@@ -28,7 +28,7 @@ class ErrorHandler:
         if hasattr(ctx.command, 'on_error'):
             return
 
-        ignored = (commands.CommandNotFound) # commands.UserInputError
+        ignored = (commands.CommandNotFound, commands.NotOwner) # commands.UserInputError
 
         # Allows us to check for original exceptions raised and sent to CommandInvokeError.
         # If nothing is found. We keep the exception passed to on_command_error.
@@ -46,13 +46,13 @@ class ErrorHandler:
 
         elif isinstance(error, commands.MissingRequiredArgument):
             embed = discord.Embed(color=0xFF0000).set_author(
-                    name='Не указаны ключевые аргументы для {ctx.prefix}{ctx.command}.',
+                    name=f'Указаны не все ключевые аргументы для {ctx.prefix}{ctx.command}.',
                     icon_url='http://s1.iconbird.com/ico/2013/11/504/w128h1281385326489locked.png')
             return await ctx.send(embed=embed)
 
         elif isinstance(error, commands.DisabledCommand):
             embed = discord.Embed(color=0xFF0000).set_author(
-                    name='Команда {ctx.prefix}{ctx.command} отключена.',
+                    name=f'Команда {ctx.prefix}{ctx.command} отключена.',
                     icon_url='http://s1.iconbird.com/ico/2013/11/504/w128h1281385326489locked.png')
             return await ctx.send(embed=embed)
 
@@ -60,16 +60,15 @@ class ErrorHandler:
             return False
 
         elif isinstance(error, discord.errors.Forbidden):
-            try:
-                await ctx.message.add_reaction('❌')
-                return await ctx.author.send('У меня недостаточно прав.')
-            except:
-                return False
+            embed = discord.Embed(color=0xFF0000).set_author(
+                    name=f'У меня недостаточно прав.',
+                    icon_url='http://s1.iconbird.com/ico/2013/11/504/w128h1281385326489locked.png')
+            return await ctx.send(embed=embed)
 
         elif isinstance(error, commands.NoPrivateMessage):
             try:
                 embed = discord.Embed(color=0xFF0000).set_author(
-                    name='Команда {ctx.prefix}{ctx.command} не может быть выполнена в ЛС.',
+                    name=f'Команда {ctx.prefix}{ctx.command} не может быть выполнена в ЛС.',
                     icon_url='http://s1.iconbird.com/ico/2013/11/504/w128h1281385326489locked.png')
                 return await ctx.send(embed=embed)
             except:
@@ -78,12 +77,12 @@ class ErrorHandler:
         # For this error example we check to see where it came from...
         elif isinstance(error, commands.BadArgument):
             embed = discord.Embed(color=0xFF0000).set_author(
-                    name='Получен неверный аргумент для {ctx.prefix}{ctx.command}.',
+                    name=f'Получен неверный аргумент для {ctx.prefix}{ctx.command}.',
                     icon_url='http://s1.iconbird.com/ico/2013/11/504/w128h1281385326489locked.png')
             return await ctx.send(embed=embed)
 
         rep_guild = discord.utils.get(self.bot.guilds, id=457092470472179712)
-        rep_channel = discord.utils.get(rep_guild.channels, id=483662931377127424)
+        rep_channel = discord.utils.get(rep_guild.channels, id=503340681058713621)
 
         embed = discord.Embed(
                     color=0xF56415,

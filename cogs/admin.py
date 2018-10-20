@@ -11,9 +11,46 @@ class Admin(object):
     def __init__(self, bot):
         self.bot = bot
 
+    @commands.command(name='setcolor')
+    @commands.has_permissions(manage_roles=True)
+    async def set_member_color(self, ctx, color: discord.Color, member: discord.Member = None):
+        """Разукрасить ник участника. *Да будут яркие краски и цвета!*
+
+        [!] В разработке.
+
+        Аргументы:
+        `:color` - цвет в HEX
+        __                                            __
+        Например:
+
+        n!colorme FFCC33
+
+        """
+        if not member:
+            member = ctx.message.author
+
+        role_exists = f'NaomiColored - {member.name}' in [x.name for x in member.roles]
+
+        if role_exists:
+            role = discord.utils.get(ctx.guild.roles, name=f'NaomiColored - {member.name}')
+            await role.edit(color=color)
+        else:
+            role = await ctx.guild.create_role(name=f'NaomiColored - {member.name}', color=color)
+            await ctx.message.author.add_roles(role)
+
     @commands.command(name='pin')
     @commands.has_permissions(manage_messages=True)
     async def pin_message(self, ctx, *, message: commands.clean_content):
+        """Скопировать ваше сообщение в стильную и современную рамку, а затем закрепить его!
+
+        Аргументы:
+        `:message` - сообщение
+        __                                            __
+        Например:
+        ```
+        n!pin Этот текст был написан древними Эльфами во имя Discord!
+        ```
+        """
         embed = discord.Embed(color=0x71f442,
                               title='Закрепить это!',
                               description=message)
@@ -26,7 +63,7 @@ class Admin(object):
     @commands.guild_only()
     @commands.has_permissions(manage_roles=True)
     async def resetmute(self, ctx):
-        """Удаляет роль NaomiMute сбрасывая настройки n!mute в исходное состояние.
+        """Сбросить настройки `n!mute`. *Когда настали мирные времена без флуда!*
         """
 
         mute = discord.utils.get(ctx.guild.roles, name='NaomiMute')
@@ -46,7 +83,7 @@ class Admin(object):
     @commands.guild_only()
     @commands.has_permissions(manage_roles=True)
     async def mute(self, ctx, member: discord.Member, *, reason: str=None):
-        """Приглушить участника (он не сможет отправлять сообщения).
+        """Приглушить участника. *Он не сможет отправлять сообщения, круто!*
 
         Аргументы:
         `:member` - участник
@@ -165,7 +202,7 @@ class Admin(object):
     @commands.guild_only()
     @commands.has_permissions(manage_roles=True)
     async def unmute(self, ctx, member: discord.Member, *, reason: str=None):
-        """Снять приглушение с участника.
+        """Снять приглушение с участника. *Да будет свобода чата!*
 
         Аргументы:
         `:member` - участник
@@ -264,7 +301,7 @@ class Admin(object):
     @commands.guild_only()
     @commands.has_permissions(manage_messages=True)
     async def purge(self, ctx, count: int):
-        """Удалить последние сообщения в чате.
+        """Удалить последние сообщения в чате. *Во имя чистоты чата!*
 
         Аргументы:
         `:count` - кол-во сообщений.
@@ -290,7 +327,7 @@ class Admin(object):
     @commands.guild_only()
     @commands.has_permissions(ban_members=True)
     async def ban(self, ctx, member: discord.Member, *, reason: str=None):
-        """Заблокировать участника на сервере.
+        """Заблокировать участника на сервере. *Да вознесется банхаммер над {username}!*
 
         Аргументы:
         `:member` - участник

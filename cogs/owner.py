@@ -75,7 +75,7 @@ class Owner(object):
 
         resp = await ctx.send('Тестируем...')
         diff = resp.created_at - ctx.message.created_at
-        await resp.edit(content=f':ping_pong: Pong!\nЗадержка API: {1000*diff.total_seconds():.1f}мс.\nЗадержка {self.bot.user.name}: {round(self.bot.latency * 1000)}мс')
+        await resp.edit(content=f':ping_pong: Pong!\nЗадержка API: {1000 * diff.total_seconds():.1f}мс.\nЗадержка {self.bot.user.name}: {round(self.bot.latency * 1000)}мс')
 
     @commands.command(hidden=True, aliases=['r'])
     @commands.is_owner()
