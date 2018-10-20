@@ -30,13 +30,16 @@ class Admin(object):
             member = ctx.message.author
 
         role_exists = f'NaomiColored - {member.name}' in [x.name for x in member.roles]
-
-        if role_exists:
-            role = discord.utils.get(ctx.guild.roles, name=f'NaomiColored - {member.name}')
-            await role.edit(color=color)
-        else:
-            role = await ctx.guild.create_role(name=f'NaomiColored - {member.name}', color=color)
-            await ctx.message.author.add_roles(role)
+        
+        try:
+            if role_exists:
+                role = discord.utils.get(ctx.guild.roles, name=f'NaomiColored - {member.name}')
+                await role.edit(color=color)
+            else:
+                role = await ctx.guild.create_role(name=f'NaomiColored - {member.name}', color=color)
+                await member.add_roles(role)
+        except discord.errors.HTTPException:
+            await ctx.send(':x: Не удалось. \nВозможно, вы неверно ввели цвет?\nПроверьте на всякий случай: %s' % color)
 
     @commands.command(name='pin')
     @commands.has_permissions(manage_messages=True)
