@@ -205,11 +205,11 @@ class MusicPlayer:
 
             if control == 'vol_up':
                 player = self._cog.get_player(context)
-                vctwo.source.volume += 2.5
+                vctwo.source.volume += 0.5
                         
             if control == 'vol_down':
                 player = self._cog.get_player(context)
-                vctwo.source.volume -= 2.5
+                vctwo.source.volume -= 0.5
 
             if control == 'thumbnail':
                 await channel.send(embed=discord.Embed(color=0x17FD6E).set_image(url=source.thumbnail).set_footer(text=f"Запросил: {source.requester} | Видео: {source.title}", icon_url=source.requester.avatar_url), delete_after=10)
@@ -257,7 +257,7 @@ class MusicPlayer:
             embednps = discord.Embed(color=0x17FD6E)
             embednps.add_field(name="Проигрывается:", value=f"```fix\n{source.title}```", inline=False)
             embednps.add_field(name="Запросил:", value=f"**{source.requester}**", inline=True)
-            embednps.add_field(name="URL-ссылка:", value=f"**[URL]({source.web_url})**", inline=True)
+            embednps.add_field(name="URL-ссылка:", value=f"**[[Клик]]({source.web_url})**", inline=True)
             embednps.add_field(name="Загрузил:", value=f"**{source.uploader}**", inline=True)
             embednps.add_field(name="Длительность:", value=f"**{datetime.timedelta(seconds=source.duration)}**", inline=True)
             embednps.set_thumbnail(url=source.thumbnail)

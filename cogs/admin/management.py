@@ -5,7 +5,7 @@ from random import choice
 import traceback
 
 
-class Admin(object):
+class Management(object):
     """Набор команд для Администрирования."""
 
     def __init__(self, bot):
@@ -333,7 +333,7 @@ class Admin(object):
     @commands.guild_only()
     @commands.has_permissions(ban_members=True)
     async def ban(self, ctx, member: discord.Member, *, reason: str=None):
-        """Заблокировать участника на сервере. *Да вознесется банхаммер над {username}!*
+        """Заблокировать участника на сервере. *Да вознесется банхаммер над <member>!*
 
         Аргументы:
         `:member` - участник
@@ -449,5 +449,5 @@ class Admin(object):
 
 
 def setup(bot):
-    bot.add_cog(Admin(bot))
+    bot.add_cog(Management(bot))
     print('[admin.py] Админский модуль загружен.')

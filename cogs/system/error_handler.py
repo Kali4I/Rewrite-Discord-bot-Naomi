@@ -64,6 +64,12 @@ class ErrorHandler:
                     name=f'У меня недостаточно прав.',
                     icon_url='http://s1.iconbird.com/ico/2013/11/504/w128h1281385326489locked.png')
             return await ctx.send(embed=embed)
+        
+        elif isinstance(error, commands.CheckFailure):
+            embed = discord.Embed(color=0xFF0000).set_author(
+                    name=f'Эту команду нельзя выполнить здесь. (Может быть, попробуете в NSFW канале?)',
+                    icon_url='http://s1.iconbird.com/ico/2013/11/504/w128h1281385326489locked.png')
+            return await ctx.send(embed=embed)
 
         elif isinstance(error, commands.NoPrivateMessage):
             try:

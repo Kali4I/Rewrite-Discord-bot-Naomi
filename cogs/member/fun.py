@@ -10,6 +10,8 @@ import nekos
 import json
 import os
 
+import pokebase as pb
+
 from utils.NekosWrapper import (get_neko, 
                                 NekoNotInTags,
                                 nekos_tags)
@@ -19,28 +21,28 @@ class Fun(object):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(name='pokemon', hidden=True)
-    @commands.is_owner()
+    @commands.command(name='pokemon')
     async def pokemon_game(self, ctx):
         """Игра “Угадай покемона„.
 
         Суть игры проста - нужно написать в чат имя покемона,
             изображенного в сообщении.
         """
+
         def message_check(m):
             return m.author.id == ctx.author.id
         
         resp = requests.get('https://pokeapi.co/api/v2/pokemon/')
         pokemons = [x['name'] for x in resp.json()['results']]
 
-        pokemon_name = choice(pokemons[101:10090])
+        pokemon_name = choice(pokemons)
         pokemon = pb.pokemon(pokemon_name)
 
         embed = discord.Embed(color=0x42f453, title='Игра “Угадай покемона„',
-                    description='У вас есть 30 секунд, чтобы отгадать этого покемона. Пишите имя латиницей.')
+                    description='У вас есть 30 секунд, чтобы отгадать этого покемона.\nПишите имя латиницей.')
         embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
-        embed.set_footer(text='{ctx.prefix}{ctx.command}')
-        embed.set_image('https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/%s.png' % pokemon.id)
+        embed.set_footer(text=f'{ctx.prefix}{ctx.command}')
+        embed.set_image(url=f'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{pokemon.id}.png')
         await ctx.send(embed=embed)
 
         msg = await self.bot.wait_for('message', check=message_check, timeout=30.0)
