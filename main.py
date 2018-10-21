@@ -52,7 +52,7 @@ class Naomi(commands.AutoShardedBot):
             except Exception as e:
                 print(f'[{time.ctime()}] Не удалось загрузить модуль {extension}.', file=sys.stderr)
                 traceback.print_exc()
-        self.run(os.getenv('TOKEN'), reconnect=True)
+        super().run(os.getenv('TOKEN'), reconnect=True)
         
     async def on_ready(self):
         print(f'[{time.ctime()}] Подключение успешно осуществлено!\nВ сети: {self.user}')
