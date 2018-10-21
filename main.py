@@ -10,7 +10,7 @@ from discord.ext import commands
 
 class Naomi(commands.AutoShardedBot):
     def __init__(self, **kwargs):
-        super().__init__(command_prefix=commands.when_mentioned_or(kwargs.pop("PREFIX")), case_insensitive=kwargs.pop("CINS"), fetch_offline_members=kwargs.pop("FOM"))
+        super().__init__(command_prefix=commands.when_mentioned_or(kwargs.pop("BOTPREFIX")), case_insensitive=kwargs.pop("CINS"), fetch_offline_members=kwargs.pop("FOM"))
         
         self.session = aiohttp.ClientSession(loop=self.loop)
         self.game_activity = 'playing'
@@ -35,10 +35,10 @@ class Naomi(commands.AutoShardedBot):
     async def presence(self):
         while not self.is_closed():
             for msg in messages:
-                if game_activity == 'streaming':
+                if self.game_activity == 'streaming':
                     await self.change_presence(activity=discord.Streaming(name=msg, url='https://www.twitch.tv/%none%'))
                     await asyncio.sleep(10)
-                if game_activity == 'playing':
+                if self.game_activity == 'playing':
                     await self.change_presence(activity=discord.Game(name=msg))
                     await asyncio.sleep(10)
     
@@ -57,4 +57,4 @@ class Naomi(commands.AutoShardedBot):
         self.loop.create_task(presence())
 
 if __name__ == '__main__':
-    Naomi().run(**{"PREFIX": os.getenv("PREFIX"), "CINS": True, "FOM": False})
+    Naomi().run(**{"BOTPREFIX": os.getenv('PREFIX'), "CINS": True, "FOM": False})
