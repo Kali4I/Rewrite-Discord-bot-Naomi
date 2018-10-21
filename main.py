@@ -12,7 +12,7 @@ import discord
 from discord.ext import commands
 
 prefix = os.getenv('PREFIX')
-activity = os.getenv('ACTIVITY')
+game_activity = os.getenv('ACTIVITY')
 
 bot = commands.Bot(command_prefix=prefix)
 bot.remove_command('help')
