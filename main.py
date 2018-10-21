@@ -55,7 +55,7 @@ class Naomi(commands.AutoShardedBot):
         
     async def on_ready(self):
         print(f'[{time.ctime()}] Подключение успешно осуществлено!\nВ сети: {self.user}')
-        self.loop.create_task(presence())
+        self.loop.create_task(self.presence())
 
 if __name__ == '__main__':
     Naomi().run()
