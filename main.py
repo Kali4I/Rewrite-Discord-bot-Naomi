@@ -1,10 +1,6 @@
 # python3.6
 # coding: utf-8
 
-# Разработка AkiraSumato_01
-# Специально для Discord сервера "Создание мода | Бесконечное Лето"
-# https://discord.gg/EDh8F3F
-
 import os
 import sys
 import time
