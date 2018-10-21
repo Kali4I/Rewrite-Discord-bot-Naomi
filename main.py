@@ -26,12 +26,6 @@ extensions = ['cogs.member.fun',
               'cogs.admin.management',
               'cogs.owner']
 
-messages = [f'{len(bot.guilds)} серверов!',
-            f'{len(bot.users)} участников!',
-            f'{len(bot.emojis)} эмодзи!',
-            f'{len([x.name for x in bot.commands if not x.hidden])} команд!',
-            f'{prefix}help']
-
 if __name__ == '__main__':
     for extension in extensions:
         try:
@@ -46,14 +40,20 @@ async def on_ready():
     
     async def presence():
         while not bot.is_closed():
+            awaiting = 10
+            messages = [f'{len(bot.guilds)} серверов!',
+                        f'{len(bot.users)} участников!',
+                        f'{len(bot.emojis)} эмодзи!',
+                        f'{len([x.name for x in bot.commands if not x.hidden])} команд!',
+                        f'{prefix}help']
             for msg in messages:
                 if game_activity == 'streaming':
                     await bot.change_presence(activity=discord.Streaming(name=msg, url='https://www.twitch.tv/%none%'))
-                    await asyncio.sleep(10)
+                    await asyncio.sleep(awaiting)
                 if game_activity == 'playing':
                     await bot.change_presence(activity=discord.Game(name=msg))
-                    await asyncio.sleep(10)
+                    await asyncio.sleep(awaiting)
 
-        bot.loop.create_task(presence())
+    await bot.loop.create_task(presence())
 
 bot.run(os.getenv('TOKEN'), bot=True, reconnect=True)
