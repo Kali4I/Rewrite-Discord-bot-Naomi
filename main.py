@@ -57,4 +57,4 @@ class Naomi(commands.AutoShardedBot):
         self.loop.create_task(presence())
 
 if __name__ == '__main__':
-    Naomi().run(**{"BOTPREFIX": os.getenv('PREFIX'), "CINS": True, "FOM": False})
+    Naomi(**{"BOTPREFIX": os.getenv('PREFIX'), "CINS": True, "FOM": False}).run()
