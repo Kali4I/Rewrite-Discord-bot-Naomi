@@ -1,10 +1,6 @@
 # python3.6
 # coding: utf-8
 
-# Разработка AkiraSumato_01
-# Специально для Discord сервера "Создание мода | Бесконечное Лето"
-# https://discord.gg/EDh8F3F
-
 import os
 import sys
 import time
@@ -58,6 +54,6 @@ async def on_ready():
                     await bot.change_presence(activity=discord.Game(name=msg))
                     await asyncio.sleep(10)
 
-        bot.loop.create_task(self.presence())
+        bot.loop.create_task(presence())
 
 bot.run(os.getenv('TOKEN'), bot=True, reconnect=True)
