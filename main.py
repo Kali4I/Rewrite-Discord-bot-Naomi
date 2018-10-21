@@ -27,7 +27,7 @@ class Naomi(commands.AutoShardedBot):
                          f'{len(self.users)} участников!',
                          f'{len(self.emojis)} эмодзи!',
                          f'{len([x.name for x in self.commands if not x.hidden])} команд!',
-                         f'{kwargs.pop("PREFIX")}help']
+                         f'{kwargs.pop("BOTPREFIX")}help']
                          
     def __repr__(self):
         return "Я - Бот Наоми :)"
