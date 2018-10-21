@@ -1,6 +1,3 @@
-# python3.6
-# -*- coding: utf-8 -*-
-
 import os
 import sys
 import time
@@ -11,49 +8,33 @@ import aiohttp
 import discord
 from discord.ext import commands
 
-prefix = os.getenv("PREFIX")
+class Naomi(commands.AutoShardedBot):
+    def __init__(self):
+        
+        super().__init__(command_prefix=commands.when_mentioned_or(os.getenv("PREFIX")), case_insensitive=True, fetch_offline_members=False)
+        
+        self.session = aiohttp.ClientSession(loop=self.loop)
+        self.game_activity = 'playing'
+        self.extensions = ['cogs.member.fun',
+                           'cogs.member.info',
+                           'cogs.member.music',
+                           'cogs.member.utils',
+                           'cogs.system.error_handler',
+                           'cogs.system.logger',
+                           'cogs.admin',
+                           'cogs.owner']
 
-bot = commands.Bot(command_prefix=prefix)
+        self.messages = [f'{len(self.guilds)} серверов!',
+                         f'{len(self.users)} участников!',
+                         f'{len(self.emojis)} эмодзи!',
+                         f'{len([x.name for x in self.commands if not x.hidden])} команд!',
+                         f'{self.prefix}help']
+                         
+    def __repr__(self):
+        return "Я - Бот Наоми :)"
 
-game_activity = os.getenv("ACTIVITY")
-
-async def start_session():
-    bot.session = aiohttp.ClientSession()
-
-bot.remove_command('help')
-
-extensions = ['cogs.member.fun',
-              'cogs.member.info',
-              'cogs.member.music',
-              'cogs.member.utils',
-              'cogs.system.error_handler',
-              'cogs.system.logger',
-              'cogs.admin.management',
-              'cogs.owner']
-
-if __name__ == '__main__':
-    for extension in extensions:
-        try:
-            bot.load_extension(extension)
-        except Exception as e:
-            print(f'[{time.ctime()}] Не удалось загрузить модуль {extension}.', file=sys.stderr)
-            traceback.print_exc()
-
-
-@bot.event
-async def on_ready():
-    print(f'[{time.ctime()}] Подключение успешно осуществлено!\nВ сети: {bot.user}')
-
-    await start_session()
-
-    async def presence():
-        sleeping = 10
-        messages = [f'{len(bot.guilds)} серверов!',
-                    f'{len(bot.users)} участников!',
-                    f'{len(bot.emojis)} эмодзи!',
-                    f'{len([x.name for x in bot.commands if not x.hidden])} команд!',
-                    f'{prefix}help']
-        while not bot.is_closed():
+    async def presence(self):
+        while not self.is_closed():
             for msg in messages:
                 if self.game_activity == 'streaming':
                     await self.change_presence(activity=discord.Streaming(name=msg, url='https://www.twitch.tv/%none%'))
@@ -77,4 +58,4 @@ async def on_ready():
         self.loop.create_task(presence())
 
 if __name__ == '__main__':
-    Naomi(**{"BOTPREFIX": os.getenv('PREFIX'), "CINS": True, "FOM": False}).run()
+    Naomi().run()
