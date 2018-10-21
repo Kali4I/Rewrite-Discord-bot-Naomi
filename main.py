@@ -8,8 +8,6 @@ import aiohttp
 import discord
 from discord.ext import commands
 
-prefix = os.getenv("PREFIX")
-
 class Naomi(commands.AutoShardedBot):
     def __init__(self, **kwargs):
         super().__init__(command_prefix=commands.when_mentioned_or(kwargs.pop("PREFIX")), case_insensitive=kwargs.pop("CINS"), fetch_offline_members=kwargs.pop("FOM"))
