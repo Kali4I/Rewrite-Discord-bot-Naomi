@@ -25,7 +25,7 @@ class Info(object):
         Аргументы:
         `:cryptocurrency` - имя криптовалюты
         `:currency` - имя валюты
-        \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+        __                                            __
         Например:
         ```
         n!cryptoprice bitcoin rub
@@ -61,7 +61,7 @@ class Info(object):
 
         Аргументы:
         `:query` - название
-        \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+        __                                            __
         Например:
         ```
         n!anime Re: Zero
@@ -95,11 +95,12 @@ class Info(object):
 
         github_url = 'https://github.com/AkiraSumato-01/Rewrite-Discord-Bot-Naomi'
         server_url = 'https://discord.gg/ZQfNQ43'
+        discordbots_url = 'https://discordbots.org/bot/452534618520944649'
         invite_url = 'https://discordapp.com/oauth2/authorize?client_id=452534618520944649&scope=bot&permissions=490040390'
 
         embed = discord.Embed(timestamp=ctx.message.created_at, color=randint(0x000000, 0xFFFFFF),
                     title=f'Спасибо, что используете {self.bot.user.name}!',
-                    description=f'**[[GitHub]]({github_url}) [[Наш Discord сервер]]({server_url}) [[Пригласить меня]]({invite_url})**\n\n\
+                    description=f'**[[GitHub]]({github_url}) [[Наш Discord сервер]]({server_url}) [[Пригласить меня]]({invite_url}) [[DiscordBots]]({discordbots_url})**\n\n\
                     <:naomiserver:491308550707085312> Серверов: {len(self.bot.guilds)}\n\
                     <:naomiusers:491313467962294296> Участников: {len(self.bot.users)}\n\
                     <:naomicmds:491314340029530132> Команд: {len([x.name for x in self.bot.commands if not x.hidden])}\n\
@@ -114,7 +115,7 @@ class Info(object):
 
         Аргументы:
         `:command` - имя команды / категории.
-        \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+        __                                            __
         Например:
         ```
         n!help anime
@@ -147,7 +148,7 @@ class Info(object):
 
         Аргументы:
         `:member` - участник сервера
-        \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+        __                                            __
         Например:
         ```
         n!userinfo Username
@@ -213,7 +214,7 @@ class Info(object):
 
         Аргументы:
         `:nickname` - никнейм игрока
-        \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+        __                                            __
         Например:
         ```
         n!mcplayer AkiraSumato_01
@@ -241,7 +242,7 @@ class Info(object):
 
         Аргументы:
         `:adress` - адрес сервера (домен / IP)
-        \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+        __                                            __
         Например:
         ```
         n!mcserver hypixel.net
@@ -274,7 +275,7 @@ class Info(object):
         Аргументы:
         `:player` - имя игрока
         `:mode` - режим (osu!, taiko, mania, catch)
-        \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+        __                                            __
         Например:
         ```
         n!osu AkiraSumato_01 mania

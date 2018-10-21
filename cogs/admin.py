@@ -11,7 +11,8 @@ class Admin(object):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(name='setcolor')
+    @commands.command(name='setcolor', aliases=['colorme', 'givecolor'])
+    @commands.guild_only()
     @commands.has_permissions(manage_roles=True)
     async def set_member_color(self, ctx, color: discord.Color, member: discord.Member = None):
         """Разукрасить ник участника. *Да будут яркие краски и цвета!*
@@ -35,9 +36,11 @@ class Admin(object):
             if role_exists:
                 role = discord.utils.get(ctx.guild.roles, name=f'NaomiColored - {member.name}')
                 await role.edit(color=color)
+                await ctx.send('%s, ваша цветовая роль успешно изменена (новый цвет: %s).' % (member.mention, color))
             else:
                 role = await ctx.guild.create_role(name=f'NaomiColored - {member.name}', color=color)
                 await member.add_roles(role)
+                await ctx.send('%s, вам успешно добавлена роль с цветом %s' % (member.mention, color))
         except discord.errors.HTTPException:
             await ctx.send(':x: Не удалось. \nВозможно, вы неверно ввели цвет?\nПроверьте на всякий случай: %s' % color)
 
@@ -66,7 +69,7 @@ class Admin(object):
     @commands.guild_only()
     @commands.has_permissions(manage_roles=True)
     async def resetmute(self, ctx):
-        """Сбросить настройки `n!mute`. *Когда настали мирные времена без флуда!*
+        """Сбросить настройки `n!mute` и удалить роль NaomiMute. *Когда настали мирные времена без флуда!*
         """
 
         mute = discord.utils.get(ctx.guild.roles, name='NaomiMute')

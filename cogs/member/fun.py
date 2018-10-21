@@ -3,6 +3,7 @@
 
 from discord.ext import commands
 from random import randint, choice
+import requests
 import discord
 import apiai
 import nekos
@@ -17,7 +18,38 @@ class Fun(object):
     """Команды пользователей - Fun"""
     def __init__(self, bot):
         self.bot = bot
-    
+
+    @commands.command(name='pokemon', hidden=True)
+    @commands.is_owner()
+    async def pokemon_game(self, ctx):
+        """Игра “Угадай покемона„.
+
+        Суть игры проста - нужно написать в чат имя покемона,
+            изображенного в сообщении.
+        """
+        def message_check(m):
+            return m.author.id == ctx.author.id
+        
+        resp = requests.get('https://pokeapi.co/api/v2/pokemon/')
+        pokemons = [x['name'] for x in resp.json()['results']]
+
+        pokemon_name = choice(pokemons[101:10090])
+        pokemon = pb.pokemon(pokemon_name)
+
+        embed = discord.Embed(color=0x42f453, title='Игра “Угадай покемона„',
+                    description='У вас есть 30 секунд, чтобы отгадать этого покемона. Пишите имя латиницей.')
+        embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
+        embed.set_footer(text='{ctx.prefix}{ctx.command}')
+        embed.set_image('https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/%s.png' % pokemon.id)
+        await ctx.send(embed=embed)
+
+        msg = await self.bot.wait_for('message', check=message_check, timeout=30.0)
+        
+        if msg.content.lower() == pokemon_name:
+            await ctx.send('Вы ответили верно! :cake:')
+        else:
+            await ctx.send('Ответ неверный. Ничего, повезет в следующий раз!')
+
     @commands.command(name='prediction', aliases=['predict'])
     async def prediction(self, ctx, *, message: str):
         """Могущественное предсказание.
@@ -141,6 +173,7 @@ class Fun(object):
         await ctx.send(message)
 
     @commands.command(name='neko', aliases=['catgirl', 'nekogirl'])
+    @commands.is_nsfw()
     async def catgirl(self, ctx, tag: str = None):
         """Отправка аниме изображений.
 
@@ -153,10 +186,6 @@ class Fun(object):
         n!neko avatar
         ```
         """
-
-        if not ctx.channel.is_nsfw():
-            return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xff0000).set_footer(text=ctx.prefix + 'Вы не в NSFW канале!'))
-
         nekoframe = discord.Embed(timestamp=ctx.message.created_at, color=0xF13875)
 
         if tag not in nekos_tags:

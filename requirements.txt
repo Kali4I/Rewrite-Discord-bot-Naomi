@@ -6,3 +6,4 @@ apiai
 git+https://github.com/rg3/youtube-dl
 mcstatus
 requests
+pokebase
