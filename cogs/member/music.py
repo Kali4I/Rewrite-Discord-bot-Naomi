@@ -1,6 +1,3 @@
-# python3.6
-# -*- coding: utf-8 -*-
-
 import discord
 from discord.ext import commands
 
@@ -13,14 +10,6 @@ from functools import partial
 from youtube_dl import YoutubeDL
 from discord.ext.commands.cooldowns import BucketType
 
-"""
-discord.ext.commands music.py "cog"
-    (https://github.com/F4stZ4p/DJ5n4k3/blob/master/modules/music.py)
-
-Edited by AkiraSumato-01 for Rewrite-Discord-Bot-Naomi
-    (https://github.com/AkiraSumato-01/Rewrite-Discord-Bot-Naomi)
-"""
-
 ytdlopts = {
     'format': 'bestaudio/best',
     'outtmpl': 'downloads/%(extractor)s-%(id)s-%(title)s.%(ext)s',
@@ -32,7 +21,7 @@ ytdlopts = {
     'quiet': True,
     'no_warnings': True,
     'default_search': 'auto',
-    'source_address': '0.0.0.0'
+    'source_address': '0.0.0.0'  # ipv6 addresses cause issues sometimes
 }
 
 ffmpegopts = {
@@ -79,7 +68,7 @@ class YTDLSource(discord.PCMVolumeTransformer):
         self.uploader = data.get('uploader')
 
         if self.uploader is None:
-            self.uploader = "Неизвестно"
+            self.uploader = "Unknown uploader"
         
         # YTDL info dicts (data) have other useful information you might want
         # https://github.com/rg3/youtube-dl/blob/master/README.md
@@ -102,7 +91,7 @@ class YTDLSource(discord.PCMVolumeTransformer):
             # take first item from a playlist
             data = data['entries'][0]
 
-        await ctx.send(f':notes: Добавлено в очередь: **{data["title"]}**')
+        await ctx.send(f':notes: Added to queue: **{data["title"]}**')
 
         if download:
             source = ytdl.prepare_filename(data)
@@ -200,22 +189,27 @@ class MusicPlayer:
                 vc.stop()
 
             if control == 'stop':
-                await context.invoke(self.bot.get_command("stop"))
-                await channel.send('**:notes: Проигрывание завершено.**', delete_after=5)
+                await channel.send('**:notes: Ok, goodbye!**', delete_after=5)
+                await self._cog.cleanup(guild)
+
+                try:
+                    self.music_controller.cancel()
+                except:
+                    pass
 
             if control == 'vol_up':
                 player = self._cog.get_player(context)
-                vctwo.source.volume += 0.5
+                vctwo.source.volume += 5
                         
             if control == 'vol_down':
                 player = self._cog.get_player(context)
-                vctwo.source.volume -= 0.5
+                vctwo.source.volume -= 5
 
             if control == 'thumbnail':
-                await channel.send(embed=discord.Embed(color=0x17FD6E).set_image(url=source.thumbnail).set_footer(text=f"Запросил: {source.requester} | Видео: {source.title}", icon_url=source.requester.avatar_url), delete_after=10)
+                await channel.send(embed=discord.Embed(color=self.bot.color).set_image(url=source.thumbnail).set_footer(text=f"Requested by {source.requester} | Video: {source.title}", icon_url=source.requester.avatar_url), delete_after=10)
 
             if control == 'tutorial':
-                await channel.send(embed=discord.Embed(color=0x17FD6E).add_field(name="Как использовать контроллер?", value="⏯ - Пауза\n⏭ - Пропустить\n➕ - Увеличить громкость\n➖ - Понизить громкость\n🖼 - Получить превью\n⏹ - Остановить проигрывание\nℹ - Очередь\n❔ - Показать справку по контроллеру"), delete_after=10)
+                await channel.send(embed=discord.Embed(color=self.bot.color).add_field(name="How to use Music Controller?", value="⏯ - Resume or pause player\n⏭ - Skip song\n➕ - Volume up\n➖ - Volume down\n🖼 - Get song thumbnail\n⏹ - Stop music session\nℹ - Player queue\n❔ - Shows you how to use Music Controller"), delete_after=10)
             
             if control == 'queue':
                 await self._cog.queue_info(context)
@@ -244,7 +238,7 @@ class MusicPlayer:
                 try:
                     source = await YTDLSource.regather_stream(source, loop=self.bot.loop)
                 except Exception as e:
-                    await self._channel.send(f':notes: Возникла ошибка.\n'
+                    await self._channel.send(f':notes: There was an error processing your song.\n'
                                              f'```css\n[{e}]\n```')
                     continue
 
@@ -254,13 +248,13 @@ class MusicPlayer:
                 self._guild.voice_client.play(source, after=lambda _: self.bot.loop.call_soon_threadsafe(self.next.set))
             except Exception:
                 continue
-            embednps = discord.Embed(color=0x17FD6E)
-            embednps.add_field(name="Проигрывается:", value=f"```fix\n{source.title}```", inline=False)
-            embednps.add_field(name="Запросил:", value=f"**{source.requester}**", inline=True)
-            embednps.add_field(name="URL-ссылка:", value=f"**[[Клик]]({source.web_url})**", inline=True)
-            embednps.add_field(name="Загрузил:", value=f"**{source.uploader}**", inline=True)
-            embednps.add_field(name="Длительность:", value=f"**{datetime.timedelta(seconds=source.duration)}**", inline=True)
-            embednps.set_thumbnail(url=source.thumbnail)
+            embednps = discord.Embed(color=self.bot.color)
+            embednps.add_field(name="Song title:", value=f"```fix\n{source.title}```", inline=False)
+            embednps.add_field(name="Requested by:", value=f"**{source.requester}**", inline=True)
+            embednps.add_field(name="Song URL:", value=f"**[URL]({source.web_url})**", inline=True)
+            embednps.add_field(name="Uploader:", value=f"**{source.uploader}**", inline=True)
+            embednps.add_field(name="Song duration:", value=f"**{datetime.timedelta(seconds=source.duration)}**", inline=True)
+            embednps.set_thumbnail(url=f"{source.thumbnail}")
             self.np = await self._channel.send(embed=embednps)
 
             self.music_controller = self.bot.loop.create_task(self.buttons_controller(self._guild, self.np, source, self._channel, self._ctxs))
@@ -282,7 +276,7 @@ class MusicPlayer:
         return self.bot.loop.create_task(self._cog.cleanup(guild))
 
 class Music:
-    """Команды проигрывателя музыки."""
+    """Music related commands."""
 
     __slots__ = ('bot', 'players', 'musictwo', 'music_controller')
 
@@ -322,11 +316,11 @@ class Music:
         """A local error handler for all errors arising from commands in this cog."""
         if isinstance(error, commands.NoPrivateMessage):
             try:
-                return await ctx.send(':notes: Команда не может быть использована в ЛС.')
+                return await ctx.send(':notes: This command can not be used in Private Messages.')
             except discord.HTTPException:
                 pass
         elif isinstance(error, InvalidVoiceChannel):
-            await ctx.send(":notes: Вы не подключены к голосовому каналу.")
+            await ctx.send(":notes: Please join voice channel or specify one with command!")
 
         print('Ignoring exception in command {}:'.format(ctx.command), file=sys.stderr)
         traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
@@ -341,63 +335,23 @@ class Music:
 
         return player
 
-    @commands.command(name='stop', aliases=['leave', 'l', 'disconnect'])
-    async def disconnect_(self, ctx):
-        """Остановить проигрыватель и отключить меня от голосового канала.
-        """
-
-        try:
-            channel = ctx.author.voice.channel
-        except AttributeError:
-            await ctx.send(":notes: Вы не подключены к голосовому каналу.", delete_after=20)
-
-        if not ctx.guild.voice_client:
-            return await ctx.send(':notes: Я не нахожусь в голосовом канале.', delete_after=20)
-
-        await ctx.guild.voice_client.disconnect()
-        await ctx.send(':notes: Успешно.', delete_after=20)
-
-
-
-    @commands.command(name='reconnect', aliases=['rc'])
-    async def reconnect_(self, ctx):
-        """Переподключить меня к голосовому каналу.
-        """
-        try:
-            channel = ctx.author.voice.channel
-
-        except AttributeError:
-            return await ctx.send(":notes: Вы не подключены к голосовому каналу.", delete_after=20)
-
-        try:
-            if ctx.guild.voice_client:
-                await ctx.guild.voice_client.disconnect()
-        except:
-            pass
-
-        await channel.connect()
-
-
-
     @commands.command(name='connect', aliases=['join', 'j'])
     async def connect_(self, ctx, *, channel: discord.VoiceChannel=None):
-        """Подключить меня к голосовому каналу.
+        """Connect to voice.
 
-        Аргументы:
-        `:channel` - название голосового канала
-        __                                            __
-        Например:
-        ```
-        n!connect музыка
-        n!join music
-        ```
+        Parameters
+        ------------
+        channel: discord.VoiceChannel [Optional]
+            The channel to connect to. If a channel is not specified, an attempt to join the voice channel you are in
+            will be made.
+
+        This command also handles moving the bot to different channels.
         """
-
         if not channel:
             try:
                 channel = ctx.author.voice.channel
             except AttributeError:
-                await ctx.send(":notes: Вы не подключены к голосовому каналу.", delete_after=20)
+                await ctx.send(":notes: Please join voice channel or specify one with command!")
 
         vc = ctx.voice_client
         
@@ -407,33 +361,27 @@ class Music:
             try:
                 await vc.move_to(channel)
             except asyncio.TimeoutError:
-                return await ctx.send(f':notes: :x: Переход в <{channel}> не удался...\nПревышено время ожидания. Попробуйте еще раз.')
-                #raise VoiceConnectionError(f'Переход в <{channel}> закончилось неудачей;\n Timeout.')
+                raise VoiceConnectionError(f'Moving to channel: <{channel}> timed out.')
         else:
             try:
                 await channel.connect()
             except asyncio.TimeoutError:
-                return await ctx.send(f':notes: :x: Подключение к <{channel}> не удалось...\nПревышено время ожидания. Попробуйте еще раз.')
-                # raise VoiceConnectionError(f'Подключение к <{channel}> закончилось неудачей;\n Timeout.')
+                raise VoiceConnectionError(f'Connecting to channel: <{channel}> timed out.')
 
-        await ctx.send(f":notes: Голосовой канал: **{channel}**", delete_after=20)
+        await ctx.send(f":notes: Connected to channel: **{channel}**", delete_after=20)
         
-
-
     @commands.command(name='play', aliases=['sing', 'p'])
     async def play_(self, ctx, *, search: str):
-        """Проигрывание музыки (видео YouTube).
+        """Request a song and add it to the queue.
 
-        Аргументы:
-        `:search` - название песни или ссылка на видео YouTube
-        __                                            __
-        Например:
-        ```
-        n!play Nightcore - Mayday
-        n!play https://www.youtube.com/watch?v=-zHm77FkW3U
-        ```
+        This command attempts to join a valid voice channel if the bot is not already in one.
+        Uses YTDL to automatically search and retrieve a song.
+
+        Parameters
+        ------------
+        search: str [Required]
+            The song to search and retrieve using YTDL. This could be a simple search, an ID or URL.
         """
-        
         await ctx.trigger_typing()
 
         vc = ctx.voice_client
@@ -442,7 +390,7 @@ class Music:
             await ctx.invoke(self.connect_)
 
         elif ctx.author not in ctx.guild.voice_client.channel.members:
-            return await ctx.send(":notes: Подключитесь к голосовому каналу.", delete_after=20)
+            return await ctx.send(":notes: Please join my voice channel to execute this command.", delete_after=20)
 
         player = self.get_player(ctx)
 
@@ -451,24 +399,21 @@ class Music:
         source = await YTDLSource.create_source(ctx, search, loop=self.bot.loop, download=False)
         await player.queue.put(source)
 
-
-
-    @commands.command(name='playing', aliases=['np', 'current', 'currentsong', 'now_playing'])
+    @commands.command(name='now_playing', aliases=['np', 'current', 'currentsong', 'playing'])
     async def now_playing_(self, ctx):
-        """Отобразить информацию о проигрываемом треке.
-        """
+        """Display information about the currently playing song."""
 
         vc = ctx.voice_client
 
         if not vc or not vc.is_connected():
-            return await ctx.send(":notes: Я не нахожусь в голосовом канале. Присоединитесь к любому из них и выполните команду..", delete_after=20)
+            return await ctx.send(":notes: I am not connected to voice or playing anything. Join or specify one with command join.", delete_after=20)
 
         elif ctx.author not in ctx.guild.voice_client.channel.members:
-            return await ctx.send(":notes: Подключитесь к голосовому каналу.", delete_after=20)
+            return await ctx.send(":notes: Please join my voice channel to execute this command.", delete_after=20)
 
         player = self.get_player(ctx)
         if not player.current:
-            return await ctx.send(":notes: Проигрывание неактивно в данный момент.", delete_after=20)
+            return await ctx.send(":notes: I am not connected to voice or playing anything. Join or specify one with command join.", delete_after=20)
 
         try:
             # Remove our previous now_playing message.
@@ -476,12 +421,12 @@ class Music:
         except discord.HTTPException:
             pass
 
-        embednp = discord.Embed(color=0x17FD6E)
-        embednp.add_field(name="Проигрывается:", value=f"```fix\n{vc.source.title}```", inline=False)
-        embednp.add_field(name="Запросил:", value=f"**{vc.source.requester}**", inline=True)
-        embednp.add_field(name="URL-ссылка:", value=f"**[URL]({vc.source.web_url})**", inline=True)
-        embednp.add_field(name="Загрузил:", value=f"**{vc.source.uploader}**", inline=True)
-        embednp.add_field(name="Длительность:", value=f"**{datetime.timedelta(seconds=vc.source.duration)}**", inline=True)
+        embednp = discord.Embed(color=self.bot.color)
+        embednp.add_field(name="Song title:", value=f"```fix\n{vc.source.title}```", inline=False)
+        embednp.add_field(name="Requested by:", value=f"**{vc.source.requester}**", inline=True)
+        embednp.add_field(name="Song URL:", value=f"**[URL]({vc.source.web_url})**", inline=True)
+        embednp.add_field(name="Uploader:", value=f"**{vc.source.uploader}**", inline=True)
+        embednp.add_field(name="Song duration:", value=f"**{datetime.timedelta(seconds=vc.source.duration)}**", inline=True)
         embednp.set_thumbnail(url=f"{vc.source.thumbnail}")
         player.np = await ctx.send(embed=embednp)
         self.music_controller = self.bot.loop.create_task(MusicPlayer(ctx).buttons_controller(ctx.guild, player.np, vc.source, ctx.channel, ctx))
@@ -489,14 +434,14 @@ class Music:
     async def queue_info(self, ctx):
         player = self.get_player(ctx)
         if player.queue.empty():
-            return await ctx.send('**:notes: Нет песен в очереди.**')
+            return await ctx.send('**:notes: There are currently no more queued songs.**')
 
         upcoming = list(itertools.islice(player.queue._queue, 0, 5))
 
         fmt = '\n'.join(f'**`{_["title"]}`**' for _ in upcoming)
-        embed = discord.Embed(title=f'Очередь - Следующий {len(upcoming)}', description=fmt, color=0x17FD6E)
+        embed = discord.Embed(title=f'Queue - Next {len(upcoming)}', description=fmt, color=self.bot.color)
         await ctx.send(embed=embed)
 
 def setup(bot):
     bot.add_cog(Music(bot))
-    print('[music.py] Музыкальный модуль загружен.')
+    print('Music module loaded.')

@@ -22,8 +22,7 @@ class Owner(object):
         """Проверить, проигрывается ли где-то музыка в моем исполнении.
         """
 
-        if len([x.name for x in self.bot.guilds if x.voice_client]) >= 1:
-            await ctx.send('В данный момент я проигрываю музыку на %s серверах.' % len(active_voice_clients))
+        await ctx.send('В данный момент я проигрываю музыку на %s серверах.' % len(active_voice_clients))
 
     @commands.command(name='sysinfo', hidden=True)
     @commands.is_owner()
@@ -106,6 +105,16 @@ class Owner(object):
                 msg = await self.bot.wait_for('message', check=message_check, timeout=20.0)
                 if msg.content.lower() not in ['перезагрузись', 'перезапустись', 'пофиг', 'пофигу']:
                     return await ctx.send(':x: Отменено господином.')
+
+            except asyncio.TimeOutError:
+                return await ctx.send(':x: Отменено - время ожидания ответа вышло.')
+        
+        else:
+            await ctx.send('Сейчас я нигде не проигрываю музыку. К перезагрузке готова! с:\nПросто нужно подтверждение.')
+            try:
+                msg = await self.bot.wait_for('message', check=message_check, timeout=20.0)
+                    if msg.content.lower() not in ['перезагрузись', 'да', 'угу', 'ага']:
+                        return await ctx.send(':x: Отменено господином.')
 
             except asyncio.TimeOutError:
                 return await ctx.send(':x: Отменено - время ожидания ответа вышло.')
