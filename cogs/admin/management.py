@@ -11,7 +11,7 @@ class Management(object):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(name='setcolor', aliases=['colorme', 'givecolor'])
+    @commands.command(name='setcolor', aliases=['givecolor'])
     @commands.guild_only()
     @commands.has_permissions(manage_roles=True)
     async def set_member_color(self, ctx, color: discord.Color, member: discord.Member = None):
@@ -23,9 +23,10 @@ class Management(object):
         `:color` - цвет в HEX
         __                                            __
         Например:
-
-        n!colorme FFCC33
-
+        ```
+        n!setcolor FFCC33
+        n!givecolor FF0000 @Username#1234
+        ```
         """
         if not member:
             member = ctx.message.author
@@ -450,4 +451,4 @@ class Management(object):
 
 def setup(bot):
     bot.add_cog(Management(bot))
-    print('[admin.py] Админский модуль загружен.')
+    print('[management.py] Бородато-Одменский модуль управления загружен.')

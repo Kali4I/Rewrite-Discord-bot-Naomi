@@ -15,8 +15,17 @@ class Owner(object):
 
     def __init__(self, bot):
         self.bot = bot
+    
+    @commands.command(name='checkvoice', aliases='cv', hidden=True)
+    @commands.is_owner()
+    async def check_voice_clients(self, ctx):
+        """Проверить, проигрывается ли где-то музыка в моем исполнении.
+        """
 
-    @commands.command(name='sysinfo')
+        if len([x.name for x in self.bot.guilds if x.voice_client]) >= 1:
+            await ctx.send('В данный момент я проигрываю музыку на %s серверах.' % len(active_voice_clients))
+
+    @commands.command(name='sysinfo', hidden=True)
     @commands.is_owner()
     async def sysinfo(self, ctx):
         """Системная информация.
@@ -37,8 +46,10 @@ class Owner(object):
 Загрузка ЦПУ (всего):
 - `{''.join(cpu_load)}`
 Загрузка ОЗУ (всего): `{ram_load}`
+
 Имя процесса: `{process_sys_name}`
 Имя пользователя: `{process_sys_username}`
+Платформа: `{platform.platform()}`
 
 Потребление ОЗУ: `{round(mem_percent_usage)}%`
 Потребление ресурсов ЦПУ: `{round(cpu_percent_usage)}%`
@@ -85,7 +96,7 @@ class Owner(object):
         def message_check(m):
             return m.author.id == ctx.author.id
 
-        active_voice_clients = [x.name for x in client.guilds if x.voice_client]
+        active_voice_clients = [x.name for x in self.bot.guilds if x.voice_client]
         
         # Чтобы не перезагрузить бота во время проигрывания музыки.
         # В конце концов, бот перестает проигрывать ее при перезагрузке.
