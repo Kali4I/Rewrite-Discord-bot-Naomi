@@ -21,7 +21,7 @@ class Owner(object):
     async def check_voice_clients(self, ctx):
         """Проверить, проигрывается ли где-то музыка в моем исполнении.
         """
-
+        active_voice_clients = [x.name for x in self.bot.guilds if x.voice_client]
         await ctx.send('В данный момент я проигрываю музыку на %s серверах.' % len(active_voice_clients))
 
     @commands.command(name='sysinfo', hidden=True)
@@ -105,6 +105,8 @@ class Owner(object):
                 msg = await self.bot.wait_for('message', check=message_check, timeout=20.0)
                 if msg.content.lower() not in ['перезагрузись', 'перезапустись', 'пофиг', 'пофигу']:
                     return await ctx.send(':x: Отменено господином.')
+                else:
+                    pass
 
             except asyncio.TimeOutError:
                 return await ctx.send(':x: Отменено - время ожидания ответа вышло.')
@@ -115,11 +117,13 @@ class Owner(object):
                 msg = await self.bot.wait_for('message', check=message_check, timeout=20.0)
                 if msg.content.lower() not in ['перезагрузись', 'да', 'угу', 'ага']:
                     return await ctx.send(':x: Отменено господином.')
+                else:
+                    pass
 
             except asyncio.TimeOutError:
                 return await ctx.send(':x: Отменено - время ожидания ответа вышло.')
 
-        await bot.change_presence(activity=discord.Game(name='ПЕРЕЗАГРУЗКУ...'), status=discord.Status.dnd)
+        await self.bot.change_presence(activity=discord.Game(name='ПЕРЕЗАГРУЗКУ...'), status=discord.Status.dnd)
         await ctx.send(embed=discord.Embed(color=0x13CFEB).set_footer(text="Перезагружаемся..."))
         os.execl(sys.executable, sys.executable, * sys.argv)
 
