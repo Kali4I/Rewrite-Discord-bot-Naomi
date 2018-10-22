@@ -329,7 +329,8 @@ def _command_signature(cmd):
             # do [name] since [name=None] or [name=] are not exactly useful for the user.
             should_print = param.default if isinstance(param.default, str) else param.default is not None
             if should_print:
-                result.append(f'[{name}={param.default!r}]')
+                # result.append(f'[{name}={param.default!r}]')
+                result.append(f'[{name}]')
             else:
                 result.append(f'[{name}]')
         elif param.kind == param.VAR_POSITIONAL:
@@ -356,7 +357,7 @@ class HelpPaginator(Pages):
         entries = [cmd for cmd in entries if (await _can_run(cmd, ctx)) and not cmd.hidden]
 
         self = cls(ctx, entries)
-        self.title = f'{cog_name} Commands'
+        self.title = f'Категория "{cog_name}"'
         self.description = inspect.getdoc(cog)
         self.prefix = cleanup_prefix(ctx.bot, ctx.prefix)
 
@@ -377,7 +378,7 @@ class HelpPaginator(Pages):
         if command.description:
             self.description = f'{command.description}\n\n{command.help}'
         else:
-            self.description = command.help or 'No help given.'
+            self.description = command.help or 'Справка не дана.'
 
         self.prefix = cleanup_prefix(ctx.bot, ctx.prefix)
         return self
@@ -421,7 +422,7 @@ class HelpPaginator(Pages):
 
     def get_bot_page(self, page):
         cog, description, commands = self.entries[page - 1]
-        self.title = f'{cog} Commands'
+        self.title = f'Категория "{cog}"'
         self.description = description
         return commands
 
@@ -437,8 +438,9 @@ class HelpPaginator(Pages):
             github_url = 'https://github.com/AkiraSumato-01/Rewrite-Discord-Bot-Naomi'
             server_url = 'https://discord.gg/ZQfNQ43'
             invite_url = 'https://discordapp.com/oauth2/authorize?client_id=452534618520944649&scope=bot&permissions=490040390'
+            discordbots_url = 'https://discordbots.org/bot/452534618520944649'
             help_sign  = 'http://hostelcluj.com/wp-content/uploads/2015/07/Information_signal_64.png'
-            self.embed.add_field(name=f'Спасибо, что используете {self.bot.user.name}!', value=f'**[[GitHub]]({github_url}) [[Наш Discord сервер]]({server_url}) [[Пригласить меня]]({invite_url})**', inline=False)
+            self.embed.add_field(name=f'Спасибо, что используете {self.bot.user.name}!', value=f'**[[GitHub]]({github_url}) [[Наш Discord сервер]]({server_url}) [[Пригласить меня]]({invite_url}) [[DiscordBots]]({discordbots_url})**', inline=False)
             self.embed.set_thumbnail(url=help_sign)
 
         self.embed.set_footer(text=f'"{self.prefix}help [команда]" для подробного описание команды.')
