@@ -10,10 +10,10 @@ class Logger(object):
         self.bot = bot
 
     async def on_guild_join(self, g):
-        print(f'[{time.ctime()}] Меня пригласили на {g.name}, еее! :з')
+        print(f'[?] Меня пригласили на {g.name}, еее! :з')
 
     async def on_guild_remove(self, g):
-        print(f'[{time.ctime()}] Меня отключили от {g.name}, обидка :с')
+        print(f'[?] Меня отключили от {g.name}, обидка :с')
 
     # Да, здесь ОЧЕНЬ много эвентов xD
 

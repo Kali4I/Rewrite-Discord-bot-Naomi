@@ -16,7 +16,7 @@ class Owner(object):
     def __init__(self, bot):
         self.bot = bot
     
-    @commands.command(name='checkvoice', aliases='cv', hidden=True)
+    @commands.command(name='checkvoice', aliases=['cv'], hidden=True)
     @commands.is_owner()
     async def check_voice_clients(self, ctx):
         """Проверить, проигрывается ли где-то музыка в моем исполнении.

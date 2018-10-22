@@ -36,8 +36,8 @@ if __name__ == '__main__':
 
 @bot.event
 async def on_ready():
-    print(f'[{time.ctime()}] Подключение успешно осуществлено!\nВ сети: {bot.user}')
-    
+    print(f'[#] Подключение успешно осуществлено!\n[#] В сети: {bot.user}')
+
     async def presence():
         while not bot.is_closed():
             awaiting = 10
