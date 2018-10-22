@@ -114,11 +114,7 @@ class Fun(object):
         ```
         """
 
-        try:
-            await ctx.author.edit(nick=nickname, reason='Запрошено пользователем.')
-
-        except discord.errors.Forbidden:
-            await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xff0000).set_footer(text=ctx.prefix + 'У меня нет прав.'))
+        await ctx.author.edit(nick=nickname, reason='Запрошено пользователем.')
 
     @commands.command(name='talk', aliases=['t'])
     async def talk(self, ctx, *, message: commands.clean_content):

@@ -15,8 +15,8 @@ class Owner(object):
 
     def __init__(self, bot):
         self.bot = bot
-    
-    @commands.group(name='sysinfo', pass_context=True)
+
+    @commands.command(name='sysinfo')
     @commands.is_owner()
     async def sysinfo(self, ctx):
         """Системная информация.
@@ -82,7 +82,24 @@ class Owner(object):
     async def restart(self, ctx):
         """Перезагрузка.
         """
+        def message_check(m):
+            return m.author.id == ctx.author.id
 
+        active_voice_clients = [x.name for x in client.guilds if x.voice_client]
+        
+        # Чтобы не перезагрузить бота во время проигрывания музыки.
+        # В конце концов, бот перестает проигрывать ее при перезагрузке.
+        if len(active_voice_clients) >= 1:
+            await ctx.send('В данный момент я проигрываю музыку на %s серверах.\nНе думаю, что стоит совершать перезагрузку сейчас...' % len(active_voice_clients))
+            try:
+                msg = await self.bot.wait_for('message', check=message_check, timeout=20.0)
+                if msg.content.lower() not in ['перезагрузись', 'перезапустись', 'пофиг', 'пофигу']:
+                    return await ctx.send(':x: Отменено господином.')
+
+            except asyncio.TimeOutError:
+                return await ctx.send(':x: Отменено - время ожидания ответа вышло.')
+
+        await bot.change_presence(activity=discord.Game(name='ПЕРЕЗАГРУЗКУ...'), status=discord.Status.dnd)
         await ctx.send(embed=discord.Embed(color=0x13CFEB).set_footer(text="Перезагружаемся..."))
         os.execl(sys.executable, sys.executable, * sys.argv)
 
@@ -183,6 +200,7 @@ class Owner(object):
                     'message': ctx.message,
                     'client': self.bot,
                     'bot': self.bot,
+                    'naomi': self.bot,
                     'discord': discord,
                     'ctx': ctx,
                     'owner': owner
@@ -190,6 +208,7 @@ class Owner(object):
 
                 env.update(globals())
                 _code = ''.join(code).replace('```python', '').replace('```', '')
+
                 try:
                     stdout = io.StringIO()
                     interpretate = f'async def virtexec():\n{textwrap.indent(_code, "  ")}'

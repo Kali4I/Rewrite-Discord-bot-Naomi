@@ -369,8 +369,11 @@ class Music:
         except AttributeError:
             return await ctx.send(":notes: Вы не подключены к голосовому каналу.", delete_after=20)
 
-        if ctx.guild.voice_client:
-            await ctx.guild.voice_client.disconnect()
+        try:
+            if ctx.guild.voice_client:
+                await ctx.guild.voice_client.disconnect()
+        except:
+            pass
 
         await channel.connect()
 
@@ -427,6 +430,7 @@ class Music:
         Например:
         ```
         n!play Nightcore - Mayday
+        n!play https://www.youtube.com/watch?v=-zHm77FkW3U
         ```
         """
         

@@ -39,7 +39,7 @@ class Pages:
     permissions: discord.Permissions
         Our permissions for the channel.
     """
-    def __init__(self, ctx, *, entries, per_page=12, show_entry_count=True):
+    def __init__(self, ctx, *, entries, per_page=8, show_entry_count=True):
         self.bot = ctx.bot
         self.entries = entries
         self.message = ctx.message
@@ -182,9 +182,9 @@ class Pages:
 
     async def show_help(self):
         """Вызвать это окно"""
-        messages = ['Welcome to the interactive paginator!\n']
-        messages.append('This interactively allows you to see pages of text by navigating with ' \
-                        'reactions. They are as follows:\n')
+        messages = ['Приветствую. Это - интерактивный справочник по командам.\n']
+        messages.append('Он позволяет управлять справочником команд с помощью ' \
+                        'Реакций. Вот они:\n')
 
         for (emoji, func) in self.reaction_emojis:
             messages.append(f'{emoji} {func.__doc__}')
@@ -496,7 +496,7 @@ class HelpPaginator(Pages):
 
         entries = (
             ('<аргумент>', '__**обязательный**__ аргумент .'),
-            ('[аргумент]', '__**опциональный**__ аргумент.'),
+            ('[аргумент]', '__**опциональный (не обязательный)**__ аргумент.'),
             ('[A|B]', 'Выбор между __**A и B**__.'),
             ('[аргумент...]', 'Множество аргументов.\n\n' \
                               'На этом все.\n' \
