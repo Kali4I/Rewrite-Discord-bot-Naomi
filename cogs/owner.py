@@ -113,8 +113,8 @@ class Owner(object):
             await ctx.send('Сейчас я нигде не проигрываю музыку. К перезагрузке готова! с:\nПросто нужно подтверждение.')
             try:
                 msg = await self.bot.wait_for('message', check=message_check, timeout=20.0)
-                    if msg.content.lower() not in ['перезагрузись', 'да', 'угу', 'ага']:
-                        return await ctx.send(':x: Отменено господином.')
+                if msg.content.lower() not in ['перезагрузись', 'да', 'угу', 'ага']:
+                    return await ctx.send(':x: Отменено господином.')
 
             except asyncio.TimeOutError:
                 return await ctx.send(':x: Отменено - время ожидания ответа вышло.')
