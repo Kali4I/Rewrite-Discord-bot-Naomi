@@ -486,7 +486,7 @@ class Music:
                     return False
                 return True
 
-            while m:
+            while True:
                 r, u = await self.bot.wait_for('reaction_add', check=check)
                 if str(r) == '⏹':
                     await ctx.invoke(self.stop_)
@@ -501,15 +501,15 @@ class Music:
                 if str(r) == '🔗':
                     await ctx.invoke(self.connect_)
                 if str(r) == '➕':
-                    self._change_volume('+')
+                    await self._change_volume('+')
                 if str(r) == '➖':
-                    self._change_volume('-')
-
+                    await self._change_volume('-')
                 await m.remove_reaction(r, u)
+
         react_loop = self.bot.loop.create_task(reaction_checker(ctx))
-        await asyncio.sleep(25.0)
-        await react_loop.cancel()
+        await asyncio.sleep(25)
         await m.delete()
+        react_loop.cancel()
 
 
 def setup(bot):
