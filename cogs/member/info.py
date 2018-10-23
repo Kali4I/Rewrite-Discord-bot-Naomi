@@ -19,7 +19,8 @@ class Info(object):
         self.bot = bot
 
     @commands.command(name='cryptoprice')
-    async def cryptoprice(self, ctx, cryptocurrency=None, currency=None):
+    async def cryptoprice(self, ctx, cryptocurrency: commands.clean_content = 'bitcoin', \
+                            currency: commands.clean_content = 'rub'):
         """Стоимость криптовалют.
 
         Аргументы:
@@ -31,12 +32,6 @@ class Info(object):
         n!cryptoprice bitcoin rub
         ```
         """
-
-        if not cryptocurrency:
-            cryptocurrency = 'bitcoin'
-
-        if not currency:
-            currency = 'rub'
 
         request = requests.get(f'https://api.coinmarketcap.com/v1/ticker/{cryptocurrency}/?convert={currency}')
         resp = request.json()
@@ -118,9 +113,9 @@ class Info(object):
         __                                            __
         Например:
         ```
-        n!help anime
-        n!help Admin
-        n!help Fun
+        n!cmds
+        n!help neko
+        n!help Management
         ```
         """
         try:
@@ -138,6 +133,7 @@ class Info(object):
                     p = await HelpPaginator.from_cog(ctx, entity)
 
             await p.paginate()
+
         except Exception as e:
             await ctx.send(e)
 
@@ -269,7 +265,8 @@ class Info(object):
         await ctx.send(embed=stats)
 
     @commands.command(name='osu', aliases=['osu!'])
-    async def osu(self, ctx, player:str, mode:str=None):
+    async def osu(self, ctx, player: commands.clean_content, \
+                            mode: commands.clean_content = 'osu!'):
         """Статистика игрока osu!
 
         Аргументы:
@@ -281,9 +278,6 @@ class Info(object):
         n!osu AkiraSumato_01 mania
         ```
         """
-
-        if not mode:
-            mode = 'osu!'
 
         if mode == 'osu!'  or mode == 'o':
             game_mode = {'num': 0, 'name': 'osu!'}

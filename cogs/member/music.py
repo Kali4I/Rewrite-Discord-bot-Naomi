@@ -34,6 +34,8 @@ from async_timeout import timeout
 from functools import partial
 from youtube_dl import YoutubeDL
 
+from random import randint
+
 if not discord.opus.is_loaded():
     discord.opus.load_opus('libopus.so')
 
@@ -368,7 +370,7 @@ class Music:
 
         await ctx.send(embed=embed)
 
-    @commands.command(name='now_playing', aliases=['currentsong', 'playing'])
+    @commands.command(name='playing', aliases=['currentsong'])
     async def now_playing_(self, ctx):
         """Информация о проигрываемой песне."""
         vc = ctx.voice_client
@@ -427,6 +429,51 @@ class Music:
             return await ctx.send('Я ничего не проигрываю в голосовой канал...', delete_after=20)
 
         await self.cleanup(ctx.guild)
+
+    reactions = {'⏹': 'Остановить проигрывание',
+                 '⏸': 'Поставить проигрыватель на паузу.'
+                 '⏯': 'Убрать проигрыватель с паузы',
+                 '⏭': 'Перейти к следующей песне'}
+                 # '➕': 'Увеличить громкость на 25%',
+                 # '➖': 'Уменьшить громкость на 25%'}
+
+    @commands.command(name='musmenu', hidden=True)
+    @commands.is_owner()
+    async def call_menu_(self, ctx):
+        """Вызов панели управления проигрывателем.
+        """
+        embed = discord.Embed(color=randint(0x000000, 0xFFFFFF),
+                                title='Панель управления проигрывателем.')
+
+        paginator = commands.Paginator(prefix='', suffix='')
+        for x in self.reactions:
+            paginator.add_line(f"{x}: {self.reactions[x]}")
+
+        for page in paginator.pages:
+            embed.add_field(name='Описание реакций', value=page)
+
+        m = await ctx.send(embed=embed)
+
+        async def reaction_checker():
+            for x in self.reactions:
+                await m.add_reaction(self.reactions[x]['emoji'])
+
+            async def on_reaction_add(r):
+                if r.emoji == '⏹':
+                    await ctx.invoke(self.stop_)
+                if r.emoji == '⏸':
+                    await ctx.invoke(self.pause_)
+                if r.emoji == '⏯':
+                    await ctx.invoke(self.resume_)
+                if r.emoji == '⏭':
+                    await ctx.invoke(self.skip_)
+                
+                try:
+                    await m.remove_reaction(r)
+                except Exception as e:
+                    print(e)
+
+        self.bot.loop.create_task(reaction_checker())
 
 
 def setup(bot):

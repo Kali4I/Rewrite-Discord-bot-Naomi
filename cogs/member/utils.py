@@ -15,7 +15,7 @@ class Utils(object):
         self.bot = bot
     
     @commands.command(name='randint', aliases=['rval'])
-    async def random_(self, ctx, from_: int = None, to: int = None):
+    async def random_(self, ctx, from_: int = 0, to: int = 100):
         """Сгенерировать случайное число.
 
         Аргументы:
@@ -28,12 +28,6 @@ class Utils(object):
         n!randint 500 2931
         ```
         """
-
-        if not from_ or not from_.isnumeric():
-            from_ = 0
-        if not to or not to.isnumeric():
-            to = 100
-        
         try:
             int_ = randint(from_, to)
         except:
@@ -42,7 +36,7 @@ class Utils(object):
         await ctx.send(f'Рандомное число: **`{int_}`**')
 
     @commands.command(name='hostinfo', aliases=['host', 'whois'])
-    async def hostinfo(self, ctx, domain:str):
+    async def hostinfo(self, ctx, domain: str):
         """WHOIS-информация о домене.
 
         Аргументы:
@@ -81,7 +75,7 @@ class Utils(object):
         await ctx.send(embed=hostinfo)
 
     @commands.command(name='hastebin', pass_context=True)
-    async def hastebin_post(self, ctx, *, code:str):
+    async def hastebin_post(self, ctx, *, code: str):
         """Отправка текста на Hastebin.com
 
         Аргументы:
@@ -98,7 +92,7 @@ class Utils(object):
                                         description=f'```{link}```'))
 
     @commands.command(name='calc', aliases=['calculator', 'calculate'], pass_context=True)
-    async def calc(self, ctx, *, expression:str):
+    async def calc(self, ctx, *, expression: str):
         """Калькулятор.
 
         Аргументы:
