@@ -429,36 +429,13 @@ class Music:
             return await ctx.send('Я ничего не проигрываю в голосовой канал...', delete_after=20)
 
         await self.cleanup(ctx.guild)
-    
-    async def _change_volume(self, ctx, action: str):
-        '''Увеличение / уменьшение громкости (25%) через интерактивный контроллер проигрывателя.
-        '''
-        vc = ctx.voice_client
-        if not vc or not vc.is_connected():
-            return await ctx.send('Я не подключена к голосовому каналу.', delete_after=20)
-
-        player = self.get_player(ctx)
-
-        if vc.source:
-            if action == '+':
-                vc.source.volume += 0.25
-            if action == '-':
-                vc.source.volume -= 0.25
-
-        if action == '+':
-            player.volume += 0.25
-        if action == '-':
-            player.volume -= 0.25
-        await ctx.send(f'**`{ctx.author}`** увеличил громкость проигрывателя на **25%**')
 
     reactions = {'⏹': 'Остановить проигрывание',
                  '⏸': 'Поставить проигрыватель на паузу.',
                  '▶': 'Возобновить проигрывание',
                  '⏭': 'Перейти к следующей песне',
                  '🗂': 'Отобразить список песен в очереди',
-                 '🔗': 'Подключить меня к каналу',
-                 '➕': 'Увеличить громкость на 25%',
-                 '➖': 'Уменьшить громкость на 25%'}
+                 '🔗': 'Подключить меня к каналу'}
 
     @commands.command(name='musmenu', aliases=['music', 'muscontrol', 'playmenu'])
     async def call_menu_(self, ctx):
@@ -500,10 +477,6 @@ class Music:
                     await ctx.invoke(self.now_playing_)
                 if str(r) == '🔗':
                     await ctx.invoke(self.connect_)
-                if str(r) == '➕':
-                    await self._change_volume(action='+')
-                if str(r) == '➖':
-                    await self._change_volume(action='-')
                 await m.remove_reaction(r, u)
 
         react_loop = self.bot.loop.create_task(reaction_checker(ctx))
@@ -514,3 +487,4 @@ class Music:
 
 def setup(bot):
     bot.add_cog(Music(bot))
+    print('[music.py] Модуль музыки загружен.')

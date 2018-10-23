@@ -54,6 +54,8 @@ async def on_ready():
                     await bot.change_presence(activity=discord.Game(name=msg))
                     await asyncio.sleep(awaiting)
 
+    await self.bot.change_presence(activity=discord.Game(name='загрузка...'), status=discord.Status.idle)
+    await asyncio.sleep(1.5)
     await bot.loop.create_task(presence())
 
 bot.run(os.getenv('TOKEN'), bot=True, reconnect=True)
