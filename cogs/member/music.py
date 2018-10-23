@@ -435,6 +435,7 @@ class Music:
                  '▶': 'Возобновить проигрывание',
                  '⏭': 'Перейти к следующей песне',
                  '🗂': 'Отобразить список песен в очереди',
+                 '🔊': 'Отобразить, что проигрывается сейчас',
                  '🔗': 'Подключить меня к каналу'}
 
     @commands.command(name='musmenu', aliases=['music', 'muscontrol', 'playmenu'])
@@ -474,6 +475,8 @@ class Music:
                 if str(r) == '⏭':
                     await ctx.invoke(self.skip_)
                 if str(r) == '🗂':
+                    await ctx.invoke(self.queue_info)
+                if str(r) == '🔊':
                     await ctx.invoke(self.now_playing_)
                 if str(r) == '🔗':
                     await ctx.invoke(self.connect_)
