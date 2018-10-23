@@ -430,7 +430,7 @@ class Music:
 
         await self.cleanup(ctx.guild)
     
-    async def _change_volume(self, action: str):
+    async def _change_volume(self, ctx, action: str):
         '''Увеличение / уменьшение громкости (25%) через интерактивный контроллер проигрывателя.
         '''
         vc = ctx.voice_client
@@ -453,15 +453,15 @@ class Music:
 
     reactions = {'⏹': 'Остановить проигрывание',
                  '⏸': 'Поставить проигрыватель на паузу.',
-                 '⏯': 'Убрать проигрыватель с паузы',
+                 '▶': 'Возобновить проигрывание',
                  '⏭': 'Перейти к следующей песне',
                  '🗂': 'Отобразить список песен в очереди',
                  '🔗': 'Подключить меня к каналу',
                  '➕': 'Увеличить громкость на 25%',
                  '➖': 'Уменьшить громкость на 25%'}
 
-    @commands.command(name='musmenu')
-    async def cm_(self, ctx):
+    @commands.command(name='musmenu', aliases=['music', 'muscontrol', 'playmenu'])
+    async def call_menu_(self, ctx):
         embed = discord.Embed(title='Контроллер проигрывателя.')
         paginator = commands.Paginator(prefix='',suffix='')
 
@@ -501,9 +501,9 @@ class Music:
                 if str(r) == '🔗':
                     await ctx.invoke(self.connect_)
                 if str(r) == '➕':
-                    await self._change_volume('+')
+                    await self._change_volume(action='+')
                 if str(r) == '➖':
-                    await self._change_volume('-')
+                    await self._change_volume(action='-')
                 await m.remove_reaction(r, u)
 
         react_loop = self.bot.loop.create_task(reaction_checker(ctx))
