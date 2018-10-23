@@ -456,7 +456,7 @@ class Music:
 
         async def reaction_checker():
             for x in self.reactions:
-                await m.add_reaction(self.reactions[x]['emoji'])
+                await m.add_reaction(x)
 
             async def on_reaction_add(r):
                 if r.emoji == '⏹':
