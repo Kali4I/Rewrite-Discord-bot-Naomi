@@ -429,23 +429,42 @@ class Music:
             return await ctx.send('Я ничего не проигрываю в голосовой канал...', delete_after=20)
 
         await self.cleanup(ctx.guild)
+    
+    async def _change_volume(self, action: str):
+        '''Увеличение / уменьшение громкости (25%) через интерактивный контроллер проигрывателя.
+        '''
+        vc = ctx.voice_client
+        if not vc or not vc.is_connected():
+            return await ctx.send('Я не подключена к голосовому каналу.', delete_after=20)
+
+        player = self.get_player(ctx)
+
+        if vc.source:
+            if action == '+':
+                vc.source.volume += 0.25
+            if action == '-':
+                vc.source.volume -= 0.25
+
+        if action == '+':
+            player.volume += 0.25
+        if action == '-':
+            player.volume -= 0.25
+        await ctx.send(f'**`{ctx.author}`** увеличил громкость проигрывателя на **25%**')
 
     reactions = {'⏹': 'Остановить проигрывание',
                  '⏸': 'Поставить проигрыватель на паузу.',
                  '⏯': 'Убрать проигрыватель с паузы',
-                 '⏭': 'Перейти к следующей песне'}
-                 # '➕': 'Увеличить громкость на 25%',
-                 # '➖': 'Уменьшить громкость на 25%'}
+                 '⏭': 'Перейти к следующей песне',
+                 '🗂': 'Отобразить список песен в очереди',
+                 '🔗': 'Подключить меня к каналу',
+                 '➕': 'Увеличить громкость на 25%',
+                 '➖': 'Уменьшить громкость на 25%'}
 
-    @commands.command(name='musmenu', hidden=True)
-    @commands.is_owner()
-    async def call_menu_(self, ctx):
-        """Вызов панели управления проигрывателем.
-        """
-        embed = discord.Embed(color=randint(0x000000, 0xFFFFFF),
-                                title='Панель управления проигрывателем.')
+    @commands.command(name='musmenu')
+    async def cm_(self, ctx):
+        embed = discord.Embed(title='Контроллер проигрывателя.')
+        paginator = commands.Paginator(prefix='',suffix='')
 
-        paginator = commands.Paginator(prefix='', suffix='')
         for x in self.reactions:
             paginator.add_line(f"{x}: {self.reactions[x]}")
 
@@ -454,26 +473,43 @@ class Music:
 
         m = await ctx.send(embed=embed)
 
-        async def reaction_checker():
+        async def reaction_checker(ctx):
             for x in self.reactions:
                 await m.add_reaction(x)
 
-            async def on_reaction_add(r):
-                if r.emoji == '⏹':
-                    await ctx.invoke(self.stop_)
-                if r.emoji == '⏸':
-                    await ctx.invoke(self.pause_)
-                if r.emoji == '⏯':
-                    await ctx.invoke(self.resume_)
-                if r.emoji == '⏭':
-                    await ctx.invoke(self.skip_)
-                
-                try:
-                    await m.remove_reaction(r)
-                except Exception as e:
-                    print(e)
+            def check(r, u):
+                if not m \
+                    or str(r) not in self.reactions \
+                    or u.id == self.bot.user.id \
+                    or r.message.id != m.id \
+                    or u.bot:
+                    return False
+                return True
 
-        self.bot.loop.create_task(reaction_checker())
+            while m:
+                r, u = await self.bot.wait_for('reaction_add', check=check)
+                if str(r) == '⏹':
+                    await ctx.invoke(self.stop_)
+                if str(r) == '⏸':
+                    await ctx.invoke(self.pause_)
+                if str(r) == '▶':
+                    await ctx.invoke(self.resume_)
+                if str(r) == '⏭':
+                    await ctx.invoke(self.skip_)
+                if str(r) == '🗂':
+                    await ctx.invoke(self.now_playing_)
+                if str(r) == '🔗':
+                    await ctx.invoke(self.connect_)
+                if str(r) == '➕':
+                    self._change_volume('+')
+                if str(r) == '➖':
+                    self._change_volume('-')
+
+                await m.remove_reaction(r, u)
+        react_loop = self.bot.loop.create_task(reaction_checker(ctx))
+        await asyncio.sleep(25.0)
+        await react_loop.cancel()
+        await m.delete()
 
 
 def setup(bot):
