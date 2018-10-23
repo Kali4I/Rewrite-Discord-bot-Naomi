@@ -483,7 +483,7 @@ class Music:
                 await m.remove_reaction(r, u)
 
         react_loop = self.bot.loop.create_task(reaction_checker(ctx))
-        await asyncio.sleep(25)
+        await asyncio.sleep(50)
         await m.delete()
         react_loop.cancel()
 
