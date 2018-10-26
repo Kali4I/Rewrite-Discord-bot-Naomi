@@ -100,6 +100,7 @@ class ErrorHandler:
                     name='Обработка исключения.',
                     icon_url='http://s1.iconbird.com/ico/2013/11/504/w128h1281385326489locked.png')
         await rep_channel.send(embed=embed)
+        await ctx.send('Приношу свои извинения, но у меня возникла проблема...\nНе стоит беспокоиться, сейчас я отправлю подробности разработчику и он быстро ее исправит! <3')
 
 
 def setup(bot):

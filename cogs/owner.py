@@ -16,6 +16,25 @@ class Owner(object):
     def __init__(self, bot):
         self.bot = bot
     
+    @commands.command(name='logout', hidden=True)
+    @commands.is_owner()
+    async def logout(self, ctx):
+        """Деавторизовать от Discord.
+        """
+
+        def message_check(m):
+            return m.author.id == ctx.author.id
+
+        await ctx.send(':hammer_pick: А оно надо? -_-')
+        msg = await self.bot.wait_for('message', check=message_check, timeout=120.0)
+
+        if msg.lower() in ['да', 'ага', 'угу']:
+            await ctx.send(':white_check_mark: Ну, как хочешь. Я спать, пока!')
+        else:
+            return await ctx.send(':x: Вот! Нормальный (нет) ответ! Остаюсь в сети.')
+
+        await self.bot.logout()
+    
     @commands.command(name='checkvoice', aliases=['cv'], hidden=True)
     @commands.is_owner()
     async def check_voice_clients(self, ctx):

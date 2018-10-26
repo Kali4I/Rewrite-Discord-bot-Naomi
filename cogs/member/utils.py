@@ -28,15 +28,10 @@ class Utils(object):
         n!randint 500 2931
         ```
         """
-        try:
-            int_ = randint(from_, to)
-        except:
-            int_ = randint(0, 100)
-
-        await ctx.send(f'Рандомное число: **`{int_}`**')
+        await ctx.send(f'Рандомное число: **`{randint(from_, to)}`**')
 
     @commands.command(name='hostinfo', aliases=['host', 'whois'])
-    async def hostinfo(self, ctx, domain: str):
+    async def hostinfo(self, ctx, domain: commands.clean_content):
         """WHOIS-информация о домене.
 
         Аргументы:
@@ -48,7 +43,10 @@ class Utils(object):
         ```
         """
 
-        whois_info = whois.whois(domain)
+        try:
+            whois_info = whois.whois(domain)
+        except whois.gaierror:
+            return await ctx.send(f':x: У меня не получилось найти "{domain}"! :c')
 
         hostinfo = discord.Embed(timestamp=ctx.message.created_at, color=0xff0000, title=f'WHOIS-информация для {domain}')
 
@@ -91,7 +89,7 @@ class Utils(object):
         await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, title='Ваш код был загружен на Hastebin:',
                                         description=f'```{link}```'))
 
-    @commands.command(name='calc', aliases=['calculator', 'calculate'], pass_context=True)
+    @commands.command(name='calc', aliases=['calculator', 'math', 'calculate'])
     async def calc(self, ctx, *, expression: str):
         """Калькулятор.
 
@@ -114,8 +112,8 @@ class Utils(object):
         except:
             return False
         
-        if len(b) >= 16 and b.count('**') == 1 or b.count('**') >= 2 and len(b) >= 8:
-            return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xfA0000).set_footer(text=ctx.prefix + 'Недопустимо по причине снижения производительности.'))
+        if len(b) >= 9 and b.count('**') == 1 or b.count('**') >= 2 and len(b) >= 6:
+            return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xfA0000).set_footer(text='Недопустимо по причине снижения производительности.'))
 
         else:
             try:
@@ -125,14 +123,13 @@ class Utils(object):
                 eval_ = '∞'
 
             except:
-                return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xf0a302).set_footer(text=ctx.prefix + 'Выражение имеет ошибку.\nИсправьте его.'))
+                return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xf0a302).set_footer(text='Выражение имеет ошибку.\nИсправьте его.'))
 
             if len(eval_) > 12 and not eval_.isnumeric():
-                await ctx.send(embed=discord.Embed(
-                    timestamp=ctx.message.created_at,
+                await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at,
                     color=0xf0a302,
                     description=f'```css\n{expression}\
-                    \n```(Указаны первые 12 цифр)\
+                    \n```(Указаны первые 12 символов)\
                     \n{eval_[:12]}\
                     \n\nОкругленный:\
                     \n{round(float(eval_))}').set_footer(text=ctx.prefix + 'calc [матем.выражение]'))
@@ -141,7 +138,7 @@ class Utils(object):
                 await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at,
                     color=0xf0a302,
                     description=f'```css\n\{expression}\
-                    \n```(Указаны первые 12 цифр)\
+                    \n```(Указаны первые 12 символов)\
                     \n{eval_[:12]}').set_footer(text=ctx.prefix + 'calc [матем.выражение]'))
 
             else:
