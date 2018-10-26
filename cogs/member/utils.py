@@ -116,6 +116,13 @@ class Utils(object):
             return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xfA0000).set_footer(text='Недопустимо по причине снижения производительности.'))
 
         else:
+
+            embed = discord.Embed(timestamp=ctx.message.created_at, color=0xf0a302,
+                                description=f'```css\n\{expression}```')
+            embed.set_footer(text=f'{ctx.prefix}{ctx.command} <expression>')
+            embed.set_author(name=ctx.message.author.name,
+                             icon_url=ctx.message.author.avatar_url)
+
             try:
                 eval_ = str(eval(b))
 
@@ -123,29 +130,24 @@ class Utils(object):
                 eval_ = '∞'
 
             except:
-                return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xf0a302).set_footer(text='Выражение имеет ошибку.\nИсправьте его.'))
+                embed.add_field(name='Выражение имеет ошибку.',
+                                value='Исправьте его.')
 
             if len(eval_) > 12 and not eval_.isnumeric():
-                await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at,
-                    color=0xf0a302,
-                    description=f'```css\n{expression}\
-                    \n```(Указаны первые 12 символов)\
-                    \n{eval_[:12]}\
-                    \n\nОкругленный:\
-                    \n{round(float(eval_))}').set_footer(text=ctx.prefix + 'calc [матем.выражение]'))
+                embed.add_field(name='Ответ:',
+                                value=f'{eval_[:12]}..')
+                embed.add_field(name='Округленное значение:',
+                                value=f'{round(float(eval_))}')
 
             elif len(eval_) > 12 and eval_.isnumeric():
-                await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at,
-                    color=0xf0a302,
-                    description=f'```css\n\{expression}\
-                    \n```(Указаны первые 12 символов)\
-                    \n{eval_[:12]}').set_footer(text=ctx.prefix + 'calc [матем.выражение]'))
+                embed.add_field(name='Ответ:',
+                                value=f'{eval_[:26]}..')
 
             else:
-                await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at,
-                    color=0xf0a302,
-                    description=f'```css\n{expression}\
-                    \n```{eval_}').set_footer(text=ctx.prefix + 'calc [матем.выражение]'))
+                embed.add_field(name='Ответ:',
+                                value=f'{eval_}')
+            
+            await ctx.send(embed=embed)
 
 def setup(bot):
     bot.add_cog(Utils(bot))
