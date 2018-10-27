@@ -10,6 +10,7 @@ import time
 import psutil
 
 from utils.HelpPaginator import HelpPaginator, CannotPaginate
+from utils.Wikipedia import Wikia
 from mcstatus import MinecraftServer
 
 
@@ -17,6 +18,37 @@ class Info(object):
     """Команды пользователей - Info"""
     def __init__(self, bot):
         self.bot = bot
+    
+    @commands.command(name='wiki', aliases=['wikipedia', 'wikia'])
+    async def wiki(self, ctx, query: commands.clean_content):
+        """[!InDev!] Поиск в Википедии.
+
+        Аргументы:
+        `:query` - Ваш запрос
+        __                                            __
+        Например:
+        ```
+        n!wikia Python
+        ```
+        """
+        wiki_query = w.search(query)
+        if len(wiki_query) >= 1:
+            result = w.page(wiki_query[0])
+            result = result.content[0:1940]
+            url = f'.. [Читать далее]({result.url})'
+        else:
+            result = ':x: Я ничего не нашла на Википедии... Извините!'
+            url = ''
+
+        embed = discord.Embed(timestamp=ctx.message.created_at, color=0xf0a302,
+                              title=f'Поиск в Википедии - "{query}"',
+                              description=f'{result}{url}')
+        embed.set_footer(text=f'{ctx.prefix}{ctx.command} <query>')
+        embed.set_author(name=ctx.message.author.name,
+                         icon_url=ctx.message.author.avatar_url)
+        
+        await ctx.send(embed=embed)
+
 
     @commands.command(name='cryptoprice')
     async def cryptoprice(self, ctx, cryptocurrency: commands.clean_content = 'bitcoin', \
