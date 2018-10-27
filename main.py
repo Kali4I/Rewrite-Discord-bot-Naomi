@@ -35,6 +35,10 @@ if __name__ == '__main__':
             traceback.print_exc()
 
 @bot.event
+async def on_connect():
+    await bot.change_presence(activity=discord.Game(name='загружаюсь :з'), status=discord.Status.idle)
+
+@bot.event
 async def on_ready():
     print(f'[#] Подключение успешно осуществлено!\n[#] В сети: {bot.user}')
 
@@ -53,9 +57,6 @@ async def on_ready():
                 if game_activity == 'playing':
                     await bot.change_presence(activity=discord.Game(name=msg))
                     await asyncio.sleep(awaiting)
-
-    await bot.change_presence(activity=discord.Game(name='загрузка...'), status=discord.Status.idle)
-    await asyncio.sleep(1.5)
     await bot.loop.create_task(presence())
 
 bot.run(os.getenv('TOKEN'), bot=True, reconnect=True)

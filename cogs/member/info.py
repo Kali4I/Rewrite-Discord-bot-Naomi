@@ -18,7 +18,23 @@ class Info(object):
     def __init__(self, bot):
         self.bot = bot
     
-    @commands.command(name='wiki', aliases=['wikipedia', 'wikia'])
+    @commands.command(name='invite')
+    async def invite(self, ctx):
+        """Получить ссылку для приглашения меня к Вам на сервер.
+        """
+        full_url = 'Хотите получить бота с не малым набором возможностей на своем сервере? [Клик сюда <3](https://discordapp.com/oauth2/authorize?client_id=452534618520944649&scope=bot&permissions=473197655)'
+        low_url = 'Нужны только основные команды пользователей? [И так тоже можно](https://discordapp.com/oauth2/authorize?client_id=452534618520944649&scope=bot&permissions=3435584)!'
+        embed = discord.Embed(timestamp=ctx.message.created_at, color=0xf0a302,
+                              title=f'Ссылки для приглашения <3',
+                              description=f'{full_url}\n{low_url}')
+        embed.set_footer(text=f'{ctx.prefix}{ctx.command}')
+        embed.set_author(name=ctx.message.author.name,
+                         icon_url=ctx.message.author.avatar_url)
+        
+        await ctx.send(embed=embed)
+
+    @commands.command(name='wiki', aliases=['wikipedia', 'wikia'], hidden=True)
+    @commands.is_owner()
     async def wiki(self, ctx, query: commands.clean_content):
         """[!InDev!] Поиск в Википедии.
 
@@ -131,8 +147,8 @@ class Info(object):
                     <:naomiusers:491313467962294296> Участников: {len(self.bot.users)}\n\
                     <:naomicmds:491314340029530132> Команд: {len([x.name for x in self.bot.commands if not x.hidden])}\n\
                     :smiley: Эмодзи: {len(self.bot.emojis)}\n\n\
-                    <:naomiram:493341277966958602> RAM: {psutil.virtual_memory().percent}%\n\
-                    <:naomicpu:493341839953494031> CPU: {psutil.cpu_times_percent().user}%')
+                    Если вы довольны моим функционалом и хотите поддержать меня и моего доброго разработчика, пожалуйста, [проголосуйте здесь](https://discordbots.org/bot/452534618520944649) <3\
+                    \nЯ надеюсь на Вашу поддержку!')
         await ctx.send(embed=embed)
 
     @commands.command(name='help', aliases=['commands', 'cmds'])
