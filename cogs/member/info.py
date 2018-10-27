@@ -10,7 +10,6 @@ import time
 import psutil
 
 from utils.HelpPaginator import HelpPaginator, CannotPaginate
-from utils.Wikipedia import Wikia
 from mcstatus import MinecraftServer
 
 
