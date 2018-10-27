@@ -8,10 +8,10 @@ import json
 import requests
 import time
 import psutil
+import wikipedia as w
 
 from utils.HelpPaginator import HelpPaginator, CannotPaginate
 from mcstatus import MinecraftServer
-
 
 class Info(object):
     """Команды пользователей - Info"""
