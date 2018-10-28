@@ -11,6 +11,7 @@ import json
 import os
 
 import pokebase as pb
+import asyncio
 
 from utils.NekosWrapper import (get_neko, 
                                 NekoNotInTags,
