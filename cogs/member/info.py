@@ -353,4 +353,3 @@ class Info(object):
 
 def setup(bot):
     bot.add_cog(Info(bot))
-    print('[info.py] Модуль "Member/Info" загружен.')

@@ -105,4 +105,3 @@ class ErrorHandler:
 
 def setup(bot):
     bot.add_cog(ErrorHandler(bot))
-    print('[error_handler.py] ErrorHandler загружен.')

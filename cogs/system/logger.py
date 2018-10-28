@@ -19,4 +19,3 @@ class Logger(object):
 
 def setup(bot):
     bot.add_cog(Logger(bot))
-    print('[logger.py] Логгер загружен.')

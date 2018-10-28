@@ -151,4 +151,3 @@ class Utils(object):
 
 def setup(bot):
     bot.add_cog(Utils(bot))
-    print('[utils.py] Модуль "Member/Utils" загружен.')

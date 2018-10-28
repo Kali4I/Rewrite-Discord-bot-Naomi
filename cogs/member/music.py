@@ -474,4 +474,3 @@ class Music:
 
 def setup(bot):
     bot.add_cog(Music(bot))
-    print('[music.py] Модуль музыки загружен.')

@@ -31,8 +31,12 @@ if __name__ == '__main__':
         try:
             bot.load_extension(extension)
         except Exception as e:
-            print(f'Не удалось загрузить модуль {extension}.', file=sys.stderr)
+            print(f'[!] Не удалось загрузить модуль {extension}.', file=sys.stderr)
+            print('------------------------')
             traceback.print_exc()
+            print('------------------------')
+        else:
+            print(f'[!] Модуль {extension} успешно загружен.')
 
 @bot.event
 async def on_connect():

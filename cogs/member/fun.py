@@ -329,4 +329,3 @@ class Fun(object):
 
 def setup(bot):
     bot.add_cog(Fun(bot))
-    print('[fun.py] Модуль "Member/Fun" загружен.')

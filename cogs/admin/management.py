@@ -451,4 +451,3 @@ class Management(object):
 
 def setup(bot):
     bot.add_cog(Management(bot))
-    print('[management.py] Бородато-Одменский модуль управления загружен.')

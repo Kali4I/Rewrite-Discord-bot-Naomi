@@ -292,4 +292,3 @@ class Owner(object):
 
 def setup(bot):
     bot.add_cog(Owner(bot))
-    print('[owner.py] Модуль всея владельца загружен.')
