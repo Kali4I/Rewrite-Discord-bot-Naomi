@@ -225,7 +225,7 @@ class Music:
 
     @commands.command(name='connect', aliases=['join'])
     async def connect_(self, ctx, *, channel: discord.VoiceChannel=None):
-        """Подключить меня к голосовому каналу.
+        """Подключить меня к голосовому каналу. *Просто подключить? А пати?*
 
         Аргументы:
         `:channel` - имя канала
@@ -261,7 +261,7 @@ class Music:
 
     @commands.command(name='play')
     async def play_(self, ctx, *, search: str):
-        """Запросить проигрывание музыки.
+        """Запросить проигрывание музыки. *Мне надоело сидеть в тишине, го пати!*
 
         Аргументы:
         `:search` - название / ссылка YouTube
@@ -288,7 +288,8 @@ class Music:
 
     @commands.command(name='pause')
     async def pause_(self, ctx):
-        """Поставить проигрыватель на паузу."""
+        """Поставить проигрыватель на паузу. *Я афк!11*
+        """
         vc = ctx.voice_client
 
         if not vc or not vc.is_playing():
@@ -301,7 +302,8 @@ class Music:
 
     @commands.command(name='resume')
     async def resume_(self, ctx):
-        """Снять проигрыватель с паузы."""
+        """Снять проигрыватель с паузы. *А? Кто-то отходил?*
+        """
         vc = ctx.voice_client
 
         if not vc or not vc.is_connected():
@@ -314,7 +316,8 @@ class Music:
 
     @commands.command(name='skip')
     async def skip_(self, ctx):
-        """Перейти к следующему треку в очереди."""
+        """Перейти к следующему треку в очереди. *Мне надоела эта песня!*
+        """
         vc = ctx.voice_client
 
         if not vc or not vc.is_connected():
@@ -330,7 +333,8 @@ class Music:
 
     @commands.command(name='queue', aliases=['q', 'playlist'])
     async def queue_info(self, ctx):
-        """Отобразить список песен в очереди."""
+        """Отобразить список песен в очереди. *А что будет играть дальше?...*
+        """
         vc = ctx.voice_client
 
         if not vc or not vc.is_connected():
@@ -350,7 +354,8 @@ class Music:
 
     @commands.command(name='playing', aliases=['currentsong'])
     async def now_playing_(self, ctx):
-        """Информация о проигрываемой песне."""
+        """Информация о проигрываемой песне. *Крутая песня! Как называется?*
+        """
         vc = ctx.voice_client
 
         if not vc or not vc.is_connected():
@@ -371,7 +376,7 @@ class Music:
 
     @commands.command(name='volume', aliases=['vol'])
     async def change_volume(self, ctx, *, vol: float):
-        """Подключить меня к голосовому каналу.
+        """Изменить громкость проигрывателя. *Нужно еще громче?? Пожалуйста!*
 
         Аргументы:
         `:vol` - процент громкости
