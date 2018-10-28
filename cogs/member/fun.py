@@ -66,7 +66,7 @@ class Fun(object):
                               description=f'```{msg}```')
         embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
         embed.set_footer(text=f'{ctx.prefix}{ctx.command}')
-        embed.add_field(name='Результаты:', value='👍: {self.voted_up}\n👎: {self.voted_down}')
+        embed.add_field(name='Результаты:', value=f'👍: {self.voted_up}\n👎: {self.voted_down}')
 
         await ctx.send(embed=embed)
 
