@@ -22,7 +22,61 @@ class Fun(object):
     def __init__(self, bot):
         self.bot = bot
     
-    @commands.command(name='voteyn')
+    @commands.command(name='vote4v')
+    async def vote4v(self, ctx, *, msg: commands.clean_content):
+        
+        reactions = ['🇦', '🇧', '🇨', '🇩']
+
+        embed = discord.Embed(title='Голосование открыто!',
+                              description=msg)
+        embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
+        embed.set_footer(text=f'{ctx.prefix}{ctx.command}')
+
+        m = await ctx.send('Голосуем!', embed=embed)
+
+        self.VOTE_A = 0
+        self.VOTE_B = 0
+        self.VOTE_C = 0
+        self.VOTE_D = 0
+        self.checked = []
+
+        async def checking():
+            for x in reactions:
+                await m.add_reaction(x)
+
+            def check(r, u):
+                if not m \
+                    or r.message.id != m.id \
+                    or u.id in self.checked \
+                    or u.bot:
+                    return False
+                return True
+
+            while True:
+                r, u = await self.bot.wait_for('reaction_add', check=check)
+                if str(r) == '🇦':
+                    self.VOTE_A += 1
+                if str(r) == '🇧':
+                    self.VOTE_B += 1
+                if str(r) == '🇨':
+                    self.VOTE_C += 1
+                if str(r) == '🇩':
+                    self.VOTE_D += 1
+
+                self.checked.append(u.id)
+        checkloop = self.bot.loop.create_task(checking())
+        await asyncio.sleep(30)
+        checkloop.cancel()
+
+        embed = discord.Embed(title='Голосование окончено!',
+                              description=f'```{msg}```')
+        embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
+        embed.set_footer(text=f'{ctx.prefix}{ctx.command}')
+        embed.add_field(name='Результаты:', value=f'🇦: {self.VOTE_A}\n🇧: {self.VOTE_B}\n🇨: {self.VOTE_C}\n🇩: {self.VOTE_D}')
+
+        await ctx.send(embed=embed)
+
+    @commands.command(name='vote2v')
     async def voteyn(self, ctx, *, msg: commands.clean_content):
 
         reactions = ['👍', '👎']
