@@ -23,7 +23,7 @@ class Fun(object):
         self.bot = bot
     
     @commands.command(name='voteyn')
-    async def voteyn(self, ctx, msg: commands.clean_content):
+    async def voteyn(self, ctx, *, msg: commands.clean_content):
 
         reactions = ['👍', '👎']
 
