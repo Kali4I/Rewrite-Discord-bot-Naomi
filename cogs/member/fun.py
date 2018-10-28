@@ -46,7 +46,7 @@ class Fun(object):
                 if not m \
                     or r.message.id != m.id \
                     or u.id in self.checked \
-                    or u.self.bot:
+                    or u.bot:
                     return False
                 return True
 
