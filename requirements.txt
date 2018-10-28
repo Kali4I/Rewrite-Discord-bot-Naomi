@@ -8,3 +8,4 @@ mcstatus
 requests
 pokebase
 wikipedia
+git+https://github.com/DiscordBotList/DBL-Python-Librar

@@ -22,8 +22,8 @@ class Info(object):
     async def invite(self, ctx):
         """Получить ссылку для приглашения меня к Вам на сервер.
         """
-        full_url = 'Хотите раскрыть все мои способности? [Клик сюда <3](https://discordapp.com/oauth2/authorize?client_id=452534618520944649&scope=bot&permissions=473197655)'
-        low_url = 'Нужны только основные команды и ничего более? [И так тоже можно](https://discordapp.com/oauth2/authorize?client_id=452534618520944649&scope=bot&permissions=3435584)!'
+        full_url = '<:naomi_arrow_up:506078581227651098> Хотите раскрыть все мои способности? [Клик сюда <3](https://discordapp.com/oauth2/authorize?client_id=452534618520944649&scope=bot&permissions=473197655)'
+        low_url = '<:naomi_arrow_down:506078605672054785> Нужны только основные команды и ничего более? [И так тоже можно](https://discordapp.com/oauth2/authorize?client_id=452534618520944649&scope=bot&permissions=3435584)!'
         embed = discord.Embed(timestamp=ctx.message.created_at, color=0xf0a302,
                               title=f'Ссылки для приглашения',
                               description=f'{full_url}\n{low_url}')
@@ -142,13 +142,15 @@ class Info(object):
 
         embed = discord.Embed(timestamp=ctx.message.created_at, color=randint(0x000000, 0xFFFFFF),
                     title=f'Спасибо, что используете {self.bot.user.name}!',
-                    description=f'**[[GitHub]]({github_url}) [[Наш Discord сервер]]({server_url}) [[Пригласить меня]]({invite_url}) [[DiscordBots]]({discordbots_url})**\n\n\
-                    <:naomiserver:491308550707085312> Серверов: {len(self.bot.guilds)}\n\
-                    <:naomiusers:491313467962294296> Участников: {len(self.bot.users)}\n\
-                    <:naomicmds:491314340029530132> Команд: {len([x.name for x in self.bot.commands if not x.hidden])}\n\
-                    :smiley: Эмодзи: {len(self.bot.emojis)}\n\n\
-                    **Если вы довольны моим функционалом и хотите поддержать меня и моего доброго разработчика, пожалуйста, [проголосуйте здесь](https://discordbots.org/bot/452534618520944649) <3**\
-                    \n**Я надеюсь на Вашу поддержку!**')
+                    description=f'''**[[GitHub]]({github_url}) [[Наш Discord сервер]]({server_url}) [[Пригласить меня]]({invite_url}) [[DiscordBots]]({discordbots_url})**
+
+<:naomiserver:491308550707085312> Серверов: {len(self.bot.guilds)}
+<:naomiusers:491313467962294296> Участников: {len(self.bot.users)}
+<:naomicmds:491314340029530132> Команд: {len([x.name for x in self.bot.commands if not x.hidden])}
+:smiley: Эмодзи: {len(self.bot.emojis)}
+
+**Если вы довольны моим функционалом и хотите поддержать меня и моего разработчика, пожалуйста, [проголосуйте здесь](https://discordbots.org/bot/452534618520944649) <3**
+**Мы надеемся на Вашу поддержку!**''')
         await ctx.send(embed=embed)
 
     @commands.command(name='help', aliases=['commands', 'cmds'])
