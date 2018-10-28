@@ -27,7 +27,7 @@ class Fun(object):
 
         reactions = ['👍', '👎']
 
-        embed = discord.Embed(title='Голосование',
+        embed = discord.Embed(title='Голосование открыто!',
                               description=msg)
         embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
         embed.set_footer(text=f'{ctx.prefix}{ctx.command}')
@@ -59,13 +59,14 @@ class Fun(object):
 
                 self.checked.append(u.id)
         checkloop = self.bot.loop.create_task(checking())
-        await asyncio.sleep(8)
+        await asyncio.sleep(30)
         checkloop.cancel()
 
         embed = discord.Embed(title='Голосование окончено!',
-                              description=f'```{msg}```\n\nРезультаты:\n👍: {self.voted_up}\n👎: {self.voted_down}')
+                              description=f'```{msg}```')
         embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
         embed.set_footer(text=f'{ctx.prefix}{ctx.command}')
+        embed.add_field(name='Результаты:', value='👍: {self.voted_up}\n👎: {self.voted_down}')
 
         await ctx.send(embed=embed)
 
