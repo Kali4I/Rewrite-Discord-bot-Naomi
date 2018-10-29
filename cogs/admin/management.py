@@ -150,8 +150,11 @@ class Management(object):
                                     pass
 
 
-                        mute_perms = discord.Permissions()
-                        mute_perms.update(send_messages=False)
+                        # mute_perms = discord.Permissions()
+                        # mute_perms.update(send_messages=False)
+                        mute_perms = discord.PermissionOverwrite()
+                        mute_perms.send_messages = False
+                        mute_perms.add_reactions = False
 
                         for role in ctx.guild.roles:
                             if role != ctx.guild.default_role:

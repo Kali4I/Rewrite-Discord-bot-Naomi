@@ -17,7 +17,7 @@ class Info(object):
     """Команды пользователей - Info"""
     def __init__(self, bot):
         self.bot = bot
-    
+
     @commands.command(name='invite')
     async def invite(self, ctx):
         """Получить ссылку для приглашения меня к Вам на сервер.
@@ -136,7 +136,7 @@ class Info(object):
         """
 
         github_url = 'https://github.com/AkiraSumato-01/Rewrite-Discord-Bot-Naomi'
-        server_url = 'https://discord.gg/ZQfNQ43'
+        server_url = 'https://discord.gg/7zNVdHg'
         discordbots_url = 'https://discordbots.org/bot/452534618520944649'
         invite_url = 'https://discordapp.com/oauth2/authorize?client_id=452534618520944649&scope=bot&permissions=490040390'
 
@@ -186,7 +186,7 @@ class Info(object):
         except Exception as e:
             await ctx.send(e)
 
-    @commands.command(name='userinfo', aliases=['user-info'])
+    @commands.command(name='userinfo', aliases=['user-info', 'user'])
     @commands.guild_only()
     async def userinfo(self, ctx, member:discord.Member=None):
         """Показать информацию об участнике сервера.
@@ -231,7 +231,7 @@ class Info(object):
             stats.set_thumbnail(url=member.avatar_url)
         await ctx.send(embed=stats)
 
-    @commands.command(name='guild', aliases=['server'])
+    @commands.command(name='guild', aliases=['server', 'guildinfo', 'guild-info'])
     @commands.guild_only()
     async def guild(self, ctx):
         """Информация о сервере.
@@ -247,7 +247,6 @@ class Info(object):
         stats.add_field(name='Текстовых каналов', value=len(ctx.guild.text_channels))
         stats.add_field(name='Голосовых каналов', value=len(ctx.guild.voice_channels))
         stats.add_field(name='Владелец', value=ctx.guild.owner)
-        stats.add_field(name='Участников', value=len(ctx.guild.members))
         stats.add_field(name='Пользователей', value=len([x.name for x in ctx.guild.members if not x.bot]))
         stats.add_field(name='Ботов', value=len([x.name for x in ctx.guild.members if x.bot]))
         stats.set_thumbnail(url=ctx.guild.icon_url)
@@ -281,7 +280,7 @@ class Info(object):
             stats = discord.Embed(timestamp=ctx.message.created_at, color=0xff0000).set_footer(text=ctx.prefix + 'mcplayer [ник]')
         await ctx.send(embed=stats)
 
-    @commands.command(name='mcstats', aliases=['mcserver'])
+    @commands.command(name='mcserver')
     async def mcstats(self, ctx, adress: str):
         """Статистика сервера Minecraft.
 

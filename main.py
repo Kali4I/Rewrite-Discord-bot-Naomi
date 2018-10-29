@@ -58,7 +58,8 @@ async def on_ready():
                         f'{len(bot.users)} участников!',
                         f'{len(bot.emojis)} эмодзи!',
                         f'{len([x.name for x in bot.commands if not x.hidden])} команд!',
-                        f'{prefix}help']
+                        f'{prefix}help',
+                         'https://discord.io/naomi']
             for msg in messages:
                 if game_activity == 'streaming':
                     await bot.change_presence(activity=discord.Streaming(name=msg, url='https://www.twitch.tv/%none%'))
