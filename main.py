@@ -50,10 +50,10 @@ async def on_ready():
     print(f'[#] Подключение успешно осуществлено!\n[#] В сети: {bot.user}')
 
     async def presence():
+        await start_session()
         while not bot.is_closed():
             awaiting = 10
 
-            await start_session()
             messages = [f'{len(bot.guilds)} серверов!',
                         f'{len(bot.users)} участников!',
                         f'{len(bot.emojis)} эмодзи!',
