@@ -5,6 +5,7 @@ import os
 import sys
 import time
 import asyncio
+import aiohttp
 import traceback
 import aiohttp
 
@@ -16,6 +17,8 @@ game_activity = os.getenv('ACTIVITY')
 
 bot = commands.Bot(command_prefix=prefix)
 bot.remove_command('help')
+async def start_session():
+    bot.session = aiohttp.ClientSession(loop=bot.loop)
 
 extensions = ['cogs.member.fun',
               'cogs.member.info',
@@ -49,6 +52,8 @@ async def on_ready():
     async def presence():
         while not bot.is_closed():
             awaiting = 10
+
+            await start_session()
             messages = [f'{len(bot.guilds)} серверов!',
                         f'{len(bot.users)} участников!',
                         f'{len(bot.emojis)} эмодзи!',

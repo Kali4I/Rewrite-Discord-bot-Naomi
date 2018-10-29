@@ -14,6 +14,20 @@ class Utils(object):
     def __init__(self, bot):
         self.bot = bot
     
+    @commands.command(name='unicodemoji', aliases=['uemoji'])
+    async def uemoji(self, ctx, emoji: commands.clean_content):
+        """Получить Unicode-эмодзи.
+
+        Аргументы:
+        `:emoji` - эмодзи
+        __                                            __
+        Например:
+        ```
+        n!uemoji :thinking:
+        ```
+        """
+        await ctx.send(f'**`{emoji}`**')
+    
     @commands.command(name='randint', aliases=['rval'])
     async def random_(self, ctx, from_: int = 0, to: int = 100):
         """Сгенерировать случайное число.
@@ -111,7 +125,7 @@ class Utils(object):
             b = sub('[ йцукенгшщзхъфывапролджэячсмитьбюЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮQWERTYUIOPASDFGHJKLZXCVBNMqwertyuoasdfghjklzxcvbnm;!@#$=\'\"]', '', a)
         except:
             return False
-        
+
         if len(b) >= 9 and b.count('**') == 1 or b.count('**') >= 2 and len(b) >= 6:
             return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xfA0000).set_footer(text='Недопустимо по причине снижения производительности.'))
 
