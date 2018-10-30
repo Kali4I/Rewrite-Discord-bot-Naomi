@@ -149,9 +149,10 @@ class Management(object):
                                 except:
                                     pass
 
-
                         # mute_perms = discord.Permissions()
                         # mute_perms.update(send_messages=False)
+                        # К черту discord.Permissions()
+
                         mute_perms = discord.PermissionOverwrite()
                         mute_perms.send_messages = False
                         mute_perms.add_reactions = False
