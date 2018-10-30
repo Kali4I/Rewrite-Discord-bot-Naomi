@@ -13,7 +13,6 @@ import discord
 from discord.ext import commands
 
 prefix = os.getenv('PREFIX')
-game_activity = os.getenv('ACTIVITY')
 
 bot = commands.Bot(command_prefix=prefix)
 bot.remove_command('help')
@@ -62,10 +61,10 @@ async def on_ready():
                         f'{prefix}help',
                          'https://discord.io/naomi']
             for msg in messages:
-                if game_activity == 'streaming':
+                if os.getenv('ACTIVITY') == 'streaming':
                     await bot.change_presence(activity=discord.Streaming(name=msg, url='https://www.twitch.tv/%none%'))
                     await asyncio.sleep(awaiting)
-                if game_activity == 'playing':
+                elif os.getenv('ACTIVITY') == 'playing':
                     await bot.change_presence(activity=discord.Game(name=msg))
                     await asyncio.sleep(awaiting)
     await bot.loop.create_task(presence())
