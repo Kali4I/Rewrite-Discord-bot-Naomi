@@ -97,7 +97,7 @@ class OwO(object):
         await ctx.send(embed=embed)
 
     @emotes.command(name='lonely')
-    async def angry(self, ctx):
+    async def lonely(self, ctx):
         """---"""
         image = 'http://images.vfl.ru/ii/1540905345/1bab6eb8/24000432.jpg'
         author = ctx.message.author.name
