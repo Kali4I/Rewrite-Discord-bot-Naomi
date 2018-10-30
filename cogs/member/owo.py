@@ -1,7 +1,9 @@
 # python3.6
 # coding: utf-8
 
+from discord.ext import commands
 from random import choice
+import discord
 
 class OwO(object):
     """<3"""
