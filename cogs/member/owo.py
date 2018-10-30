@@ -114,4 +114,4 @@ class OwO(object):
         await ctx.send(embed=embed)
 
 def setup(bot):
-    bot.add_cog(Owo(bot))
+    bot.add_cog(OwO(bot))
