@@ -28,8 +28,8 @@ class OwO(object):
     @commands.group(name='emote', aliases=['emotes'])
     async def emotes(self, ctx):
         """Эмоции и анимешные картинки <3"""
-        if ctx.invoked_subcommand is None:
-            await bot.say(':x:')
+        if not ctx.invoked_subcommand:
+            await ctx.send(f'{ctx.prefix}{ctx.command} -\nlove\nsad\njoy\nangry\nlonely')
 
     @emotes.command(name='love')
     async def love(self, ctx):
