@@ -25,7 +25,7 @@ class OwO(object):
         embed.set_image(url=image)
         await ctx.send(embed=embed)
 
-    @bot.group(name='emote', aliases=['emotes'])
+    @commands.group(name='emote', aliases=['emotes'])
     async def emotes(self, ctx):
         """Эмоции и анимешные картинки <3"""
         if ctx.invoked_subcommand is None:
