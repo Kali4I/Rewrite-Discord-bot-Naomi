@@ -28,7 +28,7 @@ class Owner(object):
         await ctx.send(':hammer_pick: А оно надо? -_-')
         msg = await self.bot.wait_for('message', check=message_check, timeout=120.0)
 
-        if msg.lower() in ['да', 'ага', 'угу']:
+        if msg.content.lower() in ['да', 'ага', 'угу', 'давай уже']:
             await ctx.send(':white_check_mark: Ну, как хочешь. Я спать, пока!')
         else:
             return await ctx.send(':x: Вот! Нормальный (нет) ответ! Остаюсь в сети.')

@@ -79,7 +79,7 @@ class Fun(object):
     @commands.command(name='vote2v')
     async def voteyn(self, ctx, *, msg: commands.clean_content):
 
-        reactions = ['👍', '👎']
+        reactions = ['1⃣', '2⃣']
 
         embed = discord.Embed(title='Голосование открыто!',
                               description=msg)
@@ -106,9 +106,9 @@ class Fun(object):
 
             while True:
                 r, u = await self.bot.wait_for('reaction_add', check=check)
-                if str(r) == '👍':
+                if str(r) == '1⃣':
                     self.voted_up += 1
-                if str(r) == '👎':
+                if str(r) == '2⃣':
                     self.voted_down += 1
 
                 self.checked.append(u.id)
@@ -120,7 +120,7 @@ class Fun(object):
                               description=f'```{msg}```')
         embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
         embed.set_footer(text=f'{ctx.prefix}{ctx.command}')
-        embed.add_field(name='Результаты:', value=f'👍: {self.voted_up}\n👎: {self.voted_down}')
+        embed.add_field(name='Результаты:', value=f'1⃣: {self.voted_up}\n2⃣: {self.voted_down}')
 
         await ctx.send(embed=embed)
 
