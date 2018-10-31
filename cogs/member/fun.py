@@ -13,6 +13,7 @@ import os
 import pokebase as pb
 import asyncio
 
+from utils.MemeGenerator import make_meme
 from utils.NekosWrapper import (get_neko, 
                                 NekoNotInTags,
                                 nekos_tags)
@@ -22,8 +23,42 @@ class Fun(object):
     def __init__(self, bot):
         self.bot = bot
     
+    @commands.command(name='memegen')
+    async def memegen(self, ctx, *, text: commands.clean_content = 'Вот такие пироги'):
+        """Генератор мемов. *Сооруди свой топовый мем!*
+
+        Аргументы:
+        `:text` - текст (% - перенос вниз)
+        __                                            __
+        Например:
+        ```
+        n!memegen Hello World
+        ```
+        """
+        string_list = text.split('%')
+
+        templates = [x.replace('.jpg', '') for x in os.listdir('templates/')]
+
+        if len(b) == 1:
+            make_meme(bottomString=b, filename=choice(templates))
+        elif len(b) >= 2:
+            make_meme(topString=b[1], bottomString=b[1], filename=choice(templates))
+        await ctx.send(file=discord.File(fp='temp.jpg'))
+        await asyncio.sleep(5)
+        os.remove('temp.jpg')
+
     @commands.command(name='vote4v')
     async def vote4v(self, ctx, *, msg: commands.clean_content):
+        """Голосование A-B-C-D.
+
+        Аргументы:
+        `:message` - ваш вопрос
+        __                                            __
+        Например:
+        ```
+        n!vote2n Черный чай или зеленый? :thinking:
+        ```
+        """
         
         reactions = ['🇦', '🇧', '🇨', '🇩']
 
@@ -77,7 +112,18 @@ class Fun(object):
         await ctx.send(embed=embed)
 
     @commands.command(name='vote2v')
-    async def voteyn(self, ctx, *, msg: commands.clean_content):
+    async def vote2n(self, ctx, *, msg: commands.clean_content):
+        """Голосование A-B.
+
+        Аргументы:
+        `:message` - ваш вопрос
+        __                                            __
+        Например:
+        ```
+        n!vote2n Кому дать конфетку ставим "1"!
+        n!vote2n Черный чай или зеленый? :thinking:
+        ```
+        """
 
         reactions = ['1⃣', '2⃣']
 
