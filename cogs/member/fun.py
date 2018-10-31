@@ -14,7 +14,7 @@ import pokebase as pb
 import asyncio
 
 from utils.MemeGenerator import make_meme
-from utils.NekosWrapper import (get_neko, 
+from utils.NekosWrapper import (get_neko,
                                 NekoNotInTags,
                                 nekos_tags)
 
@@ -35,15 +35,15 @@ class Fun(object):
         """
         string_list = text.split('%')
 
-        templates = ['templates/' + x.replace('.jpg', '') for x in os.listdir('templates/')]
+        templates = ['templates/' + x for x in os.listdir('templates/')]
 
         if len(string_list) == 1:
             make_meme(topString='', bottomString=string_list, filename=choice(templates))
         elif len(string_list) >= 2:
             make_meme(topString=string_list[1], bottomString=string_list[1], filename=choice(templates))
-        await ctx.send(file=discord.File(fp='temp.jpg'))
+        await ctx.send(file=discord.File(fp='temp.png'))
         await asyncio.sleep(5)
-        os.remove('temp.jpg')
+        os.remove('temp.pn')
 
     @commands.command(name='vote4v')
     async def vote4v(self, ctx, *, msg: commands.clean_content):
