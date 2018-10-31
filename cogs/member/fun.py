@@ -22,27 +22,25 @@ class Fun(object):
     """Команды пользователей - Fun"""
     def __init__(self, bot):
         self.bot = bot
-    
+
     @commands.command(name='memegen')
-    async def memegen(self, ctx, *, text: commands.clean_content = 'Вот такие пироги'):
+    async def memegen(ctx, *, text: commands.clean_content = 'Вот такие пироги'):
         """Генератор мемов. *Сооруди свой топовый мем!*
 
         Аргументы:
         `:text` - текст (% - перенос вниз)
         __                                            __
         Например:
-        ```
         n!memegen Hello World
-        ```
         """
         string_list = text.split('%')
 
-        templates = [x.replace('.jpg', '') for x in os.listdir('templates/')]
+        templates = ['templates/' + x.replace('.jpg', '') for x in os.listdir('templates/')]
 
-        if len(b) == 1:
-            make_meme(bottomString=b, filename=choice(templates))
-        elif len(b) >= 2:
-            make_meme(topString=b[1], bottomString=b[1], filename=choice(templates))
+        if len(string_list) == 1:
+            make_meme(topString='', bottomString=string_list, filename=choice(templates))
+        elif len(string_list) >= 2:
+            make_meme(topString=string_list[1], bottomString=string_list[1], filename=choice(templates))
         await ctx.send(file=discord.File(fp='temp.jpg'))
         await asyncio.sleep(5)
         os.remove('temp.jpg')
