@@ -139,18 +139,19 @@ class Info(object):
         server_url = 'https://discord.gg/7zNVdHg'
         discordbots_url = 'https://discordbots.org/bot/452534618520944649'
         invite_url = 'https://discordapp.com/oauth2/authorize?client_id=452534618520944649&scope=bot&permissions=490040390'
+        patreon_url = 'https://www.patreon.com/AkiraSumato_01'
 
         embed = discord.Embed(timestamp=ctx.message.created_at, color=randint(0x000000, 0xFFFFFF),
-                    title=f'Спасибо, что используете {self.bot.user.name}!',
-                    description=f'''**[[GitHub]]({github_url}) [[Наш Discord сервер]]({server_url}) [[Пригласить меня]]({invite_url}) [[DiscordBots]]({discordbots_url})**
+                    title=f'Спасибо, что используете {self.bot.user.name}! :з',
+                    description=f'''**[[GitHub]]({github_url}) [[Discord]]({server_url}) [[Пригласить меня]]({invite_url}) [[DiscordBots]]({discordbots_url}) [[Patreon]]({patreon_url})**
 
 <:naomiserver:491308550707085312> Серверов: {len(self.bot.guilds)}
 <:naomiusers:491313467962294296> Участников: {len(self.bot.users)}
 <:naomicmds:491314340029530132> Команд: {len([x.name for x in self.bot.commands if not x.hidden])}
 :smiley: Эмодзи: {len(self.bot.emojis)}
 
-**Если вы довольны моим функционалом и хотите поддержать меня и моего разработчика, пожалуйста, [проголосуйте здесь](https://discordbots.org/bot/452534618520944649) <3**
-**Мы надеемся на Вашу поддержку!**''')
+**Если вы довольны моим функционалом и хотите поддержать меня и моего разработчика, вы можете сделать это [здесь]({patreon_url}), или просто [проголосовать за меня](https://discordbots.org/bot/452534618520944649) на DiscordBots <3**
+**Мы надеемся на Вашу поддержку. Спасибо!**''')
         await ctx.send(embed=embed)
 
     @commands.command(name='help', aliases=['commands', 'cmds'])
