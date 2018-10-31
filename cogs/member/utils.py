@@ -144,8 +144,11 @@ class Utils(object):
                 eval_ = '∞'
 
             except:
-                embed.add_field(name='Выражение имеет ошибку.',
-                                value='Исправьте его.')
+                eval_ = None
+
+            if eval_ is None:
+                embed.add_field(name='Ответа нет.',
+                                value=f'Просто кое кто ({ctx.message.author}) накосячил с выражением.')
 
             if len(eval_) > 12 and not eval_.isnumeric():
                 embed.add_field(name='Ответ:',
