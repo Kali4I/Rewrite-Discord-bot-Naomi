@@ -45,7 +45,8 @@ class ErrorHandler:
             embed = discord.Embed(color=0xFF0000).set_author(
                     name=f'Указаны не все ключевые аргументы для {ctx.prefix}{ctx.command}.',
                     icon_url='http://s1.iconbird.com/ico/2013/11/504/w128h1281385326489locked.png')
-            return await ctx.send(embed=embed)
+            await ctx.send(embed=embed)
+            await ctx.invoke(bot.get_command("help"), command=ctx.command)
 
         # Команда отключена
         elif isinstance(error, commands.DisabledCommand):
@@ -83,7 +84,8 @@ class ErrorHandler:
             embed = discord.Embed(color=0xFF0000).set_author(
                     name=f'Получен неверный аргумент для {ctx.prefix}{ctx.command}.',
                     icon_url='http://s1.iconbird.com/ico/2013/11/504/w128h1281385326489locked.png')
-            return await ctx.send(embed=embed)
+            await ctx.send(embed=embed)
+            await ctx.invoke(bot.get_command("help"), command=ctx.command)
 
 
         # Если ничего не подходит
