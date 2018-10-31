@@ -24,26 +24,32 @@ class Fun(object):
         self.bot = bot
 
     @commands.command(name='memegen')
-    async def memegen(self, ctx, *, text: commands.clean_content = 'Вот такие пироги'):
+    async def memegen(self, ctx, *, text: str = 'Вот такие пироги'):
         """Генератор мемов. *Сооруди свой топовый мем!*
 
         Аргументы:
         `:text` - текст (% - перенос вниз)
         __                                            __
         Например:
-        n!memegen Hello World
+        ```
+        n!memegen Вот такие пироги
+        ```
         """
         string_list = text.split('%')
 
-        templates = ['templates/' + x for x in os.listdir('templates/')]
+        templates = [f'templates/{x}' for x in os.listdir('templates/')]
 
         if len(string_list) == 1:
-            make_meme(topString='', bottomString=string_list, filename=choice(templates))
+            make_meme(topString='',
+                    bottomString=string_list[0],
+                    filename=choice(templates))
         elif len(string_list) >= 2:
-            make_meme(topString=string_list[1], bottomString=string_list[1], filename=choice(templates))
+            make_meme(topString=string_list[0],
+                    bottomString=string_list[1],
+                    filename=choice(templates))
         await ctx.send(file=discord.File(fp='temp.png'))
         await asyncio.sleep(5)
-        os.remove('temp.pn')
+        os.remove('temp.png')
 
     @commands.command(name='vote4v')
     async def vote4v(self, ctx, *, msg: commands.clean_content):
