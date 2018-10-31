@@ -8,3 +8,4 @@ mcstatus
 requests
 pokebase
 wikipedia
+pillow
