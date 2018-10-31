@@ -24,8 +24,11 @@ class Fun(object):
         self.bot = bot
 
     @commands.command(name='memegen')
+    @commands.cooldown(1, 8, commands.BucketType.guild)
     async def memegen(self, ctx, *, text: str = 'Вот такие пироги'):
         """Генератор мемов. *Сооруди свой топовый мем!*
+
+        [!] Команда может быть выполнена лишь раз в 8 секунд.
 
         Аргументы:
         `:text` - текст (% - перенос вниз)
@@ -42,14 +45,16 @@ class Fun(object):
         if len(string_list) == 1:
             make_meme(topString='',
                     bottomString=string_list[0],
+                    outputFilename=ctx.guild.id,
                     filename=choice(templates))
         elif len(string_list) >= 2:
             make_meme(topString=string_list[0],
                     bottomString=string_list[1],
+                    outputFilename=ctx.guild.id,
                     filename=choice(templates))
-        await ctx.send(file=discord.File(fp='temp.png'))
-        await asyncio.sleep(5)
-        os.remove('temp.png')
+        await ctx.send(file=discord.File(fp=f'{ctx.guild.id}.png'))
+        await asyncio.sleep(5)outputFilename
+        os.remove(f'{ctx.guild.id}.png')
 
     @commands.command(name='vote4v')
     async def vote4v(self, ctx, *, msg: commands.clean_content):

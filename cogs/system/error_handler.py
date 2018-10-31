@@ -86,6 +86,13 @@ class ErrorHandler:
                     icon_url='http://s1.iconbird.com/ico/2013/11/504/w128h1281385326489locked.png')
             await ctx.send(embed=embed)
             return await ctx.invoke(self.bot.get_command("help"), command=str(ctx.command))
+        
+
+        elif isinstance(error, commands.CommandOnCooldown)
+            embed = discord.Embed(color=0xFF0000).set_author(
+                    name=f'Команду {ctx.prefix}{ctx.command} нельзя выполнять так часто. Подождите немного.',
+                    icon_url='http://s1.iconbird.com/ico/2013/11/504/w128h1281385326489locked.png')
+            return await ctx.send(embed=embed)
 
 
         # Если ничего не подходит

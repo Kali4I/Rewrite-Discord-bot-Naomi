@@ -8,7 +8,7 @@ from PIL import ImageDraw
 import sys
 
 
-def make_meme(topString, bottomString, filename):
+def make_meme(topString, bottomString, filename, outputFilename):
 
 	img = Image.open(filename)
 	imageSize = img.size
@@ -47,7 +47,7 @@ def make_meme(topString, bottomString, filename):
 	draw.text(topTextPosition, topString, (255,255,255), font=font)
 	draw.text(bottomTextPosition, bottomString, (255,255,255), font=font)
 
-	img.save("temp.png")
+	img.save(f"{outputFilename}.png")
 
 def get_upper(somedata):
 	'''
