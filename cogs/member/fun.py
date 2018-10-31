@@ -24,7 +24,7 @@ class Fun(object):
         self.bot = bot
 
     @commands.command(name='memegen')
-    async def memegen(ctx, *, text: commands.clean_content = 'Вот такие пироги'):
+    async def memegen(self, ctx, *, text: commands.clean_content = 'Вот такие пироги'):
         """Генератор мемов. *Сооруди свой топовый мем!*
 
         Аргументы:
