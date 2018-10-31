@@ -53,7 +53,7 @@ class Fun(object):
                     outputFilename=ctx.guild.id,
                     filename=choice(templates))
         await ctx.send(file=discord.File(fp=f'{ctx.guild.id}.png'))
-        await asyncio.sleep(5)outputFilename
+        await asyncio.sleep(5)
         os.remove(f'{ctx.guild.id}.png')
 
     @commands.command(name='vote4v')
