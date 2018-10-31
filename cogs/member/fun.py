@@ -25,7 +25,7 @@ class Fun(object):
 
     @commands.command(name='memegen')
     @commands.cooldown(1, 8, commands.BucketType.guild)
-    async def memegen(self, ctx, *, text: str = 'Вот такие пироги'):
+    async def memegen(self, ctx, *, text: commands.clean_content = 'Вот такие пироги'):
         """Генератор мемов. *Сооруди свой топовый мем!*
 
         [!] Команда может быть выполнена лишь раз в 8 секунд.
