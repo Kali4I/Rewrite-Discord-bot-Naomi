@@ -46,7 +46,7 @@ class ErrorHandler:
                     name=f'Указаны не все ключевые аргументы для {ctx.prefix}{ctx.command}.',
                     icon_url='http://s1.iconbird.com/ico/2013/11/504/w128h1281385326489locked.png')
             await ctx.send(embed=embed)
-            await ctx.invoke(self.bot.get_command("help"), command=str(ctx.command))
+            return await ctx.invoke(self.bot.get_command("help"), command=str(ctx.command))
 
         # Команда отключена
         elif isinstance(error, commands.DisabledCommand):
@@ -85,7 +85,7 @@ class ErrorHandler:
                     name=f'Получен неверный аргумент для {ctx.prefix}{ctx.command}.',
                     icon_url='http://s1.iconbird.com/ico/2013/11/504/w128h1281385326489locked.png')
             await ctx.send(embed=embed)
-            await ctx.invoke(self.bot.get_command("help"), command=str(ctx.command))
+            return await ctx.invoke(self.bot.get_command("help"), command=str(ctx.command))
 
 
         # Если ничего не подходит
