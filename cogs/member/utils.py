@@ -84,6 +84,7 @@ class Utils(object):
         hostinfo.add_field(name="Дата создания:", value=crtdate, inline=True)
         hostinfo.add_field(name="Регион:", value=whois_info["country"], inline=True)
         hostinfo.set_footer(text=ctx.prefix + 'hostinfo [домен]')
+
         await ctx.send(embed=hostinfo)
 
     @commands.command(name='hastebin', pass_context=True)
@@ -100,8 +101,13 @@ class Utils(object):
         """
 
         link = await post(code)
-        await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, title='Ваш код был загружен на Hastebin:',
-                                        description=f'```{link}```'))
+        embed = discord.Embed(timestamp=ctx.message.created_at,
+                        title='Ваш код был загружен на Hastebin:',
+                        description=f'```{link}```')
+        embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
+        embed.set_footer(text=f'{ctx.prefix}{ctx.command}')
+
+        await ctx.send(embed=embed)
 
     @commands.command(name='calc', aliases=['calculator', 'math', 'calculate'])
     async def calc(self, ctx, *, expression: str):
@@ -133,9 +139,8 @@ class Utils(object):
 
             embed = discord.Embed(timestamp=ctx.message.created_at, color=0xf0a302,
                                 description=f'```css\n\{expression}```')
-            embed.set_footer(text=f'{ctx.prefix}{ctx.command} <expression>')
-            embed.set_author(name=ctx.message.author.name,
-                             icon_url=ctx.message.author.avatar_url)
+            embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
+            embed.set_footer(text=f'{ctx.prefix}{ctx.command}')
 
             try:
                 eval_ = str(eval(b))
@@ -150,7 +155,7 @@ class Utils(object):
                 embed.add_field(name='Ответа нет.',
                                 value=f'Просто кое кто ({ctx.message.author}) накосячил с выражением.')
 
-            if len(eval_) > 12 and not eval_.isnumeric():
+            elif len(eval_) > 12 and not eval_.isnumeric():
                 embed.add_field(name='Ответ:',
                                 value=f'{eval_[:12]}..')
                 embed.add_field(name='Округленное значение:',

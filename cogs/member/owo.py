@@ -10,21 +10,6 @@ class OwO(object):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(name='tea')
-    async def tea(self, ctx):
-        """---"""
-        image = 'http://images.vfl.ru/ii/1540901885/ba9f757a/23999576.jpg'
-        messages = ['У Вас был тяжелый день? Позвольте мне предложить Вам чай и печеньку! :з',
-                    'Рада вас видеть! Вот, выпейте чаю <3',
-                    'Чай готов! :з', 'Наслаждайтесь, господин!']
-        embed = discord.Embed(color=0xFF6AE5,
-                              title=choice(messages))
-        embed.set_author(name=ctx.author.name,
-                         icon_url=ctx.author.avatar_url)
-        embed.set_footer(text=f'{ctx.prefix}{ctx.command}')
-        embed.set_image(url=image)
-        await ctx.send(embed=embed)
-
     @commands.group(name='emote', aliases=['emotes'])
     async def emotes(self, ctx):
         """Эмоции и анимешные картинки <3"""
@@ -40,9 +25,9 @@ class OwO(object):
 
         embed = discord.Embed(color=0xFF6AE5,
                               title=choice(messages))
-        embed.set_author(name=ctx.author.name,
-                         icon_url=ctx.author.avatar_url)
+        embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
         embed.set_footer(text=f'{ctx.prefix}{ctx.command}')
+
         embed.set_image(url=image)
         await ctx.send(embed=embed)
 
@@ -56,9 +41,9 @@ class OwO(object):
 
         embed = discord.Embed(color=0xFF6AE5,
                               title=choice(messages))
-        embed.set_author(name=ctx.author.name,
-                         icon_url=ctx.author.avatar_url)
+        embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
         embed.set_footer(text=f'{ctx.prefix}{ctx.command}')
+
         embed.set_image(url=image)
         await ctx.send(embed=embed)
 
@@ -73,9 +58,9 @@ class OwO(object):
 
         embed = discord.Embed(color=0xFF6AE5,
                               title=choice(messages))
-        embed.set_author(name=ctx.author.name,
-                         icon_url=ctx.author.avatar_url)
+        embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
         embed.set_footer(text=f'{ctx.prefix}{ctx.command}')
+
         embed.set_image(url=image)
         await ctx.send(embed=embed)
 
@@ -90,9 +75,9 @@ class OwO(object):
 
         embed = discord.Embed(color=0xFF6AE5,
                               title=choice(messages))
-        embed.set_author(name=ctx.author.name,
-                         icon_url=ctx.author.avatar_url)
+        embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
         embed.set_footer(text=f'{ctx.prefix}{ctx.command}')
+
         embed.set_image(url=image)
         await ctx.send(embed=embed)
 
@@ -107,9 +92,9 @@ class OwO(object):
 
         embed = discord.Embed(color=0xFF6AE5,
                               title=choice(messages))
-        embed.set_author(name=ctx.author.name,
-                         icon_url=ctx.author.avatar_url)
+        embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
         embed.set_footer(text=f'{ctx.prefix}{ctx.command}')
+
         embed.set_image(url=image)
         await ctx.send(embed=embed)
 

@@ -10,7 +10,6 @@ import time
 import psutil
 import wikipedia as w
 
-from utils.HelpPaginator import HelpPaginator, CannotPaginate
 from mcstatus import MinecraftServer
 
 class Info(object):
@@ -27,9 +26,8 @@ class Info(object):
         embed = discord.Embed(timestamp=ctx.message.created_at, color=0xf0a302,
                               title=f'Ссылки для приглашения',
                               description=f'{full_url}\n{low_url}')
+        embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
         embed.set_footer(text=f'{ctx.prefix}{ctx.command}')
-        embed.set_author(name=ctx.message.author.name,
-                         icon_url=ctx.message.author.avatar_url)
 
         await ctx.send(embed=embed)
 
@@ -58,9 +56,8 @@ class Info(object):
         embed = discord.Embed(timestamp=ctx.message.created_at, color=0xf0a302,
                               title=f'Поиск в Википедии - "{query}"',
                               description=f'{result}{url}')
-        embed.set_footer(text=f'{ctx.prefix}{ctx.command} <query>')
-        embed.set_author(name=ctx.message.author.name,
-                         icon_url=ctx.message.author.avatar_url)
+        embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
+        embed.set_footer(text=f'{ctx.prefix}{ctx.command}')
         
         await ctx.send(embed=embed)
 
@@ -92,10 +89,15 @@ class Info(object):
             resp[0][price]
 
         except KeyError:
-            return await ctx.send(f'Что-то пошло не так.\n*Может быть, {ctx.author.mention} ввел несуществующую валюту?')
+            await ctx.send(f'Что-то пошло не так.\n*Может быть, {ctx.author.mention} ввел несуществующую валюту?')
 
-        await ctx.send(embed=discord.Embed(color=0xF4F624, title=f'Стоимость криптовалюты {cryptocurrency}.',
-               description=f'USD: `{resp[0]["price_usd"]}`\n{currency.upper()}: `{resp[0][price]}`'))
+        else:
+            embed = discord.Embed(color=0xF4F624, title=f'Стоимость криптовалюты {cryptocurrency}.',
+                            description=f'USD: `{resp[0]["price_usd"]}`\n{currency.upper()}: `{resp[0][price]}`')
+            embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
+            embed.set_footer(text=f'{ctx.prefix}{ctx.command}')
+
+            await ctx.send(embed=embed)
 
     @commands.command(name='anime', aliases=['search-anime', 'aninfo'])
     async def anime(self, ctx, *, query: str):
@@ -123,8 +125,10 @@ class Info(object):
                     embed.add_field(name="Тип:",                    value=f"**{data['result'][0].get('type')}**", inline=True)
 
                     embed.set_thumbnail(url=data['result'][0].get('image_url'))
-                    embed.set_footer(text=f"Поиск аниме - {query}", icon_url=ctx.author.avatar_url)
-                    
+
+                    embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
+                    embed.set_footer(text=f'{ctx.prefix}{ctx.command}')
+
                     await ctx.send(embed=embed)
 
             except KeyError:
@@ -152,6 +156,9 @@ class Info(object):
 
 **Если вы довольны моим функционалом и хотите поддержать меня и моего разработчика, вы можете сделать это [здесь]({patreon_url}), или просто [проголосовать за меня](https://discordbots.org/bot/452534618520944649) на DiscordBots <3**
 **Мы надеемся на Вашу поддержку. Спасибо!**''')
+
+        embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
+        embed.set_footer(text=f'{ctx.prefix}{ctx.command}')
         await ctx.send(embed=embed)
 
     @commands.command(name='help', aliases=['commands', 'cmds'])
@@ -168,28 +175,55 @@ class Info(object):
         n!help Management
         ```
         """
-        try:
-            if command is None:
-                p = await HelpPaginator.from_bot(ctx)
-            else:
-                entity = self.bot.get_cog(command) or self.bot.get_command(command)
+        if command is None:
+            embed = discord.Embed(color=randint(0x000000, 0xFFFFFF),
+                            title='Справочник по командам')
+            __slots__ = []
 
-                if entity is None:
-                    clean = command.replace('@', '@\u200b')
-                    return await ctx.send(f'Команда или категория "{clean}" не найдена.')
-                elif isinstance(entity, commands.Command):
-                    p = await HelpPaginator.from_command(ctx, entity)
+            for cog in self.bot.cogs:
+                __slots__.append(self.bot.get_cog(cog))
+
+            for cog in __slots__:
+                cog_commands = len([x for x in self.bot.commands if x.cog_name == cog.__class__.__name__ and not x.hidden])
+                if cog_commands == 0:
+                    pass
                 else:
-                    p = await HelpPaginator.from_cog(ctx, entity)
+                    embed.add_field(name=cog.__class__.__name__,
+                                    value=', '.join([f'`{x}`' for x in self.bot.commands if x.cog_name == cog.__class__.__name__ and not x.hidden]),
+                                    inline=False)
 
-            await p.paginate()
+        else:
+            entity = self.bot.get_cog(command) or self.bot.get_command(command)
 
-        except Exception as e:
-            await ctx.send(e)
+            if entity is None:
+                clean = command.replace('@', '@\u200b')
+                embed = discord.Embed(color=randint(0x000000, 0xFFFFFF),
+                                title='Справочник по командам',
+                                description=f'Команда или категория "{clean}" не найдена.')
+
+            elif isinstance(entity, commands.Command):
+                embed = discord.Embed(color=randint(0x000000, 0xFFFFFF),
+                                title='Справочник по командам')
+                embed.add_field(name=f'{ctx.prefix}{entity.signature}',
+                                value=entity.help,
+                                inline=False)
+
+            else:
+                embed = discord.Embed(color=randint(0x000000, 0xFFFFFF),
+                                title='Справочник по командам')
+                embed.add_field(name=entity.__class__.__name__ + ': ' + entity.__class__.__doc__,
+                                value=', '.join([f'`{x}`' for x in self.bot.commands if x.cog_name == entity.__class__.__name__ and not x.hidden]),
+                                inline=False)
+
+        embed.set_thumbnail(url=self.bot.user.avatar_url)
+        embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
+        embed.set_footer(text=f'{ctx.prefix}{ctx.command} [команда/категория] для получения доп.информации.')
+
+        await ctx.send(embed=embed)
 
     @commands.command(name='userinfo', aliases=['user-info', 'user'])
     @commands.guild_only()
-    async def userinfo(self, ctx, member:discord.Member=None):
+    async def userinfo(self, ctx, member: discord.Member = None):
         """Показать информацию об участнике сервера.
 
         Аргументы:
@@ -206,31 +240,35 @@ class Info(object):
             member = ctx.author
 
         if member.nick == '':
-            stats = discord.Embed(timestamp=ctx.message.created_at, color=0x18C30B, title='Информация об участнике %s (%s) [%s]' % (member.nick, member.name, member.id))
+            embed = discord.Embed(timestamp=ctx.message.created_at, color=0x18C30B, title='Информация об участнике %s (%s) [%s]' % (member.nick, member.name, member.id))
         else:
-            stats = discord.Embed(timestamp=ctx.message.created_at, color=0x18C30B, title='Информация об участнике %s [%s]' % (member.name, member.id))
+            embed = discord.Embed(timestamp=ctx.message.created_at, color=0x18C30B, title='Информация об участнике %s [%s]' % (member.name, member.id))
 
         if member.name == self.bot.user.name:
             owner = (await self.bot.application_info()).owner
 
-            stats.add_field(name='Создал аккаунт', value=member.created_at)
-            stats.add_field(name='Цвет никнейма', value=member.colour)
-            stats.add_field(name='Кол-во ролей', value=len(member.roles))
-            stats.add_field(name='Высшая роль', value=member.top_role.name)
-            stats.add_field(name='Бот?', value=str(member.bot).replace('True', 'Да').replace('False', 'Нет'))
-            stats.add_field(name='Серверов со мной', value=len(self.bot.guilds))
-            stats.add_field(name='Мой разработчик', value=owner)
-            stats.set_thumbnail(url=member.avatar_url)
+            embed.add_field(name='Создал аккаунт', value=member.created_at)
+            embed.add_field(name='Цвет никнейма', value=member.colour)
+            embed.add_field(name='Кол-во ролей', value=len(member.roles))
+            embed.add_field(name='Высшая роль', value=member.top_role.name)
+            embed.add_field(name='Бот?', value=str(member.bot).replace('True', 'Да').replace('False', 'Нет'))
+            embed.add_field(name='Серверов со мной', value=len(self.bot.guilds))
+            embed.add_field(name='Мой разработчик', value=owner)
+            embed.set_thumbnail(url=member.avatar_url)
 
         else:
-            stats.add_field(name='Присоединился', value=member.joined_at)
-            stats.add_field(name='Создал аккаунт', value=member.created_at)
-            stats.add_field(name='Цвет никнейма', value=member.colour)
-            stats.add_field(name='Кол-во ролей', value=len(member.roles))
-            stats.add_field(name='Высшая роль', value=member.top_role.name)
-            stats.add_field(name='Бот?', value=str(member.bot).replace('True', 'Да').replace('False', 'Нет'))
-            stats.set_thumbnail(url=member.avatar_url)
-        await ctx.send(embed=stats)
+            embed.add_field(name='Присоединился', value=member.joined_at)
+            embed.add_field(name='Создал аккаунт', value=member.created_at)
+            embed.add_field(name='Цвет никнейма', value=member.colour)
+            embed.add_field(name='Кол-во ролей', value=len(member.roles))
+            embed.add_field(name='Высшая роль', value=member.top_role.name)
+            embed.add_field(name='Бот?', value=str(member.bot).replace('True', 'Да').replace('False', 'Нет'))
+            embed.set_thumbnail(url=member.avatar_url)
+
+        embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
+        embed.set_footer(text=f'{ctx.prefix}{ctx.command}')
+
+        await ctx.send(embed=embed)
 
     @commands.command(name='guild', aliases=['server', 'guildinfo', 'guild-info'])
     @commands.guild_only()
@@ -238,23 +276,27 @@ class Info(object):
         """Информация о сервере.
         """
 
-        stats = discord.Embed(timestamp=ctx.message.created_at,
+        embed = discord.Embed(timestamp=ctx.message.created_at,
             color=0x18C30B,
             title='Информация о сервере %s [%s]' % (ctx.guild.name, ctx.guild.id))
-        stats.add_field(name='Регион', value=ctx.guild.region)
-        stats.add_field(name='Всего эмодзи', value=len(ctx.guild.emojis))
-        stats.add_field(name='Всего участников', value=len(ctx.guild.members))
-        stats.add_field(name='Всего ролей', value=len(ctx.guild.roles))
-        stats.add_field(name='Текстовых каналов', value=len(ctx.guild.text_channels))
-        stats.add_field(name='Голосовых каналов', value=len(ctx.guild.voice_channels))
-        stats.add_field(name='Владелец', value=ctx.guild.owner)
-        stats.add_field(name='Пользователей', value=len([x.name for x in ctx.guild.members if not x.bot]))
-        stats.add_field(name='Ботов', value=len([x.name for x in ctx.guild.members if x.bot]))
-        stats.set_thumbnail(url=ctx.guild.icon_url)
-        await ctx.send(embed=stats)
+        embed.add_field(name='Регион', value=ctx.guild.region)
+        embed.add_field(name='Всего эмодзи', value=len(ctx.guild.emojis))
+        embed.add_field(name='Всего участников', value=len(ctx.guild.members))
+        embed.add_field(name='Всего ролей', value=len(ctx.guild.roles))
+        embed.add_field(name='Текстовых каналов', value=len(ctx.guild.text_channels))
+        embed.add_field(name='Голосовых каналов', value=len(ctx.guild.voice_channels))
+        embed.add_field(name='Владелец', value=ctx.guild.owner)
+        embed.add_field(name='Пользователей', value=len([x.name for x in ctx.guild.members if not x.bot]))
+        embed.add_field(name='Ботов', value=len([x.name for x in ctx.guild.members if x.bot]))
+        embed.set_thumbnail(url=ctx.guild.icon_url)
+
+        embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
+        embed.set_footer(text=f'{ctx.prefix}{ctx.command}')
+
+        await ctx.send(embed=embed)
 
     @commands.command(name='mcplayer', aliases=['mcuser'])
-    async def mcplayer(self, ctx, nickname:str):
+    async def mcplayer(self, ctx, nickname: commands.clean_content):
         """Статистика игрока Minecraft.
 
         Аргументы:
@@ -270,16 +312,21 @@ class Info(object):
         request = requests.get('https://minecraft-statistic.net/api/player/info/' + nickname)
         content = request.json()
 
+        embed = discord.Embed(timestamp=ctx.message.created_at, color=0x18C30B, title='Статистика игрока %s' % content['data']['name'])
+
         try:
-            stats = discord.Embed(timestamp=ctx.message.created_at, color=0x18C30B, title='Статистика игрока %s' % content['data']['name'])
-            stats.add_field(name='UUID', value=content['data']['uuid'])
-            stats.add_field(name='Всего сыграно', value=content['data']['total_time_play'])
-            stats.add_field(name='В сети?', value=str(content['data']['online']).replace('1', 'Да').replace('0', 'Нет'))
-            stats.add_field(name='Лицензия?', value=str(content['data']['license']).replace('1', 'Да').replace('0', 'Нет'))
-            # stats.add_field(name='Последний раз в сети', value=time.time() - content['data']['last_play'])
+            embed.add_field(name='UUID', value=content['data']['uuid'])
+            embed.add_field(name='Всего сыграно', value=content['data']['total_time_play'])
+            embed.add_field(name='В сети?', value=str(content['data']['online']).replace('1', 'Да').replace('0', 'Нет'))
+            embed.add_field(name='Лицензия?', value=str(content['data']['license']).replace('1', 'Да').replace('0', 'Нет'))
+            # embed.add_field(name='Последний раз в сети', value=time.time() - content['data']['last_play'])
         except:
-            stats = discord.Embed(timestamp=ctx.message.created_at, color=0xff0000).set_footer(text=ctx.prefix + 'mcplayer [ник]')
-        await ctx.send(embed=stats)
+            embed.add_field(name='Что-то пошло не так', value=':thinking:')
+
+        embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
+        embed.set_footer(text=f'{ctx.prefix}{ctx.command}')
+
+        await ctx.send(embed=embed)
 
     @commands.command(name='mcserver')
     async def mcstats(self, ctx, adress: str):
@@ -301,17 +348,18 @@ class Info(object):
         except ConnectionRefusedError:
             return await ctx.send(':x: Не удалось подключиться к серверу "%s".' % adress)
 
-        try:
-            stats = discord.Embed(timestamp=ctx.message.created_at, color=0x18C30B, description="```%s```" % ''.join([x['text'] for x in status.description['extra']]))
-            stats.add_field(name='Адрес', value=server.host)
-            stats.add_field(name='Порт', value=server.port)
-            stats.add_field(name='Игроки', value='%s/%s' % (status.players.online, status.players.max))
-            stats.add_field(name='Задержка', value='%s мс' % status.latency)
-            stats.add_field(name='Ядро', value=status.version.name)
-        except:
-            stats = discord.Embed(timestamp=ctx.message.created_at, color=0xff0000).set_footer(text=ctx.prefix + 'mcstats [адрес_существующего_сервера]')
+        embed = discord.Embed(timestamp=ctx.message.created_at, color=0x18C30B, description="```%s```" % ''.join([x['text'] for x in status.description['extra']]))
 
-        await ctx.send(embed=stats)
+        try:
+            embed.add_field(name='Адрес', value=server.host)
+            embed.add_field(name='Порт', value=server.port)
+            embed.add_field(name='Игроки', value='%s/%s' % (status.players.online, status.players.max))
+            embed.add_field(name='Задержка', value='%s мс' % status.latency)
+            embed.add_field(name='Ядро', value=status.version.name)
+        except:
+            embed.add_field(name='Что-то пошло не так', value='Попробуйте ввести адрес **существующего** сервера.')
+
+        await ctx.send(embed=embed)
 
     @commands.command(name='osu', aliases=['osu!'])
     async def osu(self, ctx, player: commands.clean_content, \
@@ -340,16 +388,18 @@ class Info(object):
         if mode == 'mania' or mode == 'm':
             game_mode = {'num': 3, 'name': 'osu!mania'}
 
-        _colour = randint(0x000000, 0xFFFFFF)
-        _tc = lambda: randint(0, 255)
-        osu_desk_color = '%02X%02X%02X' % (_tc(), _tc(), _tc())
+        tc = lambda: randint(0, 255)
+        osu_desk_color = '%02X%02X%02X' % (tc(), tc(), tc())
 
-        _image_url = f'http://lemmmy.pw/osusig/sig.php?colour=hex{osu_desk_color}&uname={player}&mode={game_mode["num"]}&pp=1&countryrank&removeavmargin&flagshadow&flagstroke&darktriangles&opaqueavatar&avatarrounding=5&onlineindicator=undefined&xpbar&xpbarhex'
+        embed = discord.Embed(timestamp=ctx.message.created_at,
+                        color=randint(0x000000, 0xFFFFFF),
+                        title=f'Статистика {player} в {game_mode["name"]}')
+        embed.set_image(url=f'http://lemmmy.pw/osusig/sig.php?colour=hex{osu_desk_color}&uname={player}&mode={game_mode["num"]}&pp=1&countryrank&removeavmargin&flagshadow&flagstroke&darktriangles&opaqueavatar&avatarrounding=5&onlineindicator=undefined&xpbar&xpbarhex')
 
-        osu_st = discord.Embed(timestamp=ctx.message.created_at, color=_colour, title=f'Статистика {player} в {game_mode["name"]}')
-        osu_st.set_image(url=_image_url)
-        osu_st.set_footer(text=ctx.prefix + 'osu [ник_игрока] | lemmy.pw')
-        await ctx.send(embed=osu_st)
+        embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
+        embed.set_footer(text=f'{ctx.prefix}{ctx.command}')
+
+        await ctx.send(embed=embed)
 
 def setup(bot):
     bot.add_cog(Info(bot))

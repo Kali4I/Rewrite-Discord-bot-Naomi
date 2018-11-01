@@ -16,6 +16,7 @@ prefix = os.getenv('PREFIX')
 
 bot = commands.Bot(command_prefix=prefix)
 bot.remove_command('help')
+
 async def start_session():
     bot.session = aiohttp.ClientSession(loop=bot.loop)
 

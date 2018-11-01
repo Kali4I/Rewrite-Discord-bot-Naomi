@@ -89,7 +89,7 @@ class Management(object):
     @commands.command(name='mute')
     @commands.guild_only()
     @commands.has_permissions(manage_roles=True)
-    async def mute(self, ctx, member: discord.Member, *, reason: str=None):
+    async def mute(self, ctx, member: discord.Member, *, reason: str = 'отсутствует'):
         """Приглушить участника. *Он не сможет отправлять сообщения, круто!*
 
         Аргументы:
@@ -109,110 +109,80 @@ class Management(object):
         """
         mute = discord.utils.get(ctx.guild.roles, name='NaomiMute')
 
-        if not reason:
-            reason = 'отсутствует'
-
-        try:
-            if not mute:
-
-                try:
-                    def message_check(m):
-                        return m.author.id == ctx.author.id
-
-                    failed_channels = []
-                    failed_roles = []
-
-                    await ctx.send(f'Команда {ctx.prefix}{ctx.command} использована первый раз на этом сервере.\nМогу-ли я внести правки в настройки каналов и ролей для корректной работы этой команды? (Да/Нет)', delete_after=120.0)
-                    msg = await self.bot.wait_for('message', check=message_check, timeout=120.0)
-
-                    if msg.content.lower() in ['да', 'ага', 'угу']:
-                        counter_msg = await ctx.send('Хорошо, выполняю... \nМодификация каналов: в ожидании.\nМодификация ролей: в ожидании.')
-
-                        mute = await ctx.guild.create_role(name='NaomiMute',
-                                                   reason='Использована команда n!mute, но роль "NaomiMute" отсутствовала.')
-
-                        modified_channels = 0
-                        modified_roles = 0
-                        for tchannel in ctx.guild.text_channels:
-                            try:
-                                await tchannel.set_permissions(mute,
-                                                               send_messages=False,
-                                                               add_reactions=False)
-
-                            except:
-                                failed_channels.append(f'`{tchannel.name}`')
-
-                            else:
-                                modified_channels += 1
-                                try:
-                                    await counter_msg.edit(content=f'Хорошо, выполняю... \nМодификация каналов: {modified_channels}/{len(ctx.guild.text_channels)}\nМодификация ролей: в ожидании.')
-                                except:
-                                    pass
-
-                        # mute_perms = discord.Permissions()
-                        # mute_perms.update(send_messages=False)
-                        # К черту discord.Permissions()
-
-                        mute_perms = discord.PermissionOverwrite()
-                        mute_perms.send_messages = False
-                        mute_perms.add_reactions = False
-
-                        for role in ctx.guild.roles:
-                            if role != ctx.guild.default_role:
-                                try:
-                                    await role.edit(permissions=mute_perms)
-
-                                except:
-                                    failed_roles.append(f'`{role.name}`')
-
-                                else:
-                                    modified_roles += 1
-                                try:
-                                    await counter_msg.edit(content=f'Хорошо, выполняю... \nМодификация каналов: {modified_roles}/{len(ctx.guild.text_channels)}.\nМодификация ролей: {x1}/{len(ctx.guild.roles) - 1}')
-                                except:
-                                    pass
-
-                    elif msg.content.lower() in ['нет', 'не', 'не-а', 'неа']:
-                        await ctx.send('В таком случае, команда может работать некорректно.')
-
-                    else:
-                        return await ctx.send(':x: Отменено.', delete_after=10)
-
-                except asyncio.TimeoutError:
-                    await ctx.send('Я не столь терпелива, чтобы ждать ответа так долго...\nПросто повторно введите команду.', delete_after=10)
-                    await asyncio.sleep(10)
-                    await ctx.message.delete()
-                    return False
-
+        if not mute:
             try:
-                if not len(failed_channels) == 0 or not len(failed_roles) == 0:
-                    await ctx.send(f'Модификация завершена не полностью:\n- Каналы: {", ".join(failed_channels)}\n- Роли: {", ".join(failed_roles)}')
-            except:
-                pass
+                def message_check(m):
+                    return m.author.id == ctx.author.id
 
-            await member.add_roles(mute, reason='Был приглушен через n!mute.')
+                failed_channels = []
+                failed_roles = []
 
-        except discord.errors.Forbidden:
-            await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xff0000).set_footer(text='У меня нет прав.'), delete_after=20)
-            await asyncio.sleep(20)
-            await ctx.message.delete()
-            return False
+                await ctx.send(f'Команда {ctx.prefix}{ctx.command} использована первый раз на этом сервере.\nМогу-ли я внести правки в настройки каналов и ролей для корректной работы этой команды? (Да/Нет)', delete_after=120.0)
+                msg = await self.bot.wait_for('message', check=message_check, timeout=120.0)
 
-        except Exception:
-            await ctx.send(f'```python\n{traceback.format_exc()}```', delete_after=20)
-            await asyncio.sleep(20)
-            await ctx.message.delete()
-            return False
+                if msg.content.lower() in ['да', 'ага', 'угу']:
+                    counter_msg = await ctx.send('Хорошо, выполняю... \nМодификация каналов: в ожидании.\nМодификация ролей: в ожидании.')
 
-        await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0x35FF81, description=f'Участник {member.mention} приглушен.\nПричина: {reason}'), delete_after=20)
-        await asyncio.sleep(20)
-        await ctx.message.delete()
-        return True
+                    mute = await ctx.guild.create_role(name='NaomiMute',
+                                                reason='Использована команда n!mute, но роль "NaomiMute" отсутствовала.')
+
+                    modified_channels = 0
+                    modified_roles = 0
+                    for tchannel in ctx.guild.text_channels:
+                        try:
+                            await tchannel.set_permissions(mute,
+                                                            send_messages=False,
+                                                            add_reactions=False)
+
+                        except:
+                            failed_channels.append(f'`{tchannel.name}`')
+
+                        else:
+                            modified_channels += 1
+                            try:
+                                await counter_msg.edit(content=f'Хорошо, выполняю... \nМодификация каналов: {modified_channels}/{len(ctx.guild.text_channels)}\nМодификация ролей: в ожидании.')
+                            except:
+                                pass
+
+                    # mute_perms = discord.Permissions()
+                    # mute_perms.update(send_messages=False)
+                    # К черту discord.Permissions()
+
+                    mute_perms = discord.PermissionOverwrite()
+                    mute_perms.send_messages = False
+                    mute_perms.add_reactions = False
+
+                    for role in ctx.guild.roles:
+                        if role != ctx.guild.default_role:
+                            try:
+                                await role.edit(permissions=mute_perms)
+                            except:
+                                failed_roles.append(f'`{role.name}`')
+                            else:
+                                modified_roles += 1
+                            await counter_msg.edit(content=f'Хорошо, выполняю... \nМодификация каналов: {modified_roles}/{len(ctx.guild.text_channels)}.\nМодификация ролей: {x1}/{len(ctx.guild.roles) - 1}')
+                else:
+                    return await ctx.send(':x: Отменено.')
+            except asyncio.TimeoutError:
+                await ctx.send('Я не столь терпелива, чтобы ждать ответа так долго...\nПросто повторно введите команду.')
+        try:
+            if not len(failed_channels) == 0 or not len(failed_roles) == 0:
+                await ctx.send(f'Модификация завершена не полностью:\n- Каналы: {", ".join(failed_channels)}\n- Роли: {", ".join(failed_roles)}')
+        except:
+            pass
+
+        await member.add_roles(mute, reason='Был приглушен через n!mute.')
+
+        embed = discord.Embed(timestamp=ctx.message.created_at, color=0x35FF81, description=f'Участник {member.mention} приглушен.\nПричина: {reason}')
+        embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
+        embed.set_footer(text=f'{ctx.prefix}{ctx.command}')
+
+        await ctx.send(embed=embed)
 
     @commands.command(name='unmute')
     @commands.guild_only()
     @commands.has_permissions(manage_roles=True)
-    async def unmute(self, ctx, member: discord.Member, *, reason: str=None):
+    async def unmute(self, ctx, member: discord.Member, *, reason: str = 'отсутствует'):
         """Снять приглушение с участника. *Да будет свобода чата!*
 
         Аргументы:
@@ -228,33 +198,32 @@ class Management(object):
 
         mute = discord.utils.get(ctx.guild.roles, name='NaomiMute')
 
-        if not reason:
-            reason = 'отсутствует'
+        if not mute:
+            embed = discord.Embed(timestamp=ctx.message.created_at, color=0xff0000,
+                            description='Не найдена роль "NaomiMute", а раз ее нет, то и снимать мут мне не с кого...')
+            embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
+            embed.set_footer(text=f'{ctx.prefix}{ctx.command}')
 
-        try:
-            if not mute:
-                return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xff0000, description='Не найдена роль "NaomiMute", а раз ее нет, то и снимать мут мне не с кого...'))
+        elif mute not in member.roles:
+            embed = discord.Embed(timestamp=ctx.message.created_at, color=0xff0000,
+                            description=f'{member.mention} не приглушен!')
+            embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
+            embed.set_footer(text=f'{ctx.prefix}{ctx.command}')
 
-            if mute not in member.roles:
-                return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xff0000, description=f'{member.mention} не приглушен!'))
-
+        else:
             await member.remove_roles(mute, reason='Приглушение снято - n!unmute.')
 
-        except discord.errors.Forbidden:
-            await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xff0000).set_footer(text='У меня нет прав.'), delete_after=20)
-            await asyncio.sleep(20)
-            await ctx.message.delete()
-            return False
+            embed = discord.Embed(timestamp=ctx.message.created_at, color=0x35FF81,
+                    description=f'Снято приглушение с участника {member.mention}.\nПричина: {reason}')
+            embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
+            embed.set_footer(text=f'{ctx.prefix}{ctx.command}')
 
-        await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0x35FF81, description=f'Снято приглушение с участника {member.mention}.\nПричина: {reason}'), delete_after=20)
-        await asyncio.sleep(20)
-        await ctx.message.delete()
-        return True
+        await ctx.send(embed=embed)
 
     @commands.command(name='newname', aliases=['new-name', 'change-name', 'changename', 'newnick'])
     @commands.guild_only()
     @commands.has_permissions(manage_nicknames=True)
-    async def newname(self, ctx, member: discord.Member, *, nickname: str=None):
+    async def newname(self, ctx, member: discord.Member, *, nickname: str = None):
         """Сменить никнейм участника.
 
         Аргументы:
@@ -264,23 +233,23 @@ class Management(object):
         Например:
         ```
         n!newname @Username#1234 Топ пользователь
-        n!newname Username Я топ чел
+        n!newname Username Ламповая няша
         ```
         """
 
-        try:
-            await member.edit(nick=nickname, reason='Запрошено, используя n!newname.')
+        await member.edit(nick=nickname, reason='n!newname в помощь участникам! xD')
+        
+        embed = discord.Embed(timestamp=ctx.message.created_at, color=0x00ff00,
+                description='Никнейм успешно изменен.')
+        embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
+        embed.set_footer(text=f'{ctx.prefix}{ctx.command}')
 
-        except discord.errors.Forbidden:
-            await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xff0000).set_footer(text='У меня нет прав.'), delete_after=20)
-            await asyncio.sleep(20)
-            await ctx.message.delete()
-            return False
+        await ctx.send(embed=embed)
 
     @commands.command(name='cleanup')
     @commands.guild_only()
     @commands.has_permissions(manage_messages=True)
-    async def cleanup(self, ctx, member: discord.Member, count: int=None):
+    async def cleanup(self, ctx, member: discord.Member, count: int):
         """Удалить сообщения конкретного участника.
 
         Аргументы:
@@ -294,19 +263,11 @@ class Management(object):
         ```
         """
         if count > 100:
-            return await ctx.send(f'Число сообщений не должно превышать {count}.')
-
-        def is_member(m):
-            return m.author == member
-
-        try:
+            await ctx.send(f'Число сообщений не должно превышать {count}.')
+        else:
+            def is_member(m):
+                return m.author == member
             await ctx.channel.purge(limit=count, check=is_member)
-
-        except discord.errors.Forbidden:
-            await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xff0000).set_footer(text='У меня нет прав.'), delete_after=20)
-            await asyncio.sleep(20)
-            await ctx.message.delete()
-            return False
 
     @commands.command(name='purge', aliases=['clean', 'clear', 'clearchat'])
     @commands.guild_only()
@@ -323,21 +284,14 @@ class Management(object):
         ```
         """
         if count > 100:
-            return await ctx.send(f'Число сообщений не должно превышать {count}')
-
-        try:
+            await ctx.send(f'Число сообщений не должно превышать {count}')
+        else:
             await ctx.channel.purge(limit=count)
-
-        except discord.errors.Forbidden:
-            await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xff0000).set_footer(text='У меня нет прав.'), delete_after=20)
-            await asyncio.sleep(20)
-            await ctx.message.delete()
-            return False
 
     @commands.command(name='ban')
     @commands.guild_only()
     @commands.has_permissions(ban_members=True)
-    async def ban(self, ctx, member: discord.Member, *, reason: str=None):
+    async def ban(self, ctx, member: discord.Member, *, reason: str = 'отсутствует'):
         """Заблокировать участника на сервере. *Да вознесется банхаммер над <member>!*
 
         Аргументы:
@@ -350,53 +304,48 @@ class Management(object):
         n!ban @Username#1234
         ```
         """
-        if not reason:
-            reason = 'отсутствует.'
-        try:
-            await ctx.guild.ban(user=member, reason=reason)
+        await ctx.guild.ban(user=member, reason=reason)
 
-        except discord.errors.Forbidden:
-            await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xff0000).set_footer(text='У меня нет прав.'), delete_after=20)
-            await asyncio.sleep(20)
-            await ctx.message.delete()
-            return False
+        embed = discord.Embed(timestamp=ctx.message.created_at, color=0x00ff00,
+                description=f'Пользователь {member.mention} забанен!\nПричина: {reason}.')
+        embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
+        embed.set_footer(text=f'{ctx.prefix}{ctx.command}')
 
-        else:
-            await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0x00ff00, description=f'Пользователь {member} забанен!\nПричина: {reason}.').set_footer(text='ban [@пользователь] [причина]'), delete_after=20)
-            await asyncio.sleep(20)
-            await ctx.message.delete()
-            return False
+        await ctx.send(embed=embed)
 
     @commands.command(name='unban', aliases=['pardon'])
     @commands.guild_only()
     @commands.has_permissions(ban_members=True)
-    async def unban(self, ctx, member: discord.Member, *, reason: str=None):
+    async def unban(self, ctx, user: discord.User, *, reason: str = 'отсутствует'):
         """Разблокировать участника на сервере.
 
         Аргументы:
-        `:member` - участник
+        `:user` - пользователь
         `:reason` - причина
         __                                            __
         Например:
         ```
         n!unban @Username#1234 Ты хороший
-        n!unban Username
         ```
         """
-        if not reason:
-            reason = 'отсутствует.'
+        ban_entries = await ctx.guild.bans()
+        banned_users = [user.user.name for user in ban_entries]
 
-        try:
-            ban_entries = await ctx.guild.bans()
-            banned_users = [user.user.name for user in ban_entries]
+        for u in banned_users:
+            if u.id == user.id:
+                try:
+                    await ctx.guild.unban(user=u, reason=reason)
+                except:
+                    stats = f'Не удалось разбанить {user}.'
+                else:
+                    stats = f'Пользователь {u.mention} успешно разбанен.'
 
-            for user in banned_users:
-                if user == member:
-                    await ctx.guild.unban(user=user, reason=reason)
+        embed = discord.Embed(timestamp=ctx.message.created_at, color=0xFF0000,
+                description=stats)
+        embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
+        embed.set_footer(text=f'{ctx.prefix}{ctx.command}')
 
-        except discord.errors.Forbidden:
-            await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xFF0000).set_footer(text='У меня нет прав.'))
-            return False
+        await ctx.send(embed=embed)
 
     @commands.command(name='banlist', aliases=['bans'])
     @commands.guild_only()
@@ -404,24 +353,25 @@ class Management(object):
     async def banlist(self, ctx):
         """Список заблокированных участников.
         """
-        try:
-            bans = await ctx.guild.bans()
-
-        except discord.errors.Forbidden:
-            await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xff0000).set_footer(text='У меня нет прав.'), delete_after=20)
-            await asyncio.sleep(20)
-            await ctx.message.delete()
-            return False
+        bans = await ctx.guild.bans()
 
         if len(bans) <= 0:
-            return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xff0000).set_footer(text='Забаненные пользователи отсутствуют.'))
+            embed = discord.Embed(timestamp=ctx.message.created_at,
+                            color=0xff0000,
+                            description='Забаненных пользователей нет.')
+        else:
+            embed = discord.Embed(timestamp=ctx.message.created_at,
+                            color=0xff0000,
+                            description=f'Забаненные пользователи:\n{", ".join([user.user.name for user in bans])}')
+        embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
+        embed.set_footer(text=f'{ctx.prefix}{ctx.command}')
 
-        return await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xff0000, description=f'Забаненные пользователи:\n{", ".join([user.user.name for user in bans])}').set_footer(text='banlist'))
+        await ctx.send(embed=embed)
 
     @commands.command(name='kick')
     @commands.guild_only()
     @commands.has_permissions(kick_members=True)
-    async def kick(self, ctx, member: discord.Member, *, reason: str=None):
+    async def kick(self, ctx, member: discord.Member, *, reason: str = 'отсутствует'):
         """Выгнать участника с сервера.
 
         Аргументы:
@@ -434,23 +384,14 @@ class Management(object):
         n!kick @Username#1234
         ```
         """
-        if not reason:
-            reason = 'отсутствует.'
+        await member.kick(reason=reason)
 
-        try:
-            await member.kick(reason=reason)
+        embed = discord.Embed(timestamp=ctx.message.created_at, color=0x00ff00,
+                description=f'Пользователь {member} был кикнут.\nПричина: {reason}.')
+        embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
+        embed.set_footer(text=f'{ctx.prefix}{ctx.command}')
 
-        except discord.errors.Forbidden:
-            await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0xff0000).set_footer(text='У меня нет прав.'), delete_after=20)
-            await asyncio.sleep(20)
-            await ctx.message.delete()
-            return False
-
-        else:
-            await ctx.send(embed=discord.Embed(timestamp=ctx.message.created_at, color=0x00ff00, description=f'Пользователь {member} был кикнут.\nПричина: {reason}.').set_footer(text='kick [@пользователь] [причина]'), delete_after=20)
-            await asyncio.sleep(20)
-            await ctx.message.delete()
-            return True
+        await ctx.send(embed=embed)
 
 
 def setup(bot):

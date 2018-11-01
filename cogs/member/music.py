@@ -433,6 +433,9 @@ class Music:
         for page in paginator.pages:
             embed.add_field(name='Описание реакций', value=page)
 
+        embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
+        embed.set_footer(text=f'{ctx.prefix}{ctx.command}')
+
         m = await ctx.send(embed=embed)
 
         async def reaction_checker(ctx):
