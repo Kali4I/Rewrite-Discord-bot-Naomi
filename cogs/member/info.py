@@ -53,7 +53,8 @@ class Info(object):
             result = ':x: Я ничего не нашла на Википедии... Извините!'
             url = ''
 
-        embed = discord.Embed(timestamp=ctx.message.created_at, color=0xf0a302,
+        embed = discord.Embed(timestamp=ctx.message.created_at,
+                              color=0xf0a302,
                               title=f'Поиск в Википедии - "{query}"',
                               description=f'{result}{url}')
         embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
@@ -162,7 +163,7 @@ class Info(object):
         await ctx.send(embed=embed)
 
     @commands.command(name='help', aliases=['commands', 'cmds'])
-    async def thelp(self, ctx, *, command:str=None):
+    async def thelp(self, ctx, *, command: str = None):
         """Справочник по командам.
 
         Аргументы:
@@ -176,7 +177,8 @@ class Info(object):
         ```
         """
         if command is None:
-            embed = discord.Embed(color=randint(0x000000, 0xFFFFFF),
+            embed = discord.Embed(timestamp=ctx.message.created_at,
+                            color=randint(0x000000, 0xFFFFFF),
                             title='Справочник по командам')
             __slots__ = []
 
@@ -197,19 +199,22 @@ class Info(object):
 
             if entity is None:
                 clean = command.replace('@', '@\u200b')
-                embed = discord.Embed(color=randint(0x000000, 0xFFFFFF),
+                embed = discord.Embed(timestamp=ctx.message.created_at,
+                                color=randint(0x000000, 0xFFFFFF),
                                 title='Справочник по командам',
                                 description=f'Команда или категория "{clean}" не найдена.')
 
             elif isinstance(entity, commands.Command):
-                embed = discord.Embed(color=randint(0x000000, 0xFFFFFF),
+                embed = discord.Embed(timestamp=ctx.message.created_at,
+                                color=randint(0x000000, 0xFFFFFF),
                                 title='Справочник по командам')
                 embed.add_field(name=f'{ctx.prefix}{entity.signature}',
                                 value=entity.help,
                                 inline=False)
 
             else:
-                embed = discord.Embed(color=randint(0x000000, 0xFFFFFF),
+                embed = discord.Embed(timestamp=ctx.message.created_at,
+                                color=randint(0x000000, 0xFFFFFF),
                                 title='Справочник по командам')
                 embed.add_field(name=entity.__class__.__name__ + ': ' + entity.__class__.__doc__,
                                 value=', '.join([f'`{x}`' for x in self.bot.commands if x.cog_name == entity.__class__.__name__ and not x.hidden]),

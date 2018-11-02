@@ -82,7 +82,8 @@ class YTDLSource(discord.PCMVolumeTransformer):
         if download:
             source = ytdl.prepare_filename(data)
         else:
-            return {'webpage_url': data['webpage_url'], 'requester': ctx.author, 'title': data['title']}
+            return {'webpage_url': data['webpage_url'], 'requester': ctx.author,
+                        'title': data['title']}
 
         return cls(discord.FFmpegPCMAudio(source), data=data, requester=ctx.author)
 
@@ -103,13 +104,14 @@ class YTDLSource(discord.PCMVolumeTransformer):
 class MusicPlayer:
     """A class which is assigned to each guild using the bot for Music.
 
-    This class implements a queue and loop, which allows for different guilds to listen to different playlists
-    simultaneously.
+    This class implements a queue and loop, which allows for different guilds to
+    listen to different playlists simultaneously.
 
     When the bot disconnects from the Voice it's instance will be destroyed.
     """
 
-    __slots__ = ('bot', '_guild', '_channel', '_cog', 'queue', 'next', 'current', 'np', 'volume')
+    __slots__ = ('bot', '_guild', '_channel', '_cog', 'queue', 'next',
+                 'current', 'np', 'volume')
 
     def __init__(self, ctx):
         self.bot = ctx.bot
@@ -153,8 +155,10 @@ class MusicPlayer:
             source.volume = self.volume
             self.current = source
 
-            self._guild.voice_client.play(source, after=lambda _: self.bot.loop.call_soon_threadsafe(self.next.set))
-            self.np = await self._channel.send(f'**Проигрывается ** `{source.title}`. Запросил: '
+            self._guild.voice_client.play(source,
+                        after=lambda _: self.bot.loop.call_soon_threadsafe(self.next.set))
+            self.np = await self._channel.send(
+                                f'**Проигрывается ** `{source.title}`. Запросил: '
                                                f'`{source.requester}`')
             await self.next.wait()
 
@@ -250,12 +254,14 @@ class Music:
             try:
                 await vc.move_to(channel)
             except asyncio.TimeoutError:
-                raise VoiceConnectionError(f':notes: Переход в канал <{channel}> не удался. TimeOut.')
+                raise VoiceConnectionError(
+                        f':notes: Переход в канал <{channel}> не удался. TimeOut.')
         else:
             try:
                 await channel.connect()
             except asyncio.TimeoutError:
-                raise VoiceConnectionError(f':notes: Подключение к каналу <{channel}> не удалось. TimeOut.')
+                raise VoiceConnectionError(
+                        f':notes: Подключение к каналу <{channel}> не удалось. TimeOut.')
 
         await ctx.send(f':notes: Голосовой канал: **{channel}**', delete_after=20)
 
@@ -280,9 +286,11 @@ class Music:
 
         player = self.get_player(ctx)
 
-        # If download is False, source will be a dict which will be used later to regather the stream.
-        # If download is True, source will be a discord.FFmpegPCMAudio with a VolumeTransformer.
-        source = await YTDLSource.create_source(ctx, search, loop=self.bot.loop, download=False)
+        # If download is False, source will be a dict which will be used later to
+        # regather the stream. If download is True, source will be
+        # a discord.FFmpegPCMAudio with a VolumeTransformer.
+        source = await YTDLSource.create_source(ctx, search, loop=self.bot.loop,
+                                                download=False)
 
         await player.queue.put(source)
 
@@ -293,7 +301,8 @@ class Music:
         vc = ctx.voice_client
 
         if not vc or not vc.is_playing():
-            return await ctx.send(':notes: Я сейчас ничего не проигрываю в голосовой канал...', delete_after=20)
+            return await ctx.send(':notes: Я сейчас ничего не проигрываю в голосовой канал...',
+                                    delete_after=20)
         elif vc.is_paused():
             return
 
@@ -307,7 +316,8 @@ class Music:
         vc = ctx.voice_client
 
         if not vc or not vc.is_connected():
-            return await ctx.send('Я сейчас ничего не проигрываю в голосовой канал...', delete_after=20)
+            return await ctx.send('Я сейчас ничего не проигрываю в голосовой канал...',
+                                    delete_after=20)
         elif not vc.is_paused():
             return
 
@@ -321,7 +331,8 @@ class Music:
         vc = ctx.voice_client
 
         if not vc or not vc.is_connected():
-            return await ctx.send('Я сейчас ничего не проигрываю в голосовой канал...', delete_after=20)
+            return await ctx.send('Я сейчас ничего не проигрываю в голосовой канал...',
+                                    delete_after=20)
 
         if vc.is_paused():
             pass
@@ -363,7 +374,8 @@ class Music:
 
         player = self.get_player(ctx)
         if not player.current:
-            return await ctx.send('Я ничего не проигрываю в голосовой канал...', delete_after=20)
+            return await ctx.send('Я ничего не проигрываю в голосовой канал...',
+                                    delete_after=20)
 
         try:
             # Remove our previous now_playing message.
@@ -409,17 +421,18 @@ class Music:
         vc = ctx.voice_client
 
         if not vc or not vc.is_connected():
-            return await ctx.send('Я ничего не проигрываю в голосовой канал...', delete_after=20)
+            return await ctx.send('Я ничего не проигрываю в голосовой канал...',
+                                    delete_after=20)
 
         await self.cleanup(ctx.guild)
         await ctx.send(':notes: Успешно выполнено.', delete_after=20)
 
-    reactions = {'⏹': 'Остановить проигрывание',
-                 '⏸': 'Поставить проигрыватель на паузу.',
+    reactions = {'🔊': 'Начать проигрывание',
+                 '⏹': 'Остановить проигрывание',
+                 '⏸': 'Поставить проигрыватель на паузу',
                  '▶': 'Возобновить проигрывание',
                  '⏭': 'Перейти к следующей песне',
                  '🗂': 'Отобразить список песен в очереди',
-                 '🔊': 'Отобразить, что проигрывается сейчас',
                  '🔗': 'Подключить меня к каналу'}
 
     @commands.command(name='musmenu', aliases=['music', 'muscontrol', 'playmenu'])
@@ -453,6 +466,21 @@ class Music:
 
             while True:
                 r, u = await self.bot.wait_for('reaction_add', check=check)
+                if str(r) == '🔊':
+                    def msg_chk(m):
+                        return m.author.id == ctx.author.id
+
+                    try:
+                        await ctx.send('Введите название песни / ссылку на видео в YT...',
+                                       delete_after=15)
+                        msg = await self.bot.wait_for('message', check=msg_chk, timeout=15)
+                        await ctx.send(':notes: Исполняю.')
+                        await ctx.invoke(self.bot.get_command("play"), search=msg.content)
+
+                    except asyncio.TimeOutError:
+                        return await ctx.send(':notes: Отменено - время ожидания ответа вышло.',
+                                              delete_after=15)
+
                 if str(r) == '⏹':
                     await ctx.invoke(self.stop_)
                 if str(r) == '⏸':
@@ -463,8 +491,6 @@ class Music:
                     await ctx.invoke(self.skip_)
                 if str(r) == '🗂':
                     await ctx.invoke(self.queue_info)
-                if str(r) == '🔊':
-                    await ctx.invoke(self.now_playing_)
                 if str(r) == '🔗':
                     await ctx.invoke(self.connect_)
                 await m.remove_reaction(r, u)

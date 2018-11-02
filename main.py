@@ -24,7 +24,6 @@ extensions = ['cogs.member.fun',
               'cogs.member.info',
               'cogs.member.music',
               'cogs.member.utils',
-              'cogs.member.owo',
               'cogs.system.error_handler',
               'cogs.system.logger',
               'cogs.admin.management',
@@ -59,8 +58,7 @@ async def on_ready():
                         f'{len(bot.users)} участников!',
                         f'{len(bot.emojis)} эмодзи!',
                         f'{len([x.name for x in bot.commands if not x.hidden])} команд!',
-                        f'{prefix}help',
-                         'https://discord.io/naomi']
+                        f'{prefix}help']
             for msg in messages:
                 if os.getenv('ACTIVITY') == 'streaming':
                     await bot.change_presence(activity=discord.Streaming(name=msg, url='https://www.twitch.tv/%none%'))

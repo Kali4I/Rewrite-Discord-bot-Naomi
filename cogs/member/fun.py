@@ -21,6 +21,94 @@ class Fun(object):
     """Команды пользователей - Fun"""
     def __init__(self, bot):
         self.bot = bot
+    
+    @commands.group(name='emote', aliases=['emotes'])
+    async def emotes(self, ctx):
+        """Эмоции и анимешные картинки <3"""
+        if not ctx.invoked_subcommand:
+            await ctx.send(f'{ctx.prefix}{ctx.command} -\nlove\nsad\njoy\nangry\nlonely')
+
+    @emotes.command(name='love')
+    async def love(self, ctx):
+        """Влюбленность"""
+        image = 'http://images.vfl.ru/ii/1540905231/0cf06cf3/24000410.jpg'
+        author = ctx.message.author.name
+        messages = [f'{author} полон любви и заботы <3']
+
+        embed = discord.Embed(color=0xFF6AE5,
+                              title=choice(messages))
+        embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
+        embed.set_footer(text=f'{ctx.prefix}{ctx.command}')
+
+        embed.set_image(url=image)
+        await ctx.send(embed=embed)
+
+    @emotes.command(name='sad')
+    async def sad(self, ctx):
+        """Грусть"""
+        image = 'http://images.vfl.ru/ii/1540905169/1859d59c/24000401.jpg'
+        author = ctx.message.author.name
+        messages = [f'{author} чувствует грусть :c',
+                    f'Так печально, когда {author} грустит...']
+
+        embed = discord.Embed(color=0xFF6AE5,
+                              title=choice(messages))
+        embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
+        embed.set_footer(text=f'{ctx.prefix}{ctx.command}')
+
+        embed.set_image(url=image)
+        await ctx.send(embed=embed)
+
+    @emotes.command(name='joy')
+    async def joy(self, ctx):
+        """Радость"""
+        image = 'http://images.vfl.ru/ii/1540905081/27bd14ca/24000379.jpg'
+        author = ctx.message.author.name
+        messages = [f'Я рада, {author} счастлив!',
+                    f'Счастья полон {author}, это так прекрасно! :з',
+                    f'{author} счастлив! Меня это радует <3']
+
+        embed = discord.Embed(color=0xFF6AE5,
+                              title=choice(messages))
+        embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
+        embed.set_footer(text=f'{ctx.prefix}{ctx.command}')
+
+        embed.set_image(url=image)
+        await ctx.send(embed=embed)
+
+    @emotes.command(name='angry')
+    async def angry(self, ctx):
+        """Злость"""
+        image = 'http://images.vfl.ru/ii/1540904890/5fce2341/24000340.jpg'
+        author = ctx.message.author.name
+        messages = [f'{author} испытывает злость... Не стоит беспокоить его!',
+                    f'Мне так грустно видеть, что {author} испытывает злость...',
+                    f'{author} зол... Это наполняет меня грустью :c']
+
+        embed = discord.Embed(color=0xFF6AE5,
+                              title=choice(messages))
+        embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
+        embed.set_footer(text=f'{ctx.prefix}{ctx.command}')
+
+        embed.set_image(url=image)
+        await ctx.send(embed=embed)
+
+    @emotes.command(name='lonely')
+    async def lonely(self, ctx):
+        """Одиночество"""
+        image = 'http://images.vfl.ru/ii/1540905345/1bab6eb8/24000432.jpg'
+        author = ctx.message.author.name
+        messages = [f'Мне жаль {author}. Он чувствует одиночество :c',
+                    f'Ах, как жаль... Чувство одинокости наполнило {author}...',
+                    f'{author} чувствует одиночество...']
+
+        embed = discord.Embed(color=0xFF6AE5,
+                              title=choice(messages))
+        embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
+        embed.set_footer(text=f'{ctx.prefix}{ctx.command}')
+
+        embed.set_image(url=image)
+        await ctx.send(embed=embed)
 
     @commands.command(name='memegen')
     @commands.cooldown(1, 8, commands.BucketType.guild)
@@ -260,7 +348,7 @@ class Fun(object):
 
         await ctx.send(embed=embed)
 
-    @commands.command(name='myname', aliases=['my-name'])
+    @commands.command(name='myname')
     @commands.guild_only()
     async def myname(self, ctx, *, nickname: str = None):
         """Сменить ваш никнейм
@@ -279,7 +367,8 @@ class Fun(object):
         await ctx.send('Успешно.', delete_after=5)
 
     @commands.command(name='talk', aliases=['t'])
-    async def talk(self, ctx, *, message: commands.clean_content):
+    async def talk(self, ctx, lang: commands.clean_content = None, *, \
+                    message: commands.clean_content):
         """Общение с ботом (используя Google DialogFlow).
 
         Аргументы:
@@ -290,11 +379,9 @@ class Fun(object):
         n!talk Привет, что делаешь?
         ```
         """
-        
         ai = apiai.ApiAI(os.getenv('TALK_SERVICE_TOKEN'))
-
         request = ai.text_request()
-        request.lang = 'ru'
+
         request.session_id = os.getenv('TALK_SERVICE_SESSION_ID')
         request.query = message
         responseJson = json.loads(request.getresponse().read().decode('utf-8'))

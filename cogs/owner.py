@@ -131,7 +131,7 @@ class Owner(object):
                 return await ctx.send(':x: Отменено - время ожидания ответа вышло.')
         
         else:
-            await ctx.send('Сейчас я нигде не проигрываю музыку. К перезагрузке готова! с:\nПросто нужно подтверждение.')
+            await ctx.send('К перезагрузке готова! с:\nПросто нужно подтверждение.')
             try:
                 msg = await self.bot.wait_for('message', check=message_check, timeout=20.0)
                 if msg.content.lower() not in ['перезагрузись', 'да', 'угу', 'ага']:
@@ -243,7 +243,6 @@ class Owner(object):
                     'message': ctx.message,
                     'client': self.bot,
                     'bot': self.bot,
-                    'naomi': self.bot,
                     'discord': discord,
                     'ctx': ctx,
                     'owner': owner

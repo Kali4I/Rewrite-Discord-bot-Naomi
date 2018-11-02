@@ -98,7 +98,7 @@ class ErrorHandler:
         # Если ничего не подходит
         rep_guild = discord.utils.get(self.bot.guilds, id=457092470472179712)
         rep_channel = discord.utils.get(rep_guild.channels, id=503340681058713621)
-        
+
         embed = discord.Embed(
                     color=0xF56415,
                     timestamp=ctx.message.created_at,
@@ -108,8 +108,13 @@ class ErrorHandler:
         embed.set_author(
                     name='Обработка исключения.',
                     icon_url='http://s1.iconbird.com/ico/2013/11/504/w128h1281385326489locked.png')
-        await rep_channel.send(embed=embed)
-        
+        try:
+            await rep_channel.send(embed=embed)
+
+        except:
+            dev = discord.utils.get(self.bot.users, id=297421244402368522)
+            await dev.send(embed=embed)
+
         if ctx.author.id == 297421244402368522:
             await ctx.send(f'{ctx.author.mention}, извиняюсь, но у меня произошла проблема...\nПодробности на нашем дискорд сервере!')
         else:
