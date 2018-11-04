@@ -9,3 +9,4 @@ requests
 pokebase
 wikipedia
 pillow
+git+https://github.com/Pandentia/pylava@stable
