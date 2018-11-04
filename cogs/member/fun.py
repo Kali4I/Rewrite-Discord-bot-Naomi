@@ -130,8 +130,8 @@ class Fun(object):
         templates = [f'templates/{x}' for x in os.listdir('templates/')]
 
         if len(string_list) == 1:
-            make_meme(topString='',
-                    bottomString=string_list[0],
+            make_meme(topString=string_list[0],
+                    bottomString='',
                     outputFilename=ctx.guild.id,
                     filename=choice(templates))
         elif len(string_list) >= 2:
