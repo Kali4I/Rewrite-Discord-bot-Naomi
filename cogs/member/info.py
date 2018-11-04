@@ -222,7 +222,7 @@ class Info(object):
 
         embed.set_thumbnail(url=self.bot.user.avatar_url)
         embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
-        embed.set_footer(text=f'{ctx.prefix}{ctx.command} [команда/категория] для получения доп.информации.')
+        embed.set_footer(text=f'{ctx.prefix}help [команда/категория] для получения доп.информации.')
 
         await ctx.send(embed=embed)
 

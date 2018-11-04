@@ -290,12 +290,15 @@ class Fun(object):
         embed.set_image(url=f'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{pokemon.id}.png')
         await ctx.send(embed=embed)
 
-        msg = await self.bot.wait_for('message', check=message_check, timeout=30.0)
-        
-        if msg.content.lower() == pokemon_name:
-            await ctx.send('Вы ответили верно! :cake:')
-        else:
-            await ctx.send('Ответ неверный. Ничего, повезет в следующий раз!')
+        try:
+            msg = await self.bot.wait_for('message', check=message_check, timeout=30.0)
+            if msg.content.lower() == pokemon_name:
+                await ctx.send('Вы ответили верно! :cake:')
+            else:
+                await ctx.send('Ответ неверный. Ничего, повезет в следующий раз!')
+
+        except asyncio.TimeoutError:
+            await ctx.send(':x: Нет ответа. Ничего, повезет в следующий раз!')
 
     @commands.command(name='prediction', aliases=['predict'])
     async def prediction(self, ctx, *, message: str):
@@ -367,8 +370,7 @@ class Fun(object):
         await ctx.send('Успешно.', delete_after=5)
 
     @commands.command(name='talk', aliases=['t'])
-    async def talk(self, ctx, lang: commands.clean_content = None, *, \
-                    message: commands.clean_content):
+    async def talk(self, ctx, *, message: commands.clean_content):
         """Общение с ботом (используя Google DialogFlow).
 
         Аргументы:

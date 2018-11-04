@@ -218,6 +218,13 @@ class Owner(object):
         else:
             await ctx.send(f'**`Модуль {cog} успешно перезагружен`**')
 
+    async def on_member_join(self, member):
+        role = discord.utils.get(member.guild.roles, id=507249626789707777)
+        channel = discord.utils.get(member.guild.channels, id=457588184302485514)
+
+        await member.add_roles(role, reason='Просто так :з')
+        await channel.send(f'<:naomi_arrow_up:506078581227651098> Новый участник {member.mention} присоединился.\n◽ **Добро пожаловать на {member.guild.name}!**')
+
     @commands.command(name='execute', aliases=['exec', 'eval'], hidden=True)
     @commands.is_owner()
     async def execute(self, ctx, *, code: str):

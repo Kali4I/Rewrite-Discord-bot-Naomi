@@ -7,7 +7,7 @@ import discord
 import whois
 import time
 
-from utils.HastebinPoster import post
+from utils.HastebinPoster import post, PostCodeError
 
 class Utils(object):
     """Команды пользователей - Utils"""
@@ -100,7 +100,10 @@ class Utils(object):
         ```
         """
 
-        link = await post(code)
+        try:
+            link = await post(code)
+        except PostCodeError:
+            return await ctx.send(':x: Что-то пошло не так.')
         embed = discord.Embed(timestamp=ctx.message.created_at,
                         title='Ваш код был загружен на Hastebin:',
                         description=f'```{link}```')
