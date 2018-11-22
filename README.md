@@ -20,3 +20,5 @@ Bot written with Python 3.6.6 and Discord-Rewrite 1.0.0a
 Thanks [F4stZ4p](https://github.com/F4stZ4p) for music cog.
 
 Click to join [our Discord server](https://discord.io/naomi).
+
+# There will be no updates on Github.
