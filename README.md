@@ -13,7 +13,6 @@ For launch on HerokuApp you need to:
 
 (You can create bot-application and get token here: https://discordapp.com/developers/applications/me)
 
-
 Bot written with Python 3.6.6 and Discord-Rewrite 1.0.0a
 
 Click to join [our Discord server](https://discord.io/naomi).
